@@ -1,5 +1,7 @@
 # mugen
 
+## mugen介绍
+
 mugen是openEuler社区开发的测试框架，提供公共配置和方法以便社区开发者进行测试代码的编写和执行
 
 ## mugen使用说明
@@ -99,4 +101,4 @@ mugen是openEuler社区开发的测试框架，提供公共配置和方法以便
 
 - 日志将存储到和runoet.sh同层的logs目录下面
 - 执行结果将会存放到和runoet.sh同层的results目录下面
-- logs和results目录会在用例执行之后自动化生成
+- logs和results目录会在用例执行之后自动生成
