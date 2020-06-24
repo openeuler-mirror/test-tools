@@ -94,7 +94,7 @@ function REMOTE_REBOOT_WAIT() {
 
     while [ $count -lt 60 ]; do
         if ping -c 1 $remoteip; then
-            if SSH_CMD "echo '' > /dev/null 2>&1" $remoteip $remoteuser $remotepasswd; then
+            if SSH_CMD "echo '' > /dev/null 2>&1" $remoteip $remotepasswd $remoteuser; then
                 return 0
             else
                 SLEEP_WAIT 10
