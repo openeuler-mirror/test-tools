@@ -201,6 +201,8 @@ function main() {
         pre_test
     fi
 
-    run_test && CASE_RESULT
+    run_test
+    
+    CASE_RESULT
     test $? -eq 0 || exit 1
 }
