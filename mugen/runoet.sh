@@ -28,6 +28,7 @@ function usage() {
     -f：designated test suite\n
     -r：designated test case\n
     -x：the shell script is executed in debug mode\n
+    -C: the mapping in suite2case does not need to be checked.
     \n
     Example: bash runoet.sh -f test_suite -r test_case -x\n"
 }
@@ -86,10 +87,12 @@ function run_test_case() {
     test_suite=$1
     test_case=$2
 
-    LOG_INFO "start to run testcase:${test_case}"
-
     log_path=${OET_PATH}/logs/${test_suite}/${test_case}
     mkdir -p ${log_path}
+
+    [ "$isCheck"x == "yes"x ] && check_case $test_suite $test_case
+
+    LOG_INFO "start to run testcase:${test_case}"
 
     exec 6>&1
     exec 7>&2
@@ -97,33 +100,8 @@ function run_test_case() {
 
     ((case_num++))
 
-    if ! find ${OET_PATH}/suite2cases -type f -name ${test_suite} >/dev/null 2>&1; then
-        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
-        end_test_case 1
-        return 1
-    elif ! find ${OET_PATH}/testcases -type d -name ${test_suite} >/dev/null 2>&1; then
-        LOG_ERROR "Can't find the dir of testsuite:${test_suite}."
-        end_test_case 1
-        return 1
-    fi
-
-    if ! grep -w ${test_case} ${OET_PATH}/suite2cases/${test_suite} >/dev/null 2>&1; then
-        LOG_ERROR "In the suite2cases directory, no testcase:${test_case} is found inside the ${test_suite} file."
-        end_test_case 1
-        return 1
-    elif ! find ${OET_PATH}/testcases -type d -name ${test_suite} >/dev/null 2>&1; then
-        LOG_ERROR "Can't find the dir of testcase:${test_case}."
-        end_test_case 1
-        return 1
-    elif ! find ${OET_PATH}/testcases/${test_suite} -type f -name "${test_case}*" >/dev/null 2>&1; then
-        LOG_ERROR "Can't find the script of testcase:${test_case}."
-        end_test_case 1
-        return 1
-    fi
-
-    case_path=$(find ${OET_PATH}/testcases/${test_suite} -type f -name "${test_case}*" | sed -e "s/${test_case}\..*//g")
+    case_path=$(find ${OET_PATH}/testcases/${test_suite} -type f -name "${test_case}\.*" | sed -e "s/${test_case}\..*//g")
     cd ${case_path} || exit 1
-
     script_type=$(ls ${test_case}* | awk -F '.' '{print $NF}')
 
     if [[ "$script_type"x == "sh"x ]] || [[ "$script_type"x == "bash"x ]]; then
@@ -151,6 +129,40 @@ function run_test_case() {
     }
     test $case_result != 0 && {
         end_test_case ${case_result}
+    }
+}
+
+function check_case() {
+    test_suite=$1
+    test_case=$2
+
+    case_path=$(find ${OET_PATH}/testcases/${test_suite} -type f -name "${test_case}\.*" | sed -e "s/${test_case}\..*//g")
+
+    LOG_INFO "start to check testcase:${test_case}"
+
+    test -d ${OET_PATH}/testcases/${test_suite} || {
+        LOG_ERROR "Can't find the dir of testsuite:${test_suite}."
+        end_test_case 1
+        return 1
+    }
+
+    test -f ${OET_PATH}/suite2cases/${test_suite} || {
+        LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
+        end_test_case 1
+        return 1
+    }
+
+    if echo "$@" | grep -e '-C' >/dev/null 2>&1; then
+        if ! grep -w ${test_case} ${OET_PATH}/suite2cases/${test_suite} >/dev/null 2>&1; then
+            LOG_ERROR "In the suite2cases directory, no testcase:${test_case} is found inside the ${test_suite} file."
+            end_test_case 1
+            return 1
+        fi
+    fi
+
+    test -f ${case_path}/${test_case}\.* || {
+        LOG_ERROR "Can't find testcase. please check whether the case name is correct."
+        exit 1
     }
 }
 
@@ -185,8 +197,9 @@ function run_test() {
 }
 
 export command_x="no"
-while getopts ":xachr:f:" arg; do
-    case $arg in
+export isCheck="yes"
+while getopts ":caxf:Cr:h" opt; do
+    case $opt in
     x)
         command_x="yes"
         ;;
@@ -209,6 +222,9 @@ while getopts ":xachr:f:" arg; do
             usage
             exit 1
         }
+        ;;
+    C)
+        isCheck="no"
         ;;
     h)
         usage

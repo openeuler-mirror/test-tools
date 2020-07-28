@@ -136,11 +136,13 @@ function CHECK_RESULT() {
 }
 
 function CASE_RESULT() {
+    test $1 -ne 0 && ret_c=1
+
     [[ -z $exec_result ]] && {
         LOG_INFO "The case execute succeed."
         exec_result=0
         all_result=0
-        return 0
+        return $ret_c
     }
 
     for ret in "${all_result[@]}"; do
@@ -148,7 +150,7 @@ function CASE_RESULT() {
     done
     exec_result=0
     all_result=0
-    return 1
+    return $ret
 }
 
 function SSH_CMD() {
@@ -202,7 +204,6 @@ function main() {
     fi
 
     run_test
-    
-    CASE_RESULT
+    CASE_RESULT $?
     test $? -eq 0 || exit 1
 }
