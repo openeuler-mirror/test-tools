@@ -177,19 +177,32 @@ function SSH_SCP() {
     return $ret
 }
 
+function POST_TEST_DEFAULT()
+{
+    LOG_INFO "$0 post_test"
+}
+
 function main() {
-    trap post_test EXIT INT TERM
+    if [ -n "$(type -t post_test)" ];then
+        trap post_test EXIT INT TERM
+    else
+        trap POST_TEST_DEFAULT EXIT INT TERM
+    fi
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
         dnf install expect -y
     fi
 
-    config_params
+    if [ -n "$(type -t config_params)" ];then
+        config_params
+    fi
 
-    pre_test
+    if [ -n "$(type -t pre_test)" ];then
+        pre_test
+    fi
 
     run_test
-
+    
     CASE_RESULT
     test $? -eq 0 || exit 1
 }
