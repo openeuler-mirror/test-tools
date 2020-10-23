@@ -17,11 +17,11 @@
 #####################################
 
 function LOG_INFO() {
-    printf "$(date +%Y-%m-%d\ %T)  $0  [ INFO ]  %s\n" "$@"
+    printf "$(date +%Y-%m-%d\ %T)  $0  [ INFO  ]  %s\n" "$@"
 }
 
 function LOG_WARN() {
-    printf "$(date +%Y-%m-%d\ %T)  $0  [ WARN ]  %s\n" "$@"
+    printf "$(date +%Y-%m-%d\ %T)  $0  [ WARN  ]  %s\n" "$@"
 }
 
 function LOG_ERROR() {
@@ -35,7 +35,8 @@ function DNF_INSTALL() {
         exit 1
     fi
     reponames=$(grep '^\[.*\]' /etc/yum.repos.d/*.repo | tr -d [] | sed -e ':a;N;$!ba;s/\n/ /g')
-    mapfile -t __install_pkgs < <(dnf -y install ${__pkg_list[*]} | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}')
+    mapfile -t __install_pkgs < <(dnf --assumeno install ${__pkg_list[*]} 2>&1 | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}')
+    dnf -y install ${__pkg_list[*]}
 
     if ! dnf -y install ${__pkg_list[*]}; then
         LOG_ERROR "pkg_list:${__pkg_list[*]} install failed."
@@ -81,9 +82,9 @@ function SLEEP_WAIT() {
 }
 
 function REMOTE_REBOOT_WAIT() {
-    remoteuser=$1
+    remoteip=$1
     remotepasswd=$2
-    remoteip=$3
+    remoteuser=$3
     count=0
 
     if [[ "$(dmidecode -s system-product-name)" =~ "KVM" ]]; then
@@ -122,35 +123,36 @@ function CHECK_RESULT() {
 
     if [ $mode -eq 0 ]; then
         test "$actual_result"x != "$expect_result"x && {
-            LOG_ERROR "$error_log"
+            test -n "$error_log" && LOG_ERROR "$error_log"
             ((exec_result++))
-            all_result="$all_result $exec_result"
         }
     else
         test "$actual_result"x == "$expect_result"x && {
-            LOG_ERROR "$error_log"
+            test -n "$error_log" && LOG_ERROR "$error_log"
             ((exec_result++))
-            all_result="$all_result $exec_result"
         }
     fi
 }
 
 function CASE_RESULT() {
-    test $1 -ne 0 && ret_c=1
+    case_re=$1
 
-    [[ -z $exec_result ]] && {
-        LOG_INFO "The case execute succeed."
-        exec_result=0
-        all_result=0
-        return $ret_c
+    test -z "$exec_result" && {
+        test $case_re -eq 0 && {
+            LOG_INFO "succeed to execute the case."
+            exec_result=""
+            exit 0
+        }
+        LOG_ERROR "failed to execute the case."
+        exit $case_re
     }
 
-    for ret in "${all_result[@]}"; do
-        LOG_ERROR "Test point $ret: execute failed."
-    done
-    exec_result=0
-    all_result=0
-    return $ret
+    test $exec_result -gt 0 && {
+        LOG_ERROR "failed to execute the case."
+        exit $exec_result
+    }
+    LOG_INFO "succeed to execute the case."
+    exit $exec_result
 }
 
 function SSH_CMD() {
@@ -179,31 +181,31 @@ function SSH_SCP() {
     return $ret
 }
 
-function POST_TEST_DEFAULT()
-{
+function POST_TEST_DEFAULT() {
     LOG_INFO "$0 post_test"
 }
 
 function main() {
-    if [ -n "$(type -t post_test)" ];then
+    if [ -n "$(type -t post_test)" ]; then
         trap post_test EXIT INT TERM
     else
         trap POST_TEST_DEFAULT EXIT INT TERM
     fi
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
-        dnf install expect -y
+        dnf -y install expect
     fi
 
-    if [ -n "$(type -t config_params)" ];then
+    if [ -n "$(type -t config_params)" ]; then
         config_params
     fi
 
-    if [ -n "$(type -t pre_test)" ];then
+    if [ -n "$(type -t pre_test)" ]; then
         pre_test
     fi
 
-    run_test
-    CASE_RESULT $?
-    test $? -eq 0 || exit 1
+    if [ -n "$(type -t run_test)" ]; then
+        run_test
+        CASE_RESULT $?
+    fi
 }
