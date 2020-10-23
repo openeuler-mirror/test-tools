@@ -245,8 +245,8 @@ function load_conf() {
 
     for id in $(seq 1 $node_num); do
         while IFS='' read -r var; do
-            $var
-        done < <(grep -iw "node=$id" "$conf_file" | sed 's/,/\n/g' | sed "/node=/d;s/^/export NODE${id}_/g")
+            export $var
+        done < <(grep -iw "node=$id" "$conf_file" | sed 's/,/\n/g' | sed "/node=/d;s/^/NODE${id}_/g")
     done
 }
 
