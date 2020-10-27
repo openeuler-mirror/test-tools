@@ -133,6 +133,8 @@ function CHECK_RESULT() {
             all_result="$all_result $exec_result"
         }
     fi
+
+    return 0
 }
 
 function CASE_RESULT() {
