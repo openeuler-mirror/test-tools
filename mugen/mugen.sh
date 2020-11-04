@@ -2,7 +2,7 @@
 # @Author: Your name
 # @Date:   2020-10-16 06:42:44
 # @Last Modified by:   Your name
-# @Last Modified time: 2020-11-04 01:40:23
+# @Last Modified time: 2020-11-04 03:52:19
 
 export OET_PATH=$(
     cd "$(dirname "$0")" || exit 1
@@ -18,6 +18,7 @@ export fail_num=0
 export isCheck=yes
 export command_x=no
 export conf_file="/etc/mugen/env.conf"
+export cases_url="https://gitee.com/openeuler/integration-test.git"
 if [ ! -d "/etc/mugen" ]; then
     export conf_file="${OET_PATH}/conf/env.conf"
     mkdir -p ${OET_PATH}/conf
@@ -92,6 +93,13 @@ function deploy_conf() {
     echo -e "\n$conf" >>"$conf_file"
     dos2unix "$conf_file" >/dev/nul 2>&1
 
+}
+
+function download_testcases() {
+    tmpdir=$(mktemp -d)
+    git clone "$cases_url" "$tmpdir"
+    cp "$tmpdir"/* "$OET_PATH" -r
+    rm -rf "$tmpdir"
 }
 
 function process() {
@@ -279,10 +287,10 @@ if ! rpm -qa | grep expect >/dev/null 2>&1; then
     DNF_INSTALL expect dos2unix
 fi
 
-while getopts ":caxf:Cr:h" option; do
+while getopts ":xdcaf:Cr:h" option; do
     case $option in
     x)
-        command_x="yes"
+        export command_x="yes"
         ;;
     a)
         pre_run run_all_cases
@@ -293,7 +301,7 @@ while getopts ":caxf:Cr:h" option; do
             usage
             exit 1
         }
-        echo "$@" | grep -e '-r' >/dev/null 2>&1 || {
+        echo "$@" | grep -e '-r\|-Cr' >/dev/null 2>&1 || {
             pre_run "run_test_suite $test_suite"
         }
         ;;
@@ -311,6 +319,9 @@ while getopts ":caxf:Cr:h" option; do
     c)
         deploy_conf "$@"
         ;;
+    d)
+        download_testcases
+        ;;
     h)
         usage
         ;;
@@ -319,3 +330,4 @@ while getopts ":caxf:Cr:h" option; do
         ;;
     esac
 done
+
