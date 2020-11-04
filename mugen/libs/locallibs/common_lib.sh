@@ -186,6 +186,8 @@ function POST_TEST_DEFAULT() {
 }
 
 function main() {
+    share_arg
+
     if [ -n "$(type -t post_test)" ]; then
         trap post_test EXIT INT TERM
     else

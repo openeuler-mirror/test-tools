@@ -2,7 +2,7 @@
 # @Author: Your name
 # @Date:   2020-10-16 06:42:44
 # @Last Modified by:   Your name
-# @Last Modified time: 2020-10-23 03:33:48
+# @Last Modified time: 2020-11-04 01:40:23
 
 export OET_PATH=$(
     cd "$(dirname "$0")" || exit 1
@@ -55,11 +55,11 @@ function deploy_conf() {
     fi
     ((node_num++))
 
-    conf=$(SSH_CMD "
     localtion=local
-    ip addr show | grep $1 >/dev/nul || localtion=remote
+    ip addr show | grep $ipaddr >/dev/nul || localtion=remote
 
-    nics=(\$(ls /sys/class/net | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*' | sed 's/ $//g'))
+    conf=$(SSH_CMD "
+    nics=(\$(ls /sys/class/net | grep -Ewv 'lo.*|docker.*|bond.*|vlan.*|virbr.*|br.*|vnet.*' | sed 's/ $//g'))
     for nic in \${nics\[*\]}; do
         mac+=(\$(cat /sys/class/net/\${nic}/address))
 
@@ -69,11 +69,12 @@ function deploy_conf() {
     done
 
     machines=virtual
-    dmesg | grep virtual >/dev/null || { machines=physical; }
+    dnf -y install pciutils
+    lspci | grep QEMU >/dev/nul || machines=physical
 
     frame=$(uname -m)
 
-    result=NODE=$node_num,LOCALTION=\$localtion,USER=$user,PASSWORD=$password,MACHINE=\$machines,FRAME=\$frame,NICS='\('\${nics\[@\]}'\)',MAC='\('\${mac\[*\]}'\)',IPV4='\('\${ipv4\[*\]}'\)',IPV6='\('\${ipv6\[*\]}'\)'
+    result=NODE=$node_num,LOCALTION=$localtion,USER=$user,PASSWORD=$password,MACHINE=\$machines,FRAME=\$frame,NICS='\('\${nics\[@\]}'\)',MAC='\('\${mac\[*\]}'\)',IPV4='\('\${ipv4\[*\]}'\)',IPV6='\('\${ipv6\[*\]}'\)'
 
     test \$machines == physical && {
         dnf install ipmitool -y >/dev/null
@@ -84,7 +85,13 @@ function deploy_conf() {
     echo -e \$result
     " "$ipaddr" "$password" "$user" | tail -n 1)
 
+    echo "$conf" | grep ERROR >/dev/nul && {
+        LOG_ERROR "Failed in remote CMD operation:1"
+        exit 1
+    }
     echo -e "\n$conf" >>"$conf_file"
+    dos2unix "$conf_file" >/dev/nul 2>&1
+
 }
 
 function process() {
@@ -136,7 +143,7 @@ function run_test_case() {
         LOG_ERROR "Parameter(test suite or test case) loss."
         exit 1
     fi
-    
+
     [ "$isCheck"x == "yes"x ] && {
         [ -z "$(find "$OET_PATH"/suite2cases -name "$test_suite")" ] && {
             LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
@@ -164,13 +171,13 @@ function run_test_case() {
                 break
             fi
         done
-        
+
         [ ${#case_path[@]} -eq 0 ] && {
             LOG_ERROR "No test cases found under the test suite:${test_suite}."
             return 1
         }
     fi
-    
+
     log_path=${OET_PATH}/logs/${test_suite}/${test_case}
     mkdir -p ${log_path}
 
@@ -178,11 +185,11 @@ function run_test_case() {
 
     pushd "${case_path[*]}" >/dev/null || return 1
 
-    execute_t=$(grep -w --fixed-strings EXECUTE_T oe_test_casename_01.sh 2>/dev/nul  | awk -F '=' '{print $NF}')
+    execute_t=$(grep -w --fixed-strings EXECUTE_T ${test_case}.* 2>/dev/nul | awk -F '=' '{print $NF}')
     test -n "$execute_t" && EXECUTE_T=$execute_t
-    
+
     script_type=$(ls ${test_case}.* | awk -F '.' '{print $NF}')
-    
+
     if [[ "$script_type"x == "sh"x ]] || [[ "$script_type"x == "bash"x ]]; then
         if [ "$command_x"x == "yes"x ]; then
             process "bash -x ${test_case}.sh"
@@ -243,11 +250,22 @@ function load_conf() {
 
     node_num=$(grep -ci 'node=' "$conf_file")
 
+    tmp=$(mktemp)
+    echo -e "function share_arg() {" >"$tmp"
     for id in $(seq 1 $node_num); do
-        while IFS='' read -r var; do
-            export $var
+        while IFS="" read -r var; do
+            if echo "$var" | grep '(' >/dev/nul; then
+                echo -e "$var" >>"$tmp"
+            else
+                declare -g -x ${var}
+            fi
         done < <(grep -iw "node=$id" "$conf_file" | sed 's/,/\n/g' | sed "/node=/d;s/^/NODE${id}_/g")
     done
+    echo -e "}" >>"$tmp"
+    if grep '=(' "$tmp" >/dev/nul; then
+        source "$tmp"
+        export -f share_arg
+    fi
 }
 
 function pre_run() {
@@ -258,7 +276,7 @@ function pre_run() {
 }
 
 if ! rpm -qa | grep expect >/dev/null 2>&1; then
-    DNF_INSTALL expect
+    DNF_INSTALL expect dos2unix
 fi
 
 while getopts ":caxf:Cr:h" option; do
