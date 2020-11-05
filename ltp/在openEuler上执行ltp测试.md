@@ -17,7 +17,7 @@ yum -y install gcc git make pkgconf autoconf automake bison flex m4 kernel-heade
 ```
 
 ```shell
-yum -y install autoconf automake make clang gcc findutils libtirpc libtirpc-devel pkg-config redhat-lsb-core
+yum -y install clang findutils libtirpc libtirpc-devel pkg-config openeuler-lsb
 ```
 
 
@@ -50,6 +50,11 @@ cd /opt/ltp
 - 测试结果默认存放在ltp/results下
 - 测试日志默认存放在ltp/output下
 
+
+### 6.FAQ
+
+- 存在部分用例无法执行通过，系环境原因，非内核问题
+- 用例执行速度与硬件性能有关
 
 
 详细指导请阅读[官方文档](https://github.com/linux-test-project/ltp/blob/master/README.md)
