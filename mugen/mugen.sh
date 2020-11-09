@@ -295,8 +295,8 @@ function pre_run() {
     case_count
 }
 
-if ! rpm -qa | grep expect >/dev/null 2>&1; then
-    DNF_INSTALL expect dos2unix
+if ! rpm -qa | grep '^expect' >/dev/null 2>&1; then
+    yum -y install expect dos2unix >/dev/nul
 fi
 
 while getopts ":xdcaf:Cr:h" option; do
