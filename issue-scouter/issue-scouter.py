@@ -21,7 +21,7 @@
 
 
 from lxml import etree
-import urllib
+import urllib.request
 import logging
 import time
 import pandas
