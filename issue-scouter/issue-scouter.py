@@ -27,7 +27,7 @@ import os
 import yaml
 
 
-class issueScouter(object):
+class IssueScouter(object):
     """
     从github上,爬去自己关注的仓库的相关issue.
     Args:
