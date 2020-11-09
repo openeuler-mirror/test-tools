@@ -1,0 +1,15 @@
+# rbc.yaml
+platform: 
+  name: github
+  url: https://github.com/
+issue:
+  status: open
+object:
+  - account: gawel
+    repository: pyquery
+
+  - account: GNOME
+    repository: libxslt
+
+  - account: scipy
+    repository: scipy
