@@ -13,7 +13,7 @@ import logging, time, pandas, os, yaml
 
 
 class crawl_issue(object):
-    def __init__(self, account, repository, platform_url) -> None:
+    def __init__(self, account, repository, platform_url):
         self.account = account
         self.repository = repository
         self.platform_url = platform_url
@@ -170,7 +170,7 @@ class crawl_issue(object):
 
 
 if __name__ == "__main__":
-    with open(os.path.split(os.path.realpath(__file__))[0] + "/rbc.yaml", "r") as f:
+    with open(os.path.split(os.path.realpath(__file__))[0] + "/issue-scouter.yaml", "r") as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
 
     platform_url = data.get("platform").get("url")
