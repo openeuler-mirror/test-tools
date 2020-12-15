@@ -1,15 +1,22 @@
-# rbc.yaml
-platform: 
-  name: github
-  url: https://github.com/
+# issue-scouter.yaml
 issue:
-  status: open
-object:
-  - account: gawel
-    repository: pyquery
+    status: open
+platforms: 
+  - platform:
+      name: github
+      url: https://github.com/
+      object:
+        - account: gawel
+          repository: pyquery
+          
+        - account: GNOME
+          repository: libxslt
 
-  - account: GNOME
-    repository: libxslt
-
-  - account: scipy
-    repository: scipy
+        - account: scipy
+          repository: scipy 
+  - platform:
+      name: gitlab
+      url: https://gitlab.com/
+      object:
+        - account: CalcProgrammer1
+          repository: OpenRGB

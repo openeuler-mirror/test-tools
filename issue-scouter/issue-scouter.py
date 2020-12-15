@@ -23,6 +23,7 @@
 from lxml import etree
 import urllib.request
 import logging
+import re
 import time
 import pandas
 import os
@@ -31,44 +32,78 @@ import yaml
 
 class IssueScouter(object):
     """
-    从github上,爬去自己关注的仓库的相关issue.
+    从github上,爬取自己关注的仓库的相关issue.
     Args:
         object ([type]): [account, repository, platform_url]
     """
 
-    def __init__(self, account, repository, platform_url):
+    def __init__(self, platform, account, repository, platform_url, status):
+        self.platform = platform
         self.account = account
         self.repository = repository
         self.platform_url = platform_url
-        self.issues_url = (
-            self.platform_url + self.account + "/" + self.repository + "/" + "issues"
-        )
+        self.status = status
+        if self.platform == "github":
+            self.issues_url = (
+                self.platform_url
+                + self.account
+                + "/"
+                + self.repository
+                + "/"
+                + "issues"
+            )
+        elif self.platform == "gitlab":
+            self.issues_url = (
+                self.platform_url
+                + self.account
+                + "/"
+                + self.repository
+                + "/-/"
+                + "issues"
+            )
+        else:
+            logging.error(
+                "Currently, only the gitHub and gitLab platforms are supported."
+            )
+            exit(1)
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0"
+        }
         logging.basicConfig(
             level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
         )
 
     def check_url(self):
         """
-        docstring
+        检测github的用户和仓库名是否正确
         """
-        with urllib.request.urlopen(self.platform_url) as url:
-            if url.status is not 200:
+        with urllib.request.urlopen(
+            urllib.request.Request(url=self.platform_url, headers=self.headers)
+        ) as url:
+            if url.status != 200:
                 logging.error(
-                    "Unable to connect to the github website, please check your network."
-                )
-                exit(1)
-
-        with urllib.request.urlopen(self.platform_url + self.account) as url:
-            if url.status is not 200:
-                logging.error(
-                    "The user(" + self.account + ") can't be found on github."
+                    "Unable to connect to the platform website, please check your network."
                 )
                 exit(1)
 
         with urllib.request.urlopen(
-            self.platform_url + self.account + "/" + self.repository
+            urllib.request.Request(
+                url=self.platform_url + self.account, headers=self.headers
+            )
         ) as url:
-            if url.status is not 200:
+            if url.status != 200:
+                logging.error(
+                    "The user(" + self.account + ") can't be found on platform."
+                )
+                exit(1)
+
+        with urllib.request.urlopen(
+            urllib.request.Request(
+                url=self.platform_url + self.account + "/" + self.repository,
+                headers=self.headers,
+            )
+        ) as url:
+            if url.status != 200:
                 logging.error(
                     "Under the user("
                     + self.account
@@ -78,11 +113,9 @@ class IssueScouter(object):
                 )
                 exit(1)
 
-    def crawl_issues_id(self, issue_status):
+    def crawl_issues_id(self):
         """
         从自己关注的仓库地址中获取issue的id
-        Args:
-            issue_status (str): [issue状态]
 
         Returns:
             [list]: [返回issue的id集合]
@@ -90,22 +123,33 @@ class IssueScouter(object):
         issues_id = []
 
         with urllib.request.urlopen(
-            self.platform_url + self.account + "/" + self.repository + "/" + "issues"
+            urllib.request.Request(url=self.issues_url, headers=self.headers)
         ) as req:
-            if req.status is not 200:
+            if req.status != 200:
                 logging.error("Need to confirm whether the repository has issue.")
                 exit(1)
             html = etree.HTML(req.read().decode())
-            total_pages = html.xpath(
-                '//*[@id="js-repo-pjax-container"]//em[@class="current"]/@data-total-pages'
-            )
+            if self.platform == "github":
+                total_pages = html.xpath(
+                    '//*[@id="js-repo-pjax-container"]//em[@class="current"]/@data-total-pages'
+                )
 
-            issues_num = html.xpath(
-                '//*[@id="js-issues-toolbar"]//a[@class="btn-link selected"]'
-            )
+                issues_num = html.xpath(
+                    '//*[@id="js-issues-toolbar"]//a[@class="btn-link selected"]'
+                )
+            elif self.platform == "gitlab":
+                total_pages = html.xpath(
+                    '//*[@id="content-body"]//li[@class="d-none d-md-block js-last-button js-pagination-page page-item"]/a/text()'
+                )
+                issues_num = html.xpath('//*[@id="state-opened"]/span[2]/text()')
+            else:
+                logging.error(
+                    "Currently, only the gitHub and gitLab platforms are supported."
+                )
+                exit(1)
 
-        if len(total_pages) is 0:
-            if len(issues_num) is 0:
+        if len(total_pages) == 0:
+            if len(issues_num) == 0:
                 logging.info(
                     "No issue issued under the repository(%s)." % self.repository
                 )
@@ -113,22 +157,49 @@ class IssueScouter(object):
             total_pages = "1"
 
         for page in range(1, int(total_pages[0]) + 1):
-            page_url = (
-                self.issues_url
-                + "?page="
-                + str(page)
-                + "&q=is%3A"
-                + issue_status
-                + "+is%3Aissue"
+            if self.platform == "github":
+                page_url = (
+                    self.issues_url
+                    + "?page="
+                    + str(page)
+                    + "&q=is%3A"
+                    + self.status
+                    + "+is%3Aissue"
+                )
+            elif self.platform == "gitlab":
+                page_url = (
+                    self.issues_url
+                    + "?page="
+                    + str(page)
+                    + "&scope=all&state="
+                    + issue_status
+                )
+            else:
+                logging.error(
+                    "Currently, only the gitHub and gitLab platforms are supported."
+                )
+                exit(1)
+
+            page_req = urllib.request.urlopen(
+                urllib.request.Request(url=page_url, headers=self.headers)
             )
-            page_req = urllib.request.urlopen(page_url)
             page_html = etree.HTML(page_req.read().decode())
-            page_issue_id = page_html.xpath(
-                '//*[@id="js-repo-pjax-container"]//div[@aria-label="Issues"]//div/@id'
-            )
+            if self.platform == "github":
+                page_issue_id = page_html.xpath(
+                    '//*[@id="js-repo-pjax-container"]//div[@aria-label="Issues"]//div/@id'
+                )
+            elif self.platform == "gitlab":
+                page_issue_id = page_html.xpath(
+                    '//*[@class="issues-holder"]//span[@class="issuable-reference"]/text()'
+                )
+            else:
+                logging.error(
+                    "Currently, only the gitHub and gitLab platforms are supported."
+                )
+                exit(1)
 
             for issue_id in page_issue_id:
-                issues_id.append(issue_id.rsplit("_", 1)[1])
+                issues_id.append(re.sub("[a-z_\n#]", "", issue_id))
 
         return issues_id
 
@@ -155,31 +226,54 @@ class IssueScouter(object):
 
             issue_info = [self.account, self.repository, issue_id]
             issue_url = self.issues_url + "/" + issue_id
-            issue_req = urllib.request.urlopen(issue_url)
+            issue_req = urllib.request.urlopen(
+                urllib.request.Request(url=issue_url, headers=self.headers)
+            )
             issue_html = etree.HTML(issue_req.read().decode())
 
-            issue_title = (
-                issue_html.xpath(
-                    '//*[@id="partial-discussion-header"]//h1/span[@class="js-issue-title"]/text()'
-                )[0]
-                .replace("\n", "")
-                .strip()
-            )
+            if self.platform == "github":
+                issue_title = (
+                    issue_html.xpath(
+                        '//*[@id="partial-discussion-header"]//h1/span[@class="js-issue-title"]/text()'
+                    )[0]
+                    .replace("\n", "")
+                    .strip()
+                )
 
-            issue_descs = issue_html.xpath(
-                '//div[@class="js-quote-selection-container"]/div/div[1]//div[@class="edit-comment-hide"]//td//*/text()'
-            )
-            issue_desc = ""
-            for desc in issue_descs:
-                issue_desc += desc
+                issue_descs = issue_html.xpath(
+                    '//div[@class="js-quote-selection-container"]/div/div[1]//div[@class="edit-comment-hide"]//td//*/text()'
+                )
+                issue_desc = ""
+                for desc in issue_descs:
+                    issue_desc += desc
 
-            issue_create_time = (
-                issue_html.xpath(
-                    '//*[@id="partial-discussion-header"]//relative-time/@datetime'
+                issue_create_time = (
+                    issue_html.xpath(
+                        '//*[@id="partial-discussion-header"]//relative-time/@datetime'
+                    )[0]
+                    .replace("\n", "")
+                    .strip()
+                )
+            elif self.platform == "gitlab":
+                issue_title = issue_html.xpath(
+                    '//*[@class="title-container"]/h2[@class="title"]/text()'
                 )[0]
-                .replace("\n", "")
-                .strip()
-            )
+
+                issue_descs = issue_html.xpath(
+                    '//*[@class="description"]/div[@class="md"]//*/text()'
+                )
+                issue_desc = ""
+                for desc in issue_descs:
+                    issue_desc += desc
+
+                issue_create_time = issue_html.xpath(
+                    '//*[@id="content-body"]//div[@class="issuable-meta"]/time/@datetime'
+                )[0]
+            else:
+                logging.error(
+                    "Currently, only the gitHub and gitLab platforms are supported."
+                )
+                exit(1)
 
             account_list.append(issue_info[0])
             repository_list.append(issue_info[1])
@@ -188,7 +282,7 @@ class IssueScouter(object):
             title_list.append(issue_title)
             desc_list.append(issue_desc)
             time_list.append(issue_create_time)
-            status_list.append(issue_status)
+            status_list.append(self.status)
             url_list.append(issue_url)
 
         data = {
@@ -212,18 +306,23 @@ if __name__ == "__main__":
     ) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
 
-    platform_url = data.get("platform").get("url")
     issue_status = data.get("issue").get("status")
 
-    for obj in data.get("object"):
-        account = obj.get("account")
-        repository = obj.get("repository")
+    for platform in data.get("platforms"):
+        platform_name = platform.get("platform").get("name")
+        platform_url = platform.get("platform").get("url")
 
-        issues = IssueScouter(account, repository, platform_url)
+        for obj in platform.get("platform").get("object"):
+            account = obj.get("account")
+            repository = obj.get("repository")
 
-        issues.check_url()
+            issues = IssueScouter(
+                platform_name, account, repository, platform_url, issue_status
+            )
 
-        issues_id = issues.crawl_issues_id(issue_status)
+            issues.check_url()
 
-        if len(issues_id) is not 0:
-            issues.crawl_issues_info(issues_id)
+            issues_id = issues.crawl_issues_id()
+
+            if len(issues_id) != 0:
+                issues.crawl_issues_info(issues_id)
