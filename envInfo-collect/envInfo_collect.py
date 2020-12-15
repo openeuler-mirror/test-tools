@@ -138,19 +138,7 @@ def cpu_info():
     return ENV_INFO
 
 
-class ioInfo:
-    """
-    获取环境io信息
-    """
-
-    def net_io():
-        pass  # TODO
-
-    def disk_io():
-        pass  # TODO
-
-
-class netInfo:
+class NetInfo(object):
     """
     获取环境网络基本信息
     """
@@ -353,17 +341,25 @@ class netInfo:
         )
 
     def nic_info(nic):
+        """获取网卡相关所有信息
+
+        Args:
+            nic (string): 网卡名称
+
+        Returns:
+            [dict]: 网卡信息
+        """        
         nic_info = {}
         nic_info["name"] = nic
-        nic_info["mac"] = netInfo.mac(nic)
-        nic_info["status"] = netInfo.status(nic)
-        nic_info["mtu"] = netInfo.mtu(nic)
-        nic_info["driver"] = netInfo.driver(nic)
-        nic_info["brigde"] = netInfo.brigde(nic)
-        nic_info["v4 ip"] = netInfo.v4_ip(nic)
-        nic_info["v6 ip"] = netInfo.v6_ip(nic)
-        nic_info["Auto-negotiation"] = netInfo.auto_negotiation(nic)
-        nic_info["Link detected"] = netInfo.link_detected(nic)
+        nic_info["mac"] = NetInfo.mac(nic)
+        nic_info["status"] = NetInfo.status(nic)
+        nic_info["mtu"] = NetInfo.mtu(nic)
+        nic_info["driver"] = NetInfo.driver(nic)
+        nic_info["brigde"] = NetInfo.brigde(nic)
+        nic_info["v4 ip"] = NetInfo.v4_ip(nic)
+        nic_info["v6 ip"] = NetInfo.v6_ip(nic)
+        nic_info["Auto-negotiation"] = NetInfo.auto_negotiation(nic)
+        nic_info["Link detected"] = NetInfo.link_detected(nic)
 
         try:
             ENV_INFO["net info"]
@@ -384,7 +380,7 @@ class netInfo:
         ENV_INFO["net info"] = {}
         ENV_INFO["net info"]["nic"] = []
         for nic in subprocess.getoutput("ls /sys/class/net/").split("\n"):
-            netInfo.nic_info(nic)
+            NetInfo.nic_info(nic)
 
         return ENV_INFO
 
@@ -490,6 +486,8 @@ def process_info():
 
 
 def collect_log():
+    """收集message日志
+    """    
     exitcode, output = subprocess.getstatusoutput(
         "log_dir=$(mktemp -d) && cp /var/log/message* ${log_dir} -fr && dmesg > ${log_dir}/kmesg && tar -zcvf "
         + os.getcwd()
@@ -514,6 +512,11 @@ def write_yaml(info):
 
 
 def install_rpm(rpm):
+    """安装环境信息收集需要的rpm软件包
+
+    Args:
+        rpm (string): 软件包名
+    """    
     exitcode, output = subprocess.getstatusoutput(
         "rpm -qa " + rpm + "&& yum -y install " + rpm
     )
@@ -529,7 +532,7 @@ if __name__ == "__main__":
     basic_info()
     mem_info()
     cpu_info()
-    netInfo.all_nic_info()
+    NetInfo.all_nic_info()
     disk_info()
     service_info()
     process_info()
