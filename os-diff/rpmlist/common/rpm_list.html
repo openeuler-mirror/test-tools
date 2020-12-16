@@ -1,0 +1,479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="keywords" content="cmd_object, compatibility, verdifftest, report" />
+    <meta name="description" content="List difference" />
+    <title>List difference</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            background-color: White;
+            color: Black;
+        }
+
+        hr {
+            color: Black;
+            background-color: Black;
+            height: 1px;
+            border: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+            font-size: 1.625em;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: #336699;
+            border: #336699 solid thin;
+        }
+
+        h2 {
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+            font-size: 1.25em;
+            white-space: nowrap;
+        }
+
+        span.section {
+            font-weight: bold;
+            cursor: pointer;
+            color: #003E69;
+            white-space: nowrap;
+            margin-left: 0.3125em;
+        }
+
+        span.new_sign {
+            font-weight: bold;
+            margin-left: 1.65em;
+            color: #003E69;
+        }
+
+        span.new_sign_lbl {
+            margin-left: 3em;
+            font-size: 1em;
+            color: Black;
+        }
+
+        span:hover.section {
+            color: #336699;
+        }
+
+        span.sect_aff {
+            cursor: pointer;
+            padding-left: 1.55em;
+            font-size: 0.875em;
+            color: #cc3300;
+        }
+
+        span.sect_info {
+            cursor: pointer;
+            padding-left: 1.55em;
+            font-size: 0.875em;
+            color: Black;
+        }
+
+        span.ext {
+            font-weight: normal;
+        }
+
+        span.h_name {
+            color: #cc3300;
+            font-size: 0.875em;
+            font-weight: bold;
+        }
+
+        div.h_list,
+        div.lib_list {
+            font-size: 0.94em;
+            padding-left: 0.4em;
+        }
+
+        span.ns {
+            color: #408080;
+            font-size: 0.94em;
+        }
+
+        span.lib_name {
+            color: Green;
+            font-size: 0.875em;
+            font-weight: bold;
+        }
+
+        span.iname {
+            font-weight: bold;
+            color: #003E69;
+            margin-left: 0.3125em;
+        }
+
+        span.iname_b {
+            font-weight: bold;
+        }
+
+        span.iname_a {
+            color: #333333;
+            font-weight: bold;
+            font-size: 0.94em;
+        }
+
+        span.sym_p {
+            font-weight: normal;
+            white-space: normal;
+        }
+
+        span.sym_pd {
+            white-space: normal;
+        }
+
+        span.sym_p span,
+        span.sym_pd span {
+            white-space: nowrap;
+        }
+
+        div.affect {
+            padding-left: 1em;
+            padding-bottom: 10px;
+            font-size: 0.87em;
+            font-style: italic;
+            line-height: 0.9em;
+        }
+
+        div.affected {
+            padding-left: 1.9em;
+            padding-top: 10px;
+        }
+
+        table.ptable {
+            border-collapse: collapse;
+            border: 1px outset black;
+            margin-left: 0.95em;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            width: 56.25em;
+        }
+
+        table.ptable td {
+            border: 1px solid gray;
+            padding: 3px;
+            font-size: 0.875em;
+            text-align: left;
+            vertical-align: top;
+            max-width: 28em;
+            word-wrap: break-word;
+        }
+
+        table.ptable th.pn {
+            width: 2%;
+        }
+
+        table.ptable th.chg {
+            width: 47%;
+        }
+
+        table.vtable {
+            border-collapse: collapse;
+            border: 1px outset black;
+            margin-left: 1.9em;
+            margin-top: 0.7em;
+        }
+
+        table.vtable td {
+            border: 1px solid gray;
+            padding: 3px;
+            font-size: 0.875em;
+            vertical-align: top;
+            max-width: 450px;
+            word-wrap: break-word;
+        }
+
+        table.ptable th,
+        table.vtable th {
+            background-color: #eeeeee;
+            font-weight: bold;
+            color: #333333;
+            font-family: Verdana, Arial;
+            font-size: 0.875em;
+            border: 1px solid gray;
+            text-align: center;
+            vertical-align: top;
+            white-space: nowrap;
+            padding: 3px;
+        }
+
+        table.summary {
+            border-collapse: collapse;
+            border: 1px outset black;
+            width: auto;
+        }
+
+        table.summary th {
+            background-color: #eeeeee;
+            font-weight: normal;
+            text-align: left;
+            font-size: 0.94em;
+            white-space: nowrap;
+            border: 1px inset gray;
+            padding: 3px;
+        }
+
+        table.summary td {
+            text-align: left;
+            vertical-align: top;
+            white-space: pre;
+            border: 1px inset gray;
+            padding: 3px 5px 3px 10px;
+        }
+
+        table.list th {
+            font-weight: normal;
+            text-align: left;
+            font-size: 0.94em;
+            white-space: nowrap;
+            padding: 3px;
+        }
+
+        table.list td {
+            text-align: right;
+            white-space: pre;
+            padding: 3px 5px 3px 10px;
+        }
+
+        span.mngl {
+            padding-left: 1em;
+            font-size: 0.875em;
+            cursor: text;
+            color: #444444;
+            font-weight: bold;
+        }
+
+        span.pleft {
+            padding-left: 2.5em;
+        }
+
+        span.sym_ver {
+            color: #333333;
+            white-space: nowrap;
+            font-family: "DejaVu Sans Mono", Monospace;
+        }
+
+        span.attr {
+            color: #333333;
+            font-weight: normal;
+        }
+
+        span.color_p {
+            font-style: italic;
+            color: Brown;
+        }
+
+        span.p {
+            font-style: italic;
+        }
+
+        span.fp {
+            font-style: italic;
+            background-color: #DCDCDC;
+        }
+
+        span.ttype {
+            font-weight: normal;
+        }
+
+        span.nowrap {
+            white-space: nowrap;
+        }
+
+        span.value {
+            font-weight: bold;
+        }
+
+        .passed {
+            background-color: #CCFFCC;
+            font-weight: normal;
+        }
+
+        .warning {
+            background-color: #F4F4AF;
+            font-weight: normal;
+        }
+
+        .failed {
+            background-color: #FFCCCC;
+            font-weight: normal;
+        }
+
+        .new {
+            background-color: #C6DEFF;
+            font-weight: normal;
+        }
+
+        .compatible {
+            background-color: #CCFFCC;
+            font-weight: normal;
+        }
+
+        .almost_compatible {
+            background-color: #FFDAA3;
+            font-weight: normal;
+        }
+
+        .incompatible {
+            background-color: #FFCCCC;
+            font-weight: normal;
+        }
+
+        .gray {
+            background-color: #DCDCDC;
+            font-weight: normal;
+        }
+
+        .top_ref {
+            font-size: 0.69em;
+        }
+
+        .footer {
+            font-size: 0.75em;
+        }
+
+        .tabset {
+            float: left;
+        }
+
+        a.tab {
+            border: 1px solid Black;
+            float: left;
+            margin: 0px 5px -1px 0px;
+            padding: 3px 5px 3px 5px;
+            position: relative;
+            font-size: 0.875em;
+            background-color: #DDD;
+            text-decoration: none;
+            color: Black;
+        }
+
+        a.disabled:hover {
+            color: Black;
+            background: #EEE;
+        }
+
+        a.active:hover {
+            color: Black;
+            background: White;
+        }
+
+        a.active {
+            border-bottom-color: White;
+            background-color: White;
+        }
+
+        div.tab {
+            border-top: 1px solid Black;
+            padding: 0px;
+            width: 100%;
+            clear: both;
+        }
+    </style>
+    <script type="text/javascript" language="JavaScript">
+        function showContent(header, id) {
+            e = document.getElementById(id);
+            if (e.style.display == 'none') {
+                e.style.display = 'block';
+                e.style.visibility = 'visible';
+                header.innerHTML = header.innerHTML.replace(/\[[^0-9 ]\]/gi, "[&minus;]");
+            }
+            else {
+                e.style.display = 'none';
+                e.style.visibility = 'hidden';
+                header.innerHTML = header.innerHTML.replace(/\[[^0-9 ]\]/gi, "[+]");
+            }
+        }
+
+        function initTabs() {
+            var url = window.location.href;
+            if (url.indexOf('_Source_') != -1 || url.indexOf('#Source') != -1) {
+                var tab1 = document.getElementById('BinaryID');
+                var tab2 = document.getElementById('SourceID');
+                tab1.className = 'tab disabled';
+                tab2.className = 'tab active';
+            }
+            var sets = document.getElementsByTagName('div');
+            for (var i = 0; i < sets.length; i++) {
+                if (sets[i].className.indexOf('tabset') != -1) {
+                    var tabs = [];
+                    var links = sets[i].getElementsByTagName('a');
+                    for (var j = 0; j < links.length; j++) {
+                        if (links[j].className.indexOf('tab') != -1) {
+                            tabs.push(links[j]);
+                            links[j].tabs = tabs;
+                            var tab = document.getElementById(links[j].href.substr(links[j].href.indexOf('#') + 1));
+                            //reset all tabs on start
+                            if (tab) {
+                                if (links[j].className.indexOf('active') != -1) {
+                                    tab.style.display = 'block';
+                                }
+                                else {
+                                    tab.style.display = 'none';
+                                }
+                            }
+                            links[j].onclick = function () {
+                                var tab = document.getElementById(this.href.substr(this.href.indexOf('#') + 1));
+                                if (tab) {
+                                    //reset all tabs before change
+                                    for (var k = 0; k < this.tabs.length; k++) {
+                                        document.getElementById(this.tabs[k].href.substr(this.tabs[k].href.indexOf('#') + 1)).style.display = 'none';
+                                        this.tabs[k].className = this.tabs[k].className.replace('active', 'disabled');
+                                    }
+                                    this.className = 'tab active';
+                                    tab.style.display = 'block';
+                                    // window.location.hash = this.id.replace('ID', '');
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (url.indexOf('#') != -1) {
+                location.href = location.href;
+            }
+        }
+
+        if (window.addEventListener) window.addEventListener('load', initTabs, false);
+        else if (window.attachEvent) window.attachEvent('onload', initTabs);
+
+    </script>
+</head>
+
+<body><a name='Source'></a><a name='Binary'></a><a name='Top'></a>
+
+    <h1>RPM Diff List</h1>
+
+    <br />
+
+    <h2>RPM list difference</h2>
+    <hr />
+    <table class='summary'>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col" style='text-align:center;'>Add Packages</th>
+            <th scope="col" style='text-align:center;'>Del Packages</th>
+            <th scope="col" style='text-align:center;'>Diff Packages(different version)</th>
+            <th scope="col" style='text-align:center;'>Diff Packages(same version)</th>
+            <th scope="col" style='text-align:center;'>Diff Packages(file change)</th>
+        </tr>
+        <tr>
+            <th scope="col">Pkg List</th>
+            <td bgcolor="greenyellow">add_pkg</td>
+            <td bgcolor="lightpink">del_pkg</td>
+            <td bgcolor="lemonchiffon">diff_pkg</td>
+            <td bgcolor="lemonchiffon">same_version</td>
+            <td bgcolor="lemonchiffon">file_change</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
