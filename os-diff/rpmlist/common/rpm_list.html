@@ -8,446 +8,514 @@
     <meta name="description" content="List difference" />
     <title>List difference</title>
     <style type="text/css">
-        body {
+        body
+        {
             font-family: Arial, sans-serif;
+
+            color: Black;
             background-color: White;
-            color: Black;
         }
 
-        hr {
-            color: Black;
-            background-color: Black;
+        hr
+        {
             height: 1px;
+
+            color: Black;
             border: 0;
+            background-color: Black;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 0px;
-            padding-bottom: 0px;
-            font-size: 1.625em;
+        h1
+        {
             font-family: Georgia, 'Times New Roman', Times, serif;
-            color: #336699;
-            border: #336699 solid thin;
+            font-size: 1.625em;
+
+            margin-bottom: 0;
+            padding-bottom: 0;
+
+            text-align: center;
+
+            color: #369;
+            border: #369 solid thin;
         }
 
-        h2 {
-            margin-bottom: 0px;
-            padding-bottom: 0px;
+        h2
+        {
             font-size: 1.25em;
+
+            margin-bottom: 0;
+            padding-bottom: 0;
+
             white-space: nowrap;
         }
 
-        span.section {
+        span.section
+        {
             font-weight: bold;
+
+            margin-left: .3125em;
+
             cursor: pointer;
-            color: #003E69;
             white-space: nowrap;
-            margin-left: 0.3125em;
+
+            color: #003e69;
         }
 
-        span.new_sign {
+        span.new_sign
+        {
             font-weight: bold;
+
             margin-left: 1.65em;
-            color: #003E69;
+
+            color: #003e69;
         }
 
-        span.new_sign_lbl {
-            margin-left: 3em;
+        span.new_sign_lbl
+        {
             font-size: 1em;
+
+            margin-left: 3em;
+
             color: Black;
         }
 
-        span:hover.section {
-            color: #336699;
+        span:hover.section
+        {
+            color: #369;
         }
 
-        span.sect_aff {
-            cursor: pointer;
+        span.sect_aff
+        {
+            font-size: .875em;
+
             padding-left: 1.55em;
-            font-size: 0.875em;
-            color: #cc3300;
+
+            cursor: pointer;
+
+            color: #c30;
         }
 
-        span.sect_info {
-            cursor: pointer;
+        span.sect_info
+        {
+            font-size: .875em;
+
             padding-left: 1.55em;
-            font-size: 0.875em;
+
+            cursor: pointer;
+
             color: Black;
         }
 
-        span.ext {
+        span.ext
+        {
             font-weight: normal;
         }
 
-        span.h_name {
-            color: #cc3300;
-            font-size: 0.875em;
+        span.h_name
+        {
+            font-size: .875em;
             font-weight: bold;
+
+            color: #c30;
         }
 
         div.h_list,
-        div.lib_list {
-            font-size: 0.94em;
-            padding-left: 0.4em;
+        div.lib_list
+        {
+            font-size: .94em;
+
+            padding-left: .4em;
         }
 
-        span.ns {
+        span.ns
+        {
+            font-size: .94em;
+
             color: #408080;
-            font-size: 0.94em;
         }
 
-        span.lib_name {
+        span.lib_name
+        {
+            font-size: .875em;
+            font-weight: bold;
+
             color: Green;
-            font-size: 0.875em;
+        }
+
+        span.iname
+        {
+            font-weight: bold;
+
+            margin-left: .3125em;
+
+            color: #003e69;
+        }
+
+        span.iname_b
+        {
             font-weight: bold;
         }
 
-        span.iname {
+        span.iname_a
+        {
+            font-size: .94em;
             font-weight: bold;
-            color: #003E69;
-            margin-left: 0.3125em;
+
+            color: #333;
         }
 
-        span.iname_b {
-            font-weight: bold;
-        }
-
-        span.iname_a {
-            color: #333333;
-            font-weight: bold;
-            font-size: 0.94em;
-        }
-
-        span.sym_p {
+        span.sym_p
+        {
             font-weight: normal;
+
             white-space: normal;
         }
 
-        span.sym_pd {
+        span.sym_pd
+        {
             white-space: normal;
         }
 
         span.sym_p span,
-        span.sym_pd span {
+        span.sym_pd span
+        {
             white-space: nowrap;
         }
 
-        div.affect {
-            padding-left: 1em;
-            padding-bottom: 10px;
-            font-size: 0.87em;
+        div.affect
+        {
+            font-size: .87em;
             font-style: italic;
-            line-height: 0.9em;
+            line-height: .9em;
+
+            padding-bottom: 10px;
+            padding-left: 1em;
         }
 
-        div.affected {
-            padding-left: 1.9em;
+        div.affected
+        {
             padding-top: 10px;
+            padding-left: 1.9em;
         }
 
-        table.ptable {
-            border-collapse: collapse;
-            border: 1px outset black;
-            margin-left: 0.95em;
+        table.ptable
+        {
+            width: 56.25em;
             margin-top: 3px;
             margin-bottom: 3px;
-            width: 56.25em;
+            margin-left: .95em;
+
+            border-collapse: collapse;
+
+            border: 1px outset black;
         }
 
-        table.ptable td {
-            border: 1px solid gray;
+        table.ptable td
+        {
+            font-size: .875em;
+
+            max-width: 28em;
             padding: 3px;
-            font-size: 0.875em;
+
             text-align: left;
             vertical-align: top;
-            max-width: 28em;
             word-wrap: break-word;
+
+            border: 1px solid gray;
         }
 
-        table.ptable th.pn {
+        table.ptable th.pn
+        {
             width: 2%;
         }
 
-        table.ptable th.chg {
+        table.ptable th.chg
+        {
             width: 47%;
         }
 
-        table.vtable {
-            border-collapse: collapse;
-            border: 1px outset black;
+        table.vtable
+        {
+            margin-top: .7em;
             margin-left: 1.9em;
-            margin-top: 0.7em;
+
+            border-collapse: collapse;
+
+            border: 1px outset black;
         }
 
-        table.vtable td {
-            border: 1px solid gray;
-            padding: 3px;
-            font-size: 0.875em;
-            vertical-align: top;
+        table.vtable td
+        {
+            font-size: .875em;
+
             max-width: 450px;
+            padding: 3px;
+
+            vertical-align: top;
             word-wrap: break-word;
+
+            border: 1px solid gray;
         }
 
         table.ptable th,
-        table.vtable th {
-            background-color: #eeeeee;
-            font-weight: bold;
-            color: #333333;
+        table.vtable th
+        {
             font-family: Verdana, Arial;
-            font-size: 0.875em;
-            border: 1px solid gray;
+            font-size: .875em;
+            font-weight: bold;
+
+            padding: 3px;
+
             text-align: center;
             vertical-align: top;
             white-space: nowrap;
-            padding: 3px;
+
+            color: #333;
+            border: 1px solid gray;
+            background-color: #eee;
         }
 
-        table.summary {
-            border-collapse: collapse;
-            border: 1px outset black;
+        table.summary
+        {
             width: auto;
+
+            border-collapse: collapse;
+
+            border: 1px outset black;
         }
 
-        table.summary th {
-            background-color: #eeeeee;
+        table.summary th
+        {
+            font-size: .94em;
             font-weight: normal;
-            text-align: left;
-            font-size: 0.94em;
-            white-space: nowrap;
-            border: 1px inset gray;
+
             padding: 3px;
+
+            text-align: left;
+            white-space: nowrap;
+
+            border: 1px inset gray;
+            background-color: #eee;
         }
 
-        table.summary td {
+        table.summary td
+        {
+            padding: 3px 5px 3px 10px;
+
             text-align: left;
             vertical-align: top;
             white-space: pre;
+
             border: 1px inset gray;
-            padding: 3px 5px 3px 10px;
         }
 
-        table.list th {
+        table.list th
+        {
+            font-size: .94em;
             font-weight: normal;
-            text-align: left;
-            font-size: 0.94em;
-            white-space: nowrap;
+
             padding: 3px;
+
+            text-align: left;
+            white-space: nowrap;
         }
 
-        table.list td {
+        table.list td
+        {
+            padding: 3px 5px 3px 10px;
+
             text-align: right;
             white-space: pre;
-            padding: 3px 5px 3px 10px;
         }
 
-        span.mngl {
-            padding-left: 1em;
-            font-size: 0.875em;
-            cursor: text;
-            color: #444444;
+        span.mngl
+        {
+            font-size: .875em;
             font-weight: bold;
+
+            padding-left: 1em;
+
+            cursor: text;
+
+            color: #444;
         }
 
-        span.pleft {
+        span.pleft
+        {
             padding-left: 2.5em;
         }
 
-        span.sym_ver {
-            color: #333333;
+        span.sym_ver
+        {
+            font-family: 'DejaVu Sans Mono', Monospace;
+
             white-space: nowrap;
-            font-family: "DejaVu Sans Mono", Monospace;
+
+            color: #333;
         }
 
-        span.attr {
-            color: #333333;
+        span.attr
+        {
             font-weight: normal;
+
+            color: #333;
         }
 
-        span.color_p {
+        span.color_p
+        {
             font-style: italic;
+
             color: Brown;
         }
 
-        span.p {
+        span.p
+        {
             font-style: italic;
         }
 
-        span.fp {
+        span.fp
+        {
             font-style: italic;
-            background-color: #DCDCDC;
+
+            background-color: #dcdcdc;
         }
 
-        span.ttype {
+        span.ttype
+        {
             font-weight: normal;
         }
 
-        span.nowrap {
+        span.nowrap
+        {
             white-space: nowrap;
         }
 
-        span.value {
+        span.value
+        {
             font-weight: bold;
         }
 
-        .passed {
-            background-color: #CCFFCC;
+        .passed
+        {
             font-weight: normal;
+
+            background-color: #cfc;
         }
 
-        .warning {
-            background-color: #F4F4AF;
+        .warning
+        {
             font-weight: normal;
+
+            background-color: #f4f4af;
         }
 
-        .failed {
-            background-color: #FFCCCC;
+        .failed
+        {
             font-weight: normal;
+
+            background-color: #fcc;
         }
 
-        .new {
-            background-color: #C6DEFF;
+        .new
+        {
             font-weight: normal;
+
+            background-color: #c6deff;
         }
 
-        .compatible {
-            background-color: #CCFFCC;
+        .compatible
+        {
             font-weight: normal;
+
+            background-color: #cfc;
         }
 
-        .almost_compatible {
-            background-color: #FFDAA3;
+        .almost_compatible
+        {
             font-weight: normal;
+
+            background-color: #ffdaa3;
         }
 
-        .incompatible {
-            background-color: #FFCCCC;
+        .incompatible
+        {
             font-weight: normal;
+
+            background-color: #fcc;
         }
 
-        .gray {
-            background-color: #DCDCDC;
+        .gray
+        {
             font-weight: normal;
+
+            background-color: #dcdcdc;
         }
 
-        .top_ref {
-            font-size: 0.69em;
+        .top_ref
+        {
+            font-size: .69em;
         }
 
-        .footer {
-            font-size: 0.75em;
+        .footer
+        {
+            font-size: .75em;
         }
 
-        .tabset {
+        .tabset
+        {
             float: left;
         }
 
-        a.tab {
-            border: 1px solid Black;
-            float: left;
-            margin: 0px 5px -1px 0px;
-            padding: 3px 5px 3px 5px;
+        a.tab
+        {
+            font-size: .875em;
+
             position: relative;
-            font-size: 0.875em;
-            background-color: #DDD;
+
+            float: left;
+
+            margin: 0 5px -1px 0;
+            padding: 3px 5px 3px 5px;
+
             text-decoration: none;
+
             color: Black;
+            border: 1px solid Black;
+            background-color: #ddd;
         }
 
-        a.disabled:hover {
+        a.disabled:hover
+        {
             color: Black;
-            background: #EEE;
+            background: #eee;
         }
 
-        a.active:hover {
+        a.active:hover
+        {
             color: Black;
             background: White;
         }
 
-        a.active {
+        a.active
+        {
             border-bottom-color: White;
             background-color: White;
         }
 
-        div.tab {
-            border-top: 1px solid Black;
-            padding: 0px;
-            width: 100%;
+        div.tab
+        {
             clear: both;
+
+            width: 100%;
+            padding: 0;
+
+            border-top: 1px solid Black;
         }
+
     </style>
-    <script type="text/javascript" language="JavaScript">
-        function showContent(header, id) {
-            e = document.getElementById(id);
-            if (e.style.display == 'none') {
-                e.style.display = 'block';
-                e.style.visibility = 'visible';
-                header.innerHTML = header.innerHTML.replace(/\[[^0-9 ]\]/gi, "[&minus;]");
-            }
-            else {
-                e.style.display = 'none';
-                e.style.visibility = 'hidden';
-                header.innerHTML = header.innerHTML.replace(/\[[^0-9 ]\]/gi, "[+]");
-            }
-        }
-
-        function initTabs() {
-            var url = window.location.href;
-            if (url.indexOf('_Source_') != -1 || url.indexOf('#Source') != -1) {
-                var tab1 = document.getElementById('BinaryID');
-                var tab2 = document.getElementById('SourceID');
-                tab1.className = 'tab disabled';
-                tab2.className = 'tab active';
-            }
-            var sets = document.getElementsByTagName('div');
-            for (var i = 0; i < sets.length; i++) {
-                if (sets[i].className.indexOf('tabset') != -1) {
-                    var tabs = [];
-                    var links = sets[i].getElementsByTagName('a');
-                    for (var j = 0; j < links.length; j++) {
-                        if (links[j].className.indexOf('tab') != -1) {
-                            tabs.push(links[j]);
-                            links[j].tabs = tabs;
-                            var tab = document.getElementById(links[j].href.substr(links[j].href.indexOf('#') + 1));
-                            //reset all tabs on start
-                            if (tab) {
-                                if (links[j].className.indexOf('active') != -1) {
-                                    tab.style.display = 'block';
-                                }
-                                else {
-                                    tab.style.display = 'none';
-                                }
-                            }
-                            links[j].onclick = function () {
-                                var tab = document.getElementById(this.href.substr(this.href.indexOf('#') + 1));
-                                if (tab) {
-                                    //reset all tabs before change
-                                    for (var k = 0; k < this.tabs.length; k++) {
-                                        document.getElementById(this.tabs[k].href.substr(this.tabs[k].href.indexOf('#') + 1)).style.display = 'none';
-                                        this.tabs[k].className = this.tabs[k].className.replace('active', 'disabled');
-                                    }
-                                    this.className = 'tab active';
-                                    tab.style.display = 'block';
-                                    // window.location.hash = this.id.replace('ID', '');
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (url.indexOf('#') != -1) {
-                location.href = location.href;
-            }
-        }
-
-        if (window.addEventListener) window.addEventListener('load', initTabs, false);
-        else if (window.attachEvent) window.attachEvent('onload', initTabs);
-
-    </script>
 </head>
 
-<body><a name='Source'></a><a name='Binary'></a><a name='Top'></a>
+<body><a name="Source"></a><a name="Binary"></a><a name="Top"></a>
 
     <h1>RPM Diff List</h1>
 
@@ -455,14 +523,14 @@
 
     <h2>RPM list difference</h2>
     <hr />
-    <table class='summary'>
+    <table class="summary">
         <tr>
             <th scope="col"></th>
-            <th scope="col" style='text-align:center;'>Add Packages</th>
-            <th scope="col" style='text-align:center;'>Del Packages</th>
-            <th scope="col" style='text-align:center;'>Diff Packages(different version)</th>
-            <th scope="col" style='text-align:center;'>Diff Packages(same version)</th>
-            <th scope="col" style='text-align:center;'>Diff Packages(file change)</th>
+            <th scope="col" style="text-align:center;">Add Packages</th>
+            <th scope="col" style="text-align:center;">Del Packages</th>
+            <th scope="col" style="text-align:center;">Diff Packages(different version)</th>
+            <th scope="col" style="text-align:center;">Diff Packages(same version)</th>
+            <th scope="col" style="text-align:center;">Diff Packages(file change)</th>
         </tr>
         <tr>
             <th scope="col">Pkg List</th>
