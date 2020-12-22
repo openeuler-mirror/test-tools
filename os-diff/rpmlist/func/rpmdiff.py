@@ -16,6 +16,7 @@
  @Desc      :   public library
  #############################################
 """
+
 import subprocess
 import re
 import difflib
@@ -23,10 +24,23 @@ from lxml import etree
 import argparse
 import sys
 
+
+def get_rpm_version(pkg_info):
+    """[summary]
+
+    Args:
+        pkg ([type]): [description]
+    """
+    main_version = re.search(r"Version.*", pkg_info).group().split(" ")[-1]
+    release = re.search(r"Release.*", pkg_info).group().split(" ")[-1]
+
+    version = main_version + "-" + release
+    return version
+
+
 class PkgInfo(object):
     def get_rpm_info(self, pkg):
-        """
-        [summary]
+        """[summary]
 
         Args:
             pkg ([type]): [description]
@@ -38,22 +52,8 @@ class PkgInfo(object):
         pkg_info = subprocess.getoutput(cmd)
         return pkg_info
 
-    def get_rpm_version(self, pkg_info):
-        """
-        [summary]
-
-        Args:
-            pkg ([type]): [description]
-        """
-        main_version = re.search(r"Version.*", pkg_info).group().split(" ")[-1]
-        release = re.search(r"Release.*", pkg_info).group().split(" ")[-1]
-
-        version = main_version + "-" + release
-        return version
-
     def get_rpm_frame(self, pkg_info):
-        """
-        [summary]
+        """[summary]
 
         Args:
             pkg ([type]): [description]
@@ -62,8 +62,7 @@ class PkgInfo(object):
         return frame
 
     def get_rpm_file(self, pkg):
-        """
-        [summary]
+        """[summary]
 
         Args:
             pkg ([type]): [description]
@@ -73,8 +72,7 @@ class PkgInfo(object):
         return path_file
 
     def get_rpm_requires(self, pkg):
-        """
-        [summary]
+        """[summary]
 
         Args:
             pkg ([type]): [description]
@@ -84,8 +82,7 @@ class PkgInfo(object):
         return rpm_requires
 
     def get_rpm_changelog(self, pkg):
-        """
-        [summary]
+        """[summary]
 
         Args:
             pkg ([type]): [description]
@@ -95,8 +92,7 @@ class PkgInfo(object):
         return changelog
 
     def get_rpm_provides(self, pkg):
-        """
-        [summary]
+        """[summary]
 
         Args:
             pkg ([type]): [description]
@@ -106,8 +102,7 @@ class PkgInfo(object):
         return provides
 
     def diff_rpm_info(self, old_info, new_info, report_name, isContext="false"):
-        """
-        [summary]
+        """[summary]
 
         Args:
             old_info ([type]): [description]
@@ -125,9 +120,9 @@ class PkgInfo(object):
         fp.write(html)
         fp.close()
 
+
 def diff_rpm_info(old_info, new_info, report_name, isContext="false"):
-    """
-    [summary]
+    """[summary]
 
     Args:
         old_info ([str]): [description]
@@ -141,6 +136,7 @@ def diff_rpm_info(old_info, new_info, report_name, isContext="false"):
     fp = open(report_name + ".html", "w+b")
     fp.write(html)
     fp.close()
+
 
 if __name__ == "__main__":
     if len(sys.argv) <= 4:
