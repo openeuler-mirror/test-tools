@@ -25,19 +25,6 @@ import argparse
 import sys
 
 
-def get_rpm_version(pkg_info):
-    """[summary]
-
-    Args:
-        pkg ([type]): [description]
-    """
-    main_version = re.search(r"Version.*", pkg_info).group().split(" ")[-1]
-    release = re.search(r"Release.*", pkg_info).group().split(" ")[-1]
-
-    version = main_version + "-" + release
-    return version
-
-
 class PkgInfo(object):
     def get_rpm_info(self, pkg):
         """[summary]
@@ -51,6 +38,18 @@ class PkgInfo(object):
         cmd = "rpm -qi " + pkg
         pkg_info = subprocess.getoutput(cmd)
         return pkg_info
+
+    def get_rpm_version(self, pkg_info):
+        """[summary]
+
+        Args:
+            pkg ([type]): [description]
+        """
+        main_version = re.search(r"Version.*", pkg_info).group().split(" ")[-1]
+        release = re.search(r"Release.*", pkg_info).group().split(" ")[-1]
+
+        version = main_version + "-" + release
+        return version
 
     def get_rpm_frame(self, pkg_info):
         """[summary]
