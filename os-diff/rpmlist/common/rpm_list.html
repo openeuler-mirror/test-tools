@@ -2,516 +2,454 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="keywords" content="cmd_object, compatibility, verdifftest, report" />
-    <meta name="description" content="List difference" />
+    <meta charset="utf-8">
     <title>List difference</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="cmd_object, compatibility, verdifftest, report">
+    <meta name="description" content="List difference">
     <style type="text/css">
-        body
-        {
-            font-family: Arial, sans-serif;
+    body {
+        font-family: Arial, sans-serif;
 
-            color: Black;
-            background-color: White;
-        }
+        color: #000;
+        background-color: #fff;
+    }
 
-        hr
-        {
-            height: 1px;
+    hr {
+        height: 1px;
 
-            color: Black;
-            border: 0;
-            background-color: Black;
-        }
+        color: #000;
+        border: 0;
+        background-color: #000;
+    }
 
-        h1
-        {
-            font-family: Georgia, 'Times New Roman', Times, serif;
-            font-size: 1.625em;
+    h1 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 1.625em;
 
-            margin-bottom: 0;
-            padding-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
 
-            text-align: center;
+        text-align: center;
 
-            color: #369;
-            border: #369 solid thin;
-        }
+        color: #369;
+        border: #369 solid thin;
+    }
 
-        h2
-        {
-            font-size: 1.25em;
+    h2 {
+        font-size: 1.25em;
 
-            margin-bottom: 0;
-            padding-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
 
-            white-space: nowrap;
-        }
+        white-space: nowrap;
+    }
 
-        span.section
-        {
-            font-weight: bold;
+    span.section {
+        font-weight: bold;
 
-            margin-left: .3125em;
+        margin-left: .3125em;
 
-            cursor: pointer;
-            white-space: nowrap;
+        cursor: pointer;
+        white-space: nowrap;
 
-            color: #003e69;
-        }
+        color: #003e69;
+    }
 
-        span.new_sign
-        {
-            font-weight: bold;
+    span.new_sign {
+        font-weight: bold;
 
-            margin-left: 1.65em;
+        margin-left: 1.65em;
 
-            color: #003e69;
-        }
+        color: #003e69;
+    }
 
-        span.new_sign_lbl
-        {
-            font-size: 1em;
+    span.new_sign_lbl {
+        font-size: 1em;
 
-            margin-left: 3em;
+        margin-left: 3em;
 
-            color: Black;
-        }
+        color: #000;
+    }
 
-        span:hover.section
-        {
-            color: #369;
-        }
+    span:hover.section {
+        color: #369;
+    }
 
-        span.sect_aff
-        {
-            font-size: .875em;
+    span.sect_aff {
+        font-size: .875em;
 
-            padding-left: 1.55em;
+        padding-left: 1.55em;
 
-            cursor: pointer;
+        cursor: pointer;
 
-            color: #c30;
-        }
+        color: #c30;
+    }
 
-        span.sect_info
-        {
-            font-size: .875em;
+    span.sect_info {
+        font-size: .875em;
 
-            padding-left: 1.55em;
+        padding-left: 1.55em;
 
-            cursor: pointer;
+        cursor: pointer;
 
-            color: Black;
-        }
+        color: #000;
+    }
 
-        span.ext
-        {
-            font-weight: normal;
-        }
-
-        span.h_name
-        {
-            font-size: .875em;
-            font-weight: bold;
-
-            color: #c30;
-        }
-
-        div.h_list,
-        div.lib_list
-        {
-            font-size: .94em;
-
-            padding-left: .4em;
-        }
-
-        span.ns
-        {
-            font-size: .94em;
-
-            color: #408080;
-        }
-
-        span.lib_name
-        {
-            font-size: .875em;
-            font-weight: bold;
-
-            color: Green;
-        }
-
-        span.iname
-        {
-            font-weight: bold;
-
-            margin-left: .3125em;
-
-            color: #003e69;
-        }
-
-        span.iname_b
-        {
-            font-weight: bold;
-        }
+    span.ext {
+        font-weight: normal;
+    }
 
-        span.iname_a
-        {
-            font-size: .94em;
-            font-weight: bold;
+    span.h_name {
+        font-size: .875em;
+        font-weight: bold;
 
-            color: #333;
-        }
-
-        span.sym_p
-        {
-            font-weight: normal;
+        color: #c30;
+    }
 
-            white-space: normal;
-        }
+    div.h_list,
+    div.lib_list {
+        font-size: .94em;
 
-        span.sym_pd
-        {
-            white-space: normal;
-        }
+        padding-left: .4em;
+    }
 
-        span.sym_p span,
-        span.sym_pd span
-        {
-            white-space: nowrap;
-        }
+    span.ns {
+        font-size: .94em;
 
-        div.affect
-        {
-            font-size: .87em;
-            font-style: italic;
-            line-height: .9em;
+        color: #408080;
+    }
 
-            padding-bottom: 10px;
-            padding-left: 1em;
-        }
+    span.lib_name {
+        font-size: .875em;
+        font-weight: bold;
 
-        div.affected
-        {
-            padding-top: 10px;
-            padding-left: 1.9em;
-        }
+        color: #008000;
+    }
 
-        table.ptable
-        {
-            width: 56.25em;
-            margin-top: 3px;
-            margin-bottom: 3px;
-            margin-left: .95em;
+    span.iname {
+        font-weight: bold;
 
-            border-collapse: collapse;
+        margin-left: .3125em;
 
-            border: 1px outset black;
-        }
+        color: #003e69;
+    }
 
-        table.ptable td
-        {
-            font-size: .875em;
+    span.iname_b {
+        font-weight: bold;
+    }
 
-            max-width: 28em;
-            padding: 3px;
+    span.iname_a {
+        font-size: .94em;
+        font-weight: bold;
 
-            text-align: left;
-            vertical-align: top;
-            word-wrap: break-word;
+        color: #333;
+    }
 
-            border: 1px solid gray;
-        }
+    span.sym_p {
+        font-weight: normal;
 
-        table.ptable th.pn
-        {
-            width: 2%;
-        }
+        white-space: normal;
+    }
 
-        table.ptable th.chg
-        {
-            width: 47%;
-        }
+    span.sym_pd {
+        white-space: normal;
+    }
 
-        table.vtable
-        {
-            margin-top: .7em;
-            margin-left: 1.9em;
+    span.sym_p span,
+    span.sym_pd span {
+        white-space: nowrap;
+    }
 
-            border-collapse: collapse;
+    div.affect {
+        font-size: .87em;
+        font-style: italic;
+        line-height: .9em;
 
-            border: 1px outset black;
-        }
+        padding-bottom: 10px;
+        padding-left: 1em;
+    }
 
-        table.vtable td
-        {
-            font-size: .875em;
+    div.affected {
+        padding-top: 10px;
+        padding-left: 1.9em;
+    }
 
-            max-width: 450px;
-            padding: 3px;
+    table.ptable {
+        width: 56.25em;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: .95em;
 
-            vertical-align: top;
-            word-wrap: break-word;
+        border-collapse: collapse;
 
-            border: 1px solid gray;
-        }
+        border: 1px outset #000;
+    }
 
-        table.ptable th,
-        table.vtable th
-        {
-            font-family: Verdana, Arial;
-            font-size: .875em;
-            font-weight: bold;
+    table.ptable td {
+        font-size: .875em;
 
-            padding: 3px;
+        max-width: 28em;
+        padding: 3px;
 
-            text-align: center;
-            vertical-align: top;
-            white-space: nowrap;
+        text-align: left;
+        vertical-align: top;
+        word-wrap: break-word;
 
-            color: #333;
-            border: 1px solid gray;
-            background-color: #eee;
-        }
+        border: 1px solid #808080;
+    }
 
-        table.summary
-        {
-            width: auto;
+    table.ptable th.pn {
+        width: 2%;
+    }
 
-            border-collapse: collapse;
+    table.ptable th.chg {
+        width: 47%;
+    }
 
-            border: 1px outset black;
-        }
+    table.vtable {
+        margin-top: .7em;
+        margin-left: 1.9em;
 
-        table.summary th
-        {
-            font-size: .94em;
-            font-weight: normal;
+        border-collapse: collapse;
 
-            padding: 3px;
+        border: 1px outset #000;
+    }
 
-            text-align: left;
-            white-space: nowrap;
+    table.vtable td {
+        font-size: .875em;
 
-            border: 1px inset gray;
-            background-color: #eee;
-        }
+        max-width: 450px;
+        padding: 3px;
 
-        table.summary td
-        {
-            padding: 3px 5px 3px 10px;
+        vertical-align: top;
+        word-wrap: break-word;
 
-            text-align: left;
-            vertical-align: top;
-            white-space: pre;
+        border: 1px solid #808080;
+    }
 
-            border: 1px inset gray;
-        }
+    table.ptable th,
+    table.vtable th {
+        font-family: Verdana, Arial;
+        font-size: .875em;
+        font-weight: bold;
 
-        table.list th
-        {
-            font-size: .94em;
-            font-weight: normal;
+        padding: 3px;
 
-            padding: 3px;
+        text-align: center;
+        vertical-align: top;
+        white-space: nowrap;
 
-            text-align: left;
-            white-space: nowrap;
-        }
+        color: #333;
+        border: 1px solid #808080;
+        background-color: #eee;
+    }
 
-        table.list td
-        {
-            padding: 3px 5px 3px 10px;
+    table.summary {
+        width: auto;
 
-            text-align: right;
-            white-space: pre;
-        }
+        border-collapse: collapse;
 
-        span.mngl
-        {
-            font-size: .875em;
-            font-weight: bold;
+        border: 1px outset #000;
+    }
 
-            padding-left: 1em;
+    table.summary th {
+        font-size: .94em;
+        font-weight: normal;
 
-            cursor: text;
+        padding: 3px;
 
-            color: #444;
-        }
+        text-align: left;
+        white-space: nowrap;
 
-        span.pleft
-        {
-            padding-left: 2.5em;
-        }
+        border: 1px inset #808080;
+        background-color: #eee;
+    }
 
-        span.sym_ver
-        {
-            font-family: 'DejaVu Sans Mono', Monospace;
+    table.summary td {
+        padding: 3px 5px 3px 10px;
 
-            white-space: nowrap;
+        text-align: left;
+        vertical-align: top;
+        white-space: pre;
 
-            color: #333;
-        }
+        border: 1px inset #808080;
+    }
 
-        span.attr
-        {
-            font-weight: normal;
+    table.list th {
+        font-size: .94em;
+        font-weight: normal;
 
-            color: #333;
-        }
+        padding: 3px;
 
-        span.color_p
-        {
-            font-style: italic;
+        text-align: left;
+        white-space: nowrap;
+    }
 
-            color: Brown;
-        }
+    table.list td {
+        padding: 3px 5px 3px 10px;
 
-        span.p
-        {
-            font-style: italic;
-        }
+        text-align: right;
+        white-space: pre;
+    }
 
-        span.fp
-        {
-            font-style: italic;
+    span.mngl {
+        font-size: .875em;
+        font-weight: bold;
 
-            background-color: #dcdcdc;
-        }
+        padding-left: 1em;
 
-        span.ttype
-        {
-            font-weight: normal;
-        }
+        cursor: text;
 
-        span.nowrap
-        {
-            white-space: nowrap;
-        }
+        color: #444;
+    }
 
-        span.value
-        {
-            font-weight: bold;
-        }
+    span.pleft {
+        padding-left: 2.5em;
+    }
 
-        .passed
-        {
-            font-weight: normal;
+    span.sym_ver {
+        font-family: "DejaVu Sans Mono", Monospace;
 
-            background-color: #cfc;
-        }
+        white-space: nowrap;
 
-        .warning
-        {
-            font-weight: normal;
+        color: #333;
+    }
 
-            background-color: #f4f4af;
-        }
+    span.attr {
+        font-weight: normal;
 
-        .failed
-        {
-            font-weight: normal;
+        color: #333;
+    }
 
-            background-color: #fcc;
-        }
+    span.color_p {
+        font-style: italic;
 
-        .new
-        {
-            font-weight: normal;
+        color: #a52a2a;
+    }
 
-            background-color: #c6deff;
-        }
+    span.p {
+        font-style: italic;
+    }
 
-        .compatible
-        {
-            font-weight: normal;
+    span.fp {
+        font-style: italic;
 
-            background-color: #cfc;
-        }
+        background-color: #dcdcdc;
+    }
 
-        .almost_compatible
-        {
-            font-weight: normal;
+    span.ttype {
+        font-weight: normal;
+    }
 
-            background-color: #ffdaa3;
-        }
+    span.nowrap {
+        white-space: nowrap;
+    }
 
-        .incompatible
-        {
-            font-weight: normal;
+    span.value {
+        font-weight: bold;
+    }
 
-            background-color: #fcc;
-        }
+    .passed {
+        font-weight: normal;
 
-        .gray
-        {
-            font-weight: normal;
+        background-color: #cfc;
+    }
 
-            background-color: #dcdcdc;
-        }
+    .warning {
+        font-weight: normal;
 
-        .top_ref
-        {
-            font-size: .69em;
-        }
+        background-color: #f4f4af;
+    }
 
-        .footer
-        {
-            font-size: .75em;
-        }
+    .failed {
+        font-weight: normal;
 
-        .tabset
-        {
-            float: left;
-        }
+        background-color: #fcc;
+    }
 
-        a.tab
-        {
-            font-size: .875em;
+    .new {
+        font-weight: normal;
 
-            position: relative;
+        background-color: #c6deff;
+    }
 
-            float: left;
+    .compatible {
+        font-weight: normal;
 
-            margin: 0 5px -1px 0;
-            padding: 3px 5px 3px 5px;
+        background-color: #cfc;
+    }
 
-            text-decoration: none;
+    .almost_compatible {
+        font-weight: normal;
 
-            color: Black;
-            border: 1px solid Black;
-            background-color: #ddd;
-        }
+        background-color: #ffdaa3;
+    }
 
-        a.disabled:hover
-        {
-            color: Black;
-            background: #eee;
-        }
+    .incompatible {
+        font-weight: normal;
 
-        a.active:hover
-        {
-            color: Black;
-            background: White;
-        }
+        background-color: #fcc;
+    }
 
-        a.active
-        {
-            border-bottom-color: White;
-            background-color: White;
-        }
+    .gray {
+        font-weight: normal;
 
-        div.tab
-        {
-            clear: both;
+        background-color: #dcdcdc;
+    }
 
-            width: 100%;
-            padding: 0;
+    .top_ref {
+        font-size: .69em;
+    }
 
-            border-top: 1px solid Black;
-        }
+    .footer {
+        font-size: .75em;
+    }
 
+    .tabset {
+        float: left;
+    }
+
+    a.tab {
+        font-size: .875em;
+
+        position: relative;
+
+        float: left;
+
+        margin: 0 5px -1px 0;
+        padding: 3px 5px 3px 5px;
+
+        text-decoration: none;
+
+        color: #000;
+        border: 1px solid #000;
+        background-color: #ddd;
+    }
+
+    a.disabled:hover {
+        color: #000;
+        background: #eee;
+    }
+
+    a.active:hover {
+        color: #000;
+        background: #fff;
+    }
+
+    a.active {
+        border-bottom-color: #fff;
+        background-color: #fff;
+    }
+
+    div.tab {
+        clear: both;
+
+        width: 100%;
+        padding: 0;
+
+        border-top: 1px solid #000;
+    }
     </style>
 </head>
 
