@@ -89,7 +89,7 @@ function diff_check() {
 
     f_path_spec="$rpm_path/fedora_${rpm}.spec"
 
-    o_path_spec="$rpm_path/fedora_${rpm}.spec"
+    o_path_spec="$rpm_path/openEuler_${rpm}.spec"
 
     if grep -A 10 "^%check" "$f_path_spec" >/dev/null; then
         grep -A 10 "^%check" "$o_path_spec" >/dev/null || {
