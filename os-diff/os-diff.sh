@@ -26,6 +26,10 @@ OS_DIFF_PATH=$(
 current_path=$(pwd)
 rm -rf ${OS_DIFF_PATH}/rpmlist/results/
 
+function logging() {
+    printf "$(date +%Y-%m-%d\ %T)  [ %s ]  %s\\n" "$@"
+}
+
 function get_rpm_list() {
     list_file=$1
     path1=$2
@@ -58,6 +62,7 @@ local_path1=local_path
 local_path2=local_path
 repo_url1=""
 repo_url2=""
+logging "INFO" "***Processing data format***"
 while getopts "hal:s:S:p:P:r:R:" arg; do
     case $arg in
     a)
