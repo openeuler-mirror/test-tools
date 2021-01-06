@@ -39,19 +39,42 @@ fi
 function usage() {
     printf "Usage:  \n
     -c: configuration environment of test framework\n
+    -d: download test cases what provided by the openEuler community.\n
     -a: execute all use cases\n
     -f：designated test suite\n
     -r：designated test case\n
     -x：the shell script is executed in debug mode\n
-    -C: the mapping in suite2cases does not need to be checked.
+    -C: the mapping in suite2cases does not need to be checked.(you must ensure that the case name does't exist.)
     \n
-    Example: bash runoet.sh -f test_suite -r test_case -x\n"
+    Example: 
+        run all cases:
+          normal mode:
+            bash mugen.sh -a
+          debug mode:
+            bash mugen.sh -xa
+
+        run test suite:
+          normal mode:
+            bash mugen.sh -f test_suite
+          debug mode:
+            bash mugen.sh -xf test_suite
+
+        run test case:
+          normal mode:
+            bash mugen.sh -f test_suite -r test_case
+          normal mode and no check suite2case:
+            bash mugen.sh -f test_suite -Cr test_case
+          debug mode:
+            bash mugen.sh -xf test_suite -r test_case
+          debug mode and no check suite2case:
+            bash mugen.sh -xf test_suite -Cr test_case
+        \n"
 }
 
 function deploy_conf() {
     ipaddr=$2
-    user=$3
-    password=$4
+    user=${3-"root"}
+    password=${4-"openEuler12#$"}
 
     if [ -z "$ipaddr" ] || [ -z "$user" ] || [ -z "$password" ]; then
         LOG_ERROR "Parameter missing."
@@ -295,8 +318,8 @@ function pre_run() {
     case_count
 }
 
-if ! rpm -qa | grep expect >/dev/null 2>&1; then
-    DNF_INSTALL expect dos2unix
+if ! rpm -qa | grep '^expect' >/dev/null 2>&1; then
+    yum -y install expect dos2unix >/dev/nul
 fi
 
 while getopts ":xdcaf:Cr:h" option; do
