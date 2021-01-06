@@ -58,7 +58,7 @@ function check_test() {
         exit 1
     }
 
-    grep -A 10 "^%check" "$path_spec" >/dev/null
+    grep "^%check" "$path_spec" >/dev/null
     test $? -ne 0 && {
         logger "DEBUG" "the spec:${rpm}.spec no check."
         exit 0
@@ -91,9 +91,12 @@ function diff_check() {
 
     o_path_spec="$rpm_path/openEuler_${rpm}.spec"
 
-    if grep -A 10 "^%check" "$f_path_spec" >/dev/null; then
-        grep -A 10 "^%check" "$o_path_spec" >/dev/null || {
-            if grep 'make.*check\|make.*test' "$f_path_spec" >/dev/null; then
+    f_check=$(mktemp)
+    o_check=$(mktemp)
+
+    if grep -A 10 "^%check" "$f_path_spec" >$f_check; then
+        grep -A 10 "^%check" "$o_path_spec" >$o_check || {
+            if grep 'make.*check\|make.*test' "$f_check" >/dev/null; then
                 logger "ERROR" "'make check' exists in the upstream community,but we do not."
                 return 1
             else
@@ -102,8 +105,8 @@ function diff_check() {
             fi
         }
 
-        grep 'make.*check\|make.*test' "$f_path_spec" >/dev/null && {
-            grep 'make.*check\|make.*test' "$o_path_spec" >/dev/null || {
+        grep 'make.*check\|make.*test' "$f_check" >/dev/null && {
+            grep 'make.*check\|make.*test' "$o_check" >/dev/null || {
                 logger "ERROR" "'make check' exists in the upstream community,but we do not."
                 return 1
             }
@@ -112,7 +115,7 @@ function diff_check() {
             return 0
         }
 
-        grep 'make.*check\|make.*test' "$o_path_spec" >/dev/null && {
+        grep 'make.*check\|make.*test' "$o_check" >/dev/null && {
             logger "INFO " "there is no 'make check' in the upstream community,but we do."
             return 0
         }
@@ -121,8 +124,8 @@ function diff_check() {
         return 0
     fi
 
-    if grep -A 10 "^%check" "$o_path_spec" >/dev/null; then
-        grep 'make.*check\|make.*test' "$o_path_spec" >/dev/null && {
+    if grep -A 10 "^%check" "$o_path_spec" > $o_check; then
+        grep 'make.*check\|make.*test' "$o_check" >/dev/null && {
             logger "INFO " "there is no 'make check' in the upstream community,but we do."
             return 0
         }
