@@ -81,8 +81,8 @@ function get_diff_result() {
     old_pkg_list=$1
     new_pkg_list=$2
     iff_result=$(diff -u ${old_pkg_list} ${new_pkg_list} | grep -v "^@@")
-    echo "${diff_result}" | grep "^+" >/dev/null && echo "${diff_result}" | grep "^+" | awk -F + '{print $2}' >$RPM_LIST_PATH/add_pkgs || echo "None" >$RPM_LIST_PATH/add_pkgs
-    echo "${diff_result}" | grep "^-" >/dev/null && echo "${diff_result}" | grep "^-" | awk -F - '{print $2}' >$RPM_LIST_PATH/del_pkgs || echo "None" >$RPM_LIST_PATH/del_pkgs
+    echo "${diff_result}" | grep "^+" >/dev/null && echo "${diff_result}" | grep "^+" | awk -F "^+" '{print $2}' >$RPM_LIST_PATH/add_pkgs || echo "None" >$RPM_LIST_PATH/add_pkgs
+    echo "${diff_result}" | grep "^-" >/dev/null && echo "${diff_result}" | grep "^-" | awk -F "^-" '{print $2}' >$RPM_LIST_PATH/del_pkgs || echo "None" >$RPM_LIST_PATH/del_pkgs
     echo "${diff_result}" | grep -v "^+" | grep -v "^-" >/dev/null && echo "${diff_result}" | grep -v "^+" | grep -v "^-" | awk '{print $1}' >$RPM_LIST_PATH/same_pkgs || echo "None" >$RPM_LIST_PATH/same_pkgs
 }
 
