@@ -72,9 +72,9 @@ function usage() {
 }
 
 function deploy_conf() {
-    ipaddr=$2
-    user=${3-"root"}
-    password=${4-"openEuler12#$"}
+    local ipaddr=$2
+    local user=${3-"root"}
+    local password=${4-"openEuler12#$"}
 
     if [ -z "$ipaddr" ] || [ -z "$user" ] || [ -z "$password" ]; then
         LOG_ERROR "Parameter missing."
@@ -105,8 +105,7 @@ function deploy_conf() {
     done
 
     machines=virtual
-    dnf -y install pciutils
-    lspci | grep QEMU >/dev/nul || machines=physical
+    hostnamectl | grep 'Virtualization: kvm' || machines=physical
 
     frame=$(uname -m)
 
@@ -131,6 +130,7 @@ function deploy_conf() {
 }
 
 function download_testcases() {
+    local tmpdir
     tmpdir=$(mktemp -d)
     git clone "$cases_url" "$tmpdir"
     cp "$tmpdir"/* "$OET_PATH" -r
@@ -138,12 +138,12 @@ function download_testcases() {
 }
 
 function process() {
-    cmd=$1
+    local cmd=$1
 
     (sleep "$EXECUTE_T" && {
         case_pid=$(pgrep -f "$cmd")
         test -n "$case_pid" && {
-            if kill -9 $case_pid >/dev/nul; then
+            if kill -9 "$case_pid" >/dev/nul 2>&1; then
                 LOG_WARN "The case execution timeout."
             fi
         }
@@ -151,7 +151,7 @@ function process() {
 
     exec 6>&1
     exec 7>&2
-    exec >${log_path}/"$(date +%Y-%m-%d-%T)".log 2>&1
+    exec >"$log_path"/"$(date +%Y-%m-%d-%T)".log 2>&1
 
     ((case_num++))
 
@@ -179,8 +179,8 @@ function process() {
 
 function run_test_case() {
 
-    test_suite=$1
-    test_case=$2
+    local test_suite=$1
+    local test_case=$2
 
     if [[ -z "$test_suite" || -z "$test_case" ]]; then
         LOG_ERROR "Parameter(test suite or test case) loss."
@@ -228,9 +228,11 @@ function run_test_case() {
 
     pushd "${case_path[*]}" >/dev/null || return 1
 
+    local execute_t
     execute_t=$(grep -w --fixed-strings EXECUTE_T ${test_case}.* 2>/dev/nul | awk -F '=' '{print $NF}')
     test -n "$execute_t" && EXECUTE_T=$execute_t
 
+    local script_type
     script_type=$(ls ${test_case}.* | awk -F '.' '{print $NF}')
 
     if [[ "$script_type"x == "sh"x ]] || [[ "$script_type"x == "bash"x ]]; then
@@ -258,19 +260,16 @@ function case_count() {
 }
 
 function run_test_suite() {
-    test_suite=$1
+    local test_suite=$1
 
     [ -z "$(find "$OET_PATH"/suite2cases -name "$test_suite")" ] && {
         LOG_ERROR "In the suite2cases directory, Can't find the file of testsuite:${test_suite}."
         return 1
     }
 
-    case_tmp=$(mktemp)
-    shuf ${OET_PATH}/suite2cases/${test_suite} -o "$case_tmp"
-
-    while read -r test_case; do
+    for test_case in $(shuf ${OET_PATH}/suite2cases/${test_suite} | tr -d ' '); do
         run_test_case "$test_suite" "$test_case"
-    done <"$case_tmp"
+    done
 }
 
 function run_all_cases() {
@@ -365,4 +364,3 @@ while getopts ":xdcaf:Cr:h" option; do
         ;;
     esac
 done
-
