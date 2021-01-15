@@ -1,0 +1,485 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>List difference</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="cmd_object, compatibility, verdifftest, report">
+    <meta name="description" content="List difference">
+    <style type="text/css">
+    body {
+        font-family: Arial, sans-serif;
+
+        color: #000;
+        background-color: #fff;
+    }
+
+    hr {
+        height: 1px;
+
+        color: #000;
+        border: 0;
+        background-color: #000;
+    }
+
+    h1 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 1.625em;
+
+        margin-bottom: 0;
+        padding-bottom: 0;
+
+        text-align: center;
+
+        color: #369;
+        border: #369 solid thin;
+    }
+
+    h2 {
+        font-size: 1.25em;
+
+        margin-bottom: 0;
+        padding-bottom: 0;
+
+        white-space: nowrap;
+    }
+
+    span.section {
+        font-weight: bold;
+
+        margin-left: .3125em;
+
+        cursor: pointer;
+        white-space: nowrap;
+
+        color: #003e69;
+    }
+
+    span.new_sign {
+        font-weight: bold;
+
+        margin-left: 1.65em;
+
+        color: #003e69;
+    }
+
+    span.new_sign_lbl {
+        font-size: 1em;
+
+        margin-left: 3em;
+
+        color: #000;
+    }
+
+    span:hover.section {
+        color: #369;
+    }
+
+    span.sect_aff {
+        font-size: .875em;
+
+        padding-left: 1.55em;
+
+        cursor: pointer;
+
+        color: #c30;
+    }
+
+    span.sect_info {
+        font-size: .875em;
+
+        padding-left: 1.55em;
+
+        cursor: pointer;
+
+        color: #000;
+    }
+
+    span.ext {
+        font-weight: normal;
+    }
+
+    span.h_name {
+        font-size: .875em;
+        font-weight: bold;
+
+        color: #c30;
+    }
+
+    div.h_list,
+    div.lib_list {
+        font-size: .94em;
+
+        padding-left: .4em;
+    }
+
+    span.ns {
+        font-size: .94em;
+
+        color: #408080;
+    }
+
+    span.lib_name {
+        font-size: .875em;
+        font-weight: bold;
+
+        color: #008000;
+    }
+
+    span.iname {
+        font-weight: bold;
+
+        margin-left: .3125em;
+
+        color: #003e69;
+    }
+
+    span.iname_b {
+        font-weight: bold;
+    }
+
+    span.iname_a {
+        font-size: .94em;
+        font-weight: bold;
+
+        color: #333;
+    }
+
+    span.sym_p {
+        font-weight: normal;
+
+        white-space: normal;
+    }
+
+    span.sym_pd {
+        white-space: normal;
+    }
+
+    span.sym_p span,
+    span.sym_pd span {
+        white-space: nowrap;
+    }
+
+    div.affect {
+        font-size: .87em;
+        font-style: italic;
+        line-height: .9em;
+
+        padding-bottom: 10px;
+        padding-left: 1em;
+    }
+
+    div.affected {
+        padding-top: 10px;
+        padding-left: 1.9em;
+    }
+
+    table.ptable {
+        width: 56.25em;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        margin-left: .95em;
+
+        border-collapse: collapse;
+
+        border: 1px outset #000;
+    }
+
+    table.ptable td {
+        font-size: .875em;
+
+        max-width: 28em;
+        padding: 3px;
+
+        text-align: left;
+        vertical-align: top;
+        word-wrap: break-word;
+
+        border: 1px solid #808080;
+    }
+
+    table.ptable th.pn {
+        width: 2%;
+    }
+
+    table.ptable th.chg {
+        width: 47%;
+    }
+
+    table.vtable {
+        margin-top: .7em;
+        margin-left: 1.9em;
+
+        border-collapse: collapse;
+
+        border: 1px outset #000;
+    }
+
+    table.vtable td {
+        font-size: .875em;
+
+        max-width: 450px;
+        padding: 3px;
+
+        vertical-align: top;
+        word-wrap: break-word;
+
+        border: 1px solid #808080;
+    }
+
+    table.ptable th,
+    table.vtable th {
+        font-family: Verdana, Arial;
+        font-size: .875em;
+        font-weight: bold;
+
+        padding: 3px;
+
+        text-align: center;
+        vertical-align: top;
+        white-space: nowrap;
+
+        color: #333;
+        border: 1px solid #808080;
+        background-color: #eee;
+    }
+
+    table.summary {
+        width: auto;
+
+        border-collapse: collapse;
+
+        border: 1px outset #000;
+    }
+
+    table.summary th {
+        font-size: .94em;
+        font-weight: normal;
+
+        padding: 3px;
+
+        text-align: left;
+        white-space: nowrap;
+
+        border: 1px inset #808080;
+        background-color: #eee;
+    }
+
+    table.summary td {
+        padding: 3px 5px 3px 10px;
+
+        text-align: left;
+        vertical-align: top;
+        white-space: pre;
+
+        border: 1px inset #808080;
+    }
+
+    table.list th {
+        font-size: .94em;
+        font-weight: normal;
+
+        padding: 3px;
+
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    table.list td {
+        padding: 3px 5px 3px 10px;
+
+        text-align: right;
+        white-space: pre;
+    }
+
+    span.mngl {
+        font-size: .875em;
+        font-weight: bold;
+
+        padding-left: 1em;
+
+        cursor: text;
+
+        color: #444;
+    }
+
+    span.pleft {
+        padding-left: 2.5em;
+    }
+
+    span.sym_ver {
+        font-family: "DejaVu Sans Mono", Monospace;
+
+        white-space: nowrap;
+
+        color: #333;
+    }
+
+    span.attr {
+        font-weight: normal;
+
+        color: #333;
+    }
+
+    span.color_p {
+        font-style: italic;
+
+        color: #a52a2a;
+    }
+
+    span.p {
+        font-style: italic;
+    }
+
+    span.fp {
+        font-style: italic;
+
+        background-color: #dcdcdc;
+    }
+
+    span.ttype {
+        font-weight: normal;
+    }
+
+    span.nowrap {
+        white-space: nowrap;
+    }
+
+    span.value {
+        font-weight: bold;
+    }
+
+    .passed {
+        font-weight: normal;
+
+        background-color: #cfc;
+    }
+
+    .warning {
+        font-weight: normal;
+
+        background-color: #f4f4af;
+    }
+
+    .failed {
+        font-weight: normal;
+
+        background-color: #fcc;
+    }
+
+    .new {
+        font-weight: normal;
+
+        background-color: #c6deff;
+    }
+
+    .compatible {
+        font-weight: normal;
+
+        background-color: #cfc;
+    }
+
+    .almost_compatible {
+        font-weight: normal;
+
+        background-color: #ffdaa3;
+    }
+
+    .incompatible {
+        font-weight: normal;
+
+        background-color: #fcc;
+    }
+
+    .gray {
+        font-weight: normal;
+
+        background-color: #dcdcdc;
+    }
+
+    .top_ref {
+        font-size: .69em;
+    }
+
+    .footer {
+        font-size: .75em;
+    }
+
+    .tabset {
+        float: left;
+    }
+
+    a.tab {
+        font-size: .875em;
+
+        position: relative;
+
+        float: left;
+
+        margin: 0 5px -1px 0;
+        padding: 3px 5px 3px 5px;
+
+        text-decoration: none;
+
+        color: #000;
+        border: 1px solid #000;
+        background-color: #ddd;
+    }
+
+    a.disabled:hover {
+        color: #000;
+        background: #eee;
+    }
+
+    a.active:hover {
+        color: #000;
+        background: #fff;
+    }
+
+    a.active {
+        border-bottom-color: #fff;
+        background-color: #fff;
+    }
+
+    div.tab {
+        clear: both;
+
+        width: 100%;
+        padding: 0;
+
+        border-top: 1px solid #000;
+    }
+    </style>
+</head>
+
+<body><a name="Source"></a><a name="Binary"></a><a name="Top"></a>
+
+    <h1>RPM Diff List</h1>
+
+    <br >
+
+    <h2>RPM list difference</h2>
+    <hr >
+    <table class="summary">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col" style="text-align:center;">Add Packages</th>
+            <th scope="col" style="text-align:center;">Del Packages</th>
+            <th scope="col" style="text-align:center;">Diff Packages(different version)</th>
+            <th scope="col" style="text-align:center;">Diff Packages(same version)</th>
+            <th scope="col" style="text-align:center;">Diff Packages(file change)</th>
+        </tr>
+        <tr>
+            <th scope="col">Pkg List</th>
+            <td bgcolor="greenyellow">add_pkg</td>
+            <td bgcolor="lightpink">del_pkg</td>
+            <td bgcolor="lemonchiffon">diff_pkg</td>
+            <td bgcolor="lemonchiffon">same_version</td>
+            <td bgcolor="lemonchiffon">file_change</td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
