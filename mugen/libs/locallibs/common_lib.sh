@@ -191,13 +191,9 @@ function main() {
     share_arg
 
     if [ -n "$(type -t post_test)" ]; then
-        if trap post_test EXIT INT TERM; then
-            exit 1
-        fi
+        trap post_test EXIT INT TERM || exit 1
     else
-        if trap POST_TEST_DEFAULT EXIT INT TERM; then
-            exit 1
-        fi
+        trap POST_TEST_DEFAULT EXIT INT TERM || exit 1
     fi
 
     if ! rpm -qa | grep expect >/dev/null 2>&1; then
