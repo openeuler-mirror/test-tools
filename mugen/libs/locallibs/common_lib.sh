@@ -28,6 +28,23 @@ function LOG_ERROR() {
     printf "$(date +%Y-%m-%d\ %T)  $0  [ ERROR ]  %s\n" "$@"
 }
 
+function GET_RANDOM_PORT() {
+    start_port=${1-1}
+    end_port=${1-10000}
+
+    mapfile used_ports < <(printf %d\\n 0x$(cat /proc/net/tcp* /proc/net/udp* | sed '/local_address/d' | awk -F ':' '{print $3}' | awk '{print $1}' | sort -u))
+
+    random_port=0
+    while [ $random_port == 0 ]; do
+        random_port=$(shuf -i ${start_port}-${end_port} -n1)
+        for used_port in "${used_ports[@]}"; do
+            test ${used_port} -eq ${random_port} && random_port=0
+        done
+    done
+
+    echo $random_port
+}
+
 function DNF_INSTALL() {
     __pkg_list=$1
     if [ -z "${__pkg_list}" ]; then
