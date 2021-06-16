@@ -177,10 +177,10 @@ function CASE_RESULT() {
 function SSH_CMD() {
     cmd=$1
     remoteip=$2
-    remotepasswd=${3-openEuler12#$}
-    remoteuser=${4-root}
-    timeout=${5-300}
-    connport=${6-22}
+    remotepasswd=${3:-"openEuler12#$"}
+    remoteuser=${4:-"root"}
+    timeout=${5:-"300"}
+    connport=${6:-"22"}
 
     bash ${OET_PATH}/libs/locallibs/sshcmd.sh -c "$cmd" -i "$remoteip" -u "$remoteuser" -p "$remotepasswd" -t "$timeout" -o "$connport"
     ret=$?

@@ -68,21 +68,24 @@ function usage() {
             bash mugen.sh -xf test_suite -r test_case
           debug mode and no check suite2case:
             bash mugen.sh -xf test_suite -Cr test_case
-        \n"
+        \n
+	configure env of test framework:\n
+	    bash mugen.sh -c localip username passwd port,like bash mugen.sh -c 1.1.1.1 root xxxxxxx 4567\n"
 }
 
 function deploy_conf() {
     local ipaddr=$2
-    local user=${3-"root"}
-    local password=${4-"openEuler12#$"}
+    local user=${3:-"root"}
+    local password=${4:-"openEuler12#$"}
+    local connport=${5:-"22"}
 
-    if [ -z "$ipaddr" ] || [ -z "$user" ] || [ -z "$password" ]; then
+    if [ -z "$ipaddr" ] || [ -z "$user" ] || [ -z "$password" ] || [ -z "$connport" ]; then
         LOG_ERROR "Parameter missing."
         exit 1
     fi
 
-    if ! SSH_CMD "echo OK" "$ipaddr" "$password" "$user" >/dev/nul; then
-        LOG_ERROR "The user name($user) and password($password) can't be used to log in the address($ipaddr)"
+    if ! SSH_CMD "echo" "$ipaddr" "$password" "$user" "" "$connport" > /dev/null; then
+	    LOG_ERROR "The user name($user) and password($password) can't be used to log in the address($ipaddr) and port($connport)"
         exit 1
     fi
 
