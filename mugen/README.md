@@ -21,7 +21,7 @@ mugen是openEuler社区开放的测试框架，提供公共配置和方法以便
   - 配置测试环境  
     `bash mugen.sh -c $ip $user $password`
   - 下载openEuler社区开源测试脚本  
-    `bash muge.sh -d`
+    `bash mugen.sh -d`
   - 执行所有用例  
     - 正常模式
       `bash mugen.sh -a`
