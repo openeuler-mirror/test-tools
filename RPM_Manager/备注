@@ -1,0 +1,30 @@
+1-install_direct.sh         直接安装待测试软件包，包含基础校验（软件包后缀和数量）
+2-upgrade_last_direct.sh    从已发布的最新版本——>测试版本
+3-upgrade_base_direct.sh    从基线版本——>测试版本
+4-upgrade_last_indirect.sh  从基线版本——>已发布的最新版本——>测试版本
+5-upgrade_mid_indirect.sh   从基线版本——>已发布的中间版本——>测试版本
+6-downgrade_uninstall.sh    软件包回滚 & 卸载
+7-uninstall_direct.sh       直接卸载软件包
+
+说明：
+    1、6、7不需要传参数； 
+    2、3、4、5需要传递两个参数，起始版本、目标版本，例如： bash -x 2-upgrade_last_direct.sh openEuler-20.03-LTS openEuler-20.03-LTS-SP3，bash -x 2-upgrade_last_direct.sh openEuler-22.03-LTS-SP1 openEuler-22.03-LTS-SP1
+
+
+
+测试场景：
+openEuler-20.03
+    SP1(测试版本)直接安装卸载       运行脚本：bash -x 1-install_direct.sh;     bash -x 7-uninstall_direct.sh
+    SP1(last) -> SP1(测试版本)    运行脚本：bash -x 2-upgrade_last_direct.sh openEuler-20.03-LTS-SP1 openEuler-20.03-LTS-SP1;      bash -x 6-downgrade_uninstall.sh
+
+    SP3(测试版本)直接安装卸载       运行脚本：bash -x 1-install_direct.sh;     bash -x 7-uninstall_direct.sh 
+    SP3(last) -> SP3(测试版本)    运行脚本：bash -x 2-upgrade_last_direct.sh openEuler-20.03-LTS-SP3 openEuler-20.03-LTS-SP3;      bash -x 6-downgrade_uninstall.sh
+    SP1(last) -> SP3(测试版本)    运行脚本：bash -x 2-upgrade_last_direct.sh openEuler-20.03-LTS-SP1 openEuler-20.03-LTS-SP3;      bash -x 6-downgrade_uninstall.sh
+
+openEuler-22.03
+    LTS(测试版本)直接安装卸载       运行脚本：bash -x 1-install_direct.sh;     bash -x 7-uninstall_direct.sh
+    LTS(base) -> LTS(last) -> LTS(测试版本)     运行脚本：bash -x 4-upgrade_last_indirect.sh openEuler-22.03-LTS openEuler-22.03-LTS;      bash -x 6-downgrade_uninstall.sh
+
+    SP1(测试版本)直接安装卸载       运行脚本：bash -x 1-install_direct.sh;     bash -x 7-uninstall_direct.sh
+    SP1(base) -> SP1(last) -> SP1(测试版本)     运行脚本：bash -x 4-upgrade_last_indirect.sh openEuler-22.03-LTS-SP1 openEuler-22.03-LTS-SP1;      bash -x 6-downgrade_uninstall.sh
+    LTS(last) -> SP1(测试版本)    运行脚本：bash -x 2-upgrade_last_direct.sh openEuler-22.03-LTS openEuler-22.03-LTS-SP1;      bash -x 6-downgrade_uninstall.sh
