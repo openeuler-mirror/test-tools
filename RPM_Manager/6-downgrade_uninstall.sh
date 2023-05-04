@@ -12,8 +12,12 @@ source ./common.sh
 main() {
     cd /home/pkg_manager_folder || exit 1
     #降级
-    yum downgrade -y $(cat update_list) --skip-broken 2>&1 | tee downgrade_log
-    test -s EPOL_update_list && yum downgrade -y "$(cat EPOL_update_list)" --skip-broken 2>&1 | tee EPOL_downgrade_log
+    while read -r pkg; do
+        yum downgrade -y "$pkg" >>downgrade_log 2>&1
+    done <update_list
+    test -s EPOL_update_list && while read -r pkg; do
+        yum downgrade -y "$pkg" >>EPOL_downgrade_log 2>&1
+    done <EPOL_update_list
 
     #卸载
     uninstall_pkg
