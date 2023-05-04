@@ -41,8 +41,12 @@ upgrade_test_pkg() {
         dnf config-manager --enable "${original_ver}_update" "${original_ver}_EPOL_update"
         mv /etc/yum.repos.d/"${target_ver}".repo.bak /etc/yum.repos.d/"${target_ver}".repo
     fi
-    yum upgrade -y $(cat update_list) --skip-broken 2>&1 | tee update_log
-    test -s EPOL_update_list && yum upgrade -y "$(cat EPOL_update_list)" --skip-broken 2>&1 | tee EPOL_update_log
+    while read -r pkg; do
+        yum upgrade -y "$pkg" >>update_log 2>&1
+    done <update_list
+    test -s EPOL_update_list && while read -r pkg; do
+        yum upgrade -y "$pkg" >>EPOL_update_log 2>&1
+    done <EPOL_update_list
 }
 
 main() {
