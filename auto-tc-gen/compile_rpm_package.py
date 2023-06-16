@@ -17,49 +17,38 @@
 #coding=UTF-8
 
 import subprocess
-import logging
+from logger import log
 import transform_rpm_package
 
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
-
-def get_rpm_name_path(sub_res_list):
+def get_rpm_name_path(sub_res_list, build_dir):
     """
-    获取包名与需要安装的rpm包路径
+    获取需要安装的rpm包路径
 
     Args:
         sub_res_list ([list]): [文件编译中的输出信息]
+        build_dir ([string]): [build目录]
 
     Returns:
-        [string]: rpm包名
         [list]: rpm包路径
     """
-    rpm_name = ""
     rpm_list = []
     for res in sub_res_list:
         if not res.startswith("Wrote:"):
             continue
-        if res.startswith("Wrote: /root/rpmbuild/SRPMS/"):
-            rpm_name = res.split("Wrote: /root/rpmbuild/SRPMS/")[1]
-            rpm_name_list = rpm_name.split(".")
-            rpm_name = rpm_name_list[0]
-            for i in range(1, len(rpm_name_list) - 2):
-                rpm_name = rpm_name + "." + rpm_name_list[i]
-        if res.startswith("Wrote: /root/rpmbuild/RPMS/"):
+        if res.startswith(f"Wrote: {build_dir}SRPMS/") or res.startswith(f"Wrote: {build_dir}RPMS/"):
             res = res.split("Wrote:")[1].strip()
             rpm_list.append(res)
-    return rpm_name, rpm_list
+    return rpm_list
 
 
-def automatic_install_dependency(sub_res_list):
+def automatic_install_dependency(sub_res_list, log_file):
     """
     依赖的自动导入
 
     Args:
         sub_res_list ([list]): [文件编译中的输出信息]
+        log_file ([string]): [日志打印目录]
     """
     dependency_list = []
     for res in sub_res_list:
@@ -72,70 +61,58 @@ def automatic_install_dependency(sub_res_list):
         else:
             sub_status, sub_res = subprocess.getstatusoutput("yum install -y " + res)
         if sub_status != 0:
-            logging.error("依赖 " + res + " 导入失败")
+            log.error("依赖 " + res + " 导入失败", log_file)
         else:
-            logging.info("依赖 " + res + " 导入成功")
+            log.info("依赖 " + res + " 导入成功", log_file)
 
-def inspect_install(name):
+def inspect_install(name, log_file):
     """
         检查与安装环境中需要安装的软件包
 
         Args:
             name ([string]): [包名]
+            log_file ([string]): [日志打印目录]
         """
     sub_status, sub_res = subprocess.getstatusoutput("yum list installed | grep" + " " + name)
     if len(str(sub_res)) == 0:
         sub_status, sub_res = subprocess.getstatusoutput("yum install -y" + " " + name)
         if sub_status != 0:
-            logging.error("环境中缺少软件包 " + name + " ，自动安装失败")
+            log.error("环境中缺少软件包 " + name + " ，自动安装失败", log_file)
 
-def compile_rpm_package(source_list):
+def compile_rpm_package(build_dir, log_file):
     """
     软件包编译
 
     Args:
-        source_list ([list]): [SPEC文件列表]
+        build_dir ([string]): [build文件目录]
+        log_file ([string]): [日志打印目录]
     """
-
-    print(" ")
-    print("-----------------------------------------")
-    print("第二步：编译rpm包")
-    print("-----------------------------------------")
-    print(" ")
-    print("已检测到的spec文件为：")
-    spec_address = "/root/rpmbuild/SPECS"
-    status, res = subprocess.getstatusoutput("ls " + spec_address)
-    for spec in res.split('\n'):
-        print(spec)
-    print(" ")
-    print("开始编译rpm包")
-    # 记录需要安装的rpm包路径
-    rpm_multiple_list = []
+    spec_address = build_dir + "SPECS/"
+    log.info("第四步：编译软件包", log_file)
+    sub_status, sub_res = subprocess.getstatusoutput(f"ls {spec_address}")
+    name = sub_res
     # 检查与安装 rpm-build 、cpan包
-    inspect_install("rpm-build")
-    inspect_install("perl-CPAN")
-    for name in res.split('\n'):
-        sub_status, sub_res = subprocess.getstatusoutput("rpmbuild -ba" + " " + spec_address + "/" + name)
+    inspect_install("rpm-build", log_file)
+    inspect_install("perl-CPAN", log_file)
+    compile_command = f"rpmbuild -ba --define='_topdir {build_dir}' {spec_address}{name}"
+    sub_status, sub_res = subprocess.getstatusoutput(compile_command)
+    sub_res_list = sub_res.split('\n')
+    if len(sub_res_list) > 0 and sub_res_list[len(sub_res_list) - 1].__contains__(" is needed by "):
+        log.info("------开始自动导入依赖------", log_file)
+        # 依赖的自动导入,( is needed by )
+        automatic_install_dependency(sub_res_list, log_file)
+        sub_status, sub_res = subprocess.getstatusoutput(compile_command)
         sub_res_list = sub_res.split('\n')
-        if len(sub_res_list) > 0 and sub_res_list[len(sub_res_list) - 1].__contains__(" is needed by "):
-            print("------开始自动导入依赖------")
-            # 依赖的自动导入,( is needed by )
-            automatic_install_dependency(sub_res_list)
-            sub_status, sub_res = subprocess.getstatusoutput("rpmbuild -ba" + " " + spec_address + "/" + name)
-            sub_res_list = sub_res.split('\n')
-            if sub_status != 0:
-                logging.error("软件包 " + name + " 自动导入依赖失败")
-            else:
-                logging.info("软件包 " + name + " 自动导入依赖成功")
-        # 获取包名与需要安装的rpm包路径
-        rpm_name, rpm_list = get_rpm_name_path(sub_res_list)
-        if rpm_name != "" and len(rpm_list) != 0:
-            # 将包名插入第一个位置，与rpm需要安装的包路径放在一起
-            rpm_list.insert(0, rpm_name)
-            rpm_multiple_list.append(rpm_list)
-        # 打印编译失败的情况
-        if not sub_res_list[len(sub_res_list)-1].__contains__("exit 0"):
-            logging.error("软件包 " + name + " 编译失败")
+        if sub_status != 0:
+            log.error("软件包 " + name + " 自动导入依赖失败", log_file)
         else:
-            logging.info("软件包 " + name + " 编译成功")
-    transform_rpm_package.transform_rpm_package(source_list, rpm_multiple_list)
+            log.info("软件包 " + name + " 自动导入依赖成功", log_file)
+    # 获取需要安装的rpm包路径
+    rpm_list = get_rpm_name_path(sub_res_list, build_dir)
+    # 打印编译失败的情况
+    if not sub_res_list[len(sub_res_list)-1].__contains__("exit 0"):
+        log.error("软件包 " + name + " 编译失败", log_file)
+        return
+    else:
+        log.info("软件包 " + name + " 编译成功", log_file)
+    transform_rpm_package.transform_rpm_package(rpm_list, build_dir, log_file)

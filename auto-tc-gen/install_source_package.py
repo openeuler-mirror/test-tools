@@ -16,99 +16,93 @@
 
 #coding=UTF-8
 
-import logging
+import os
 import subprocess
+import configparser
+from logger import log
 import compile_rpm_package
 from help_parse import parameter_classify
 
-is_auto = "y"
+# 获取当前脚本所在的目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 读取配置文件
+config = configparser.ConfigParser()
+config.read('./config.ini')
+# 从配置文件中获取日志打印存放目录和脚本文件存放目录
+# 包括工具是否需要全自动、源码包下载目录、日志打印存放目录、脚本文件存放目录
+download_dir = config.get('Directories', 'download_dir', fallback=current_dir)
+build_dir = config.get('Directories', 'build_dir', fallback=current_dir)
+log_dir = config.get('Directories', 'log_dir', fallback=current_dir)
+scr_dir = config.get('Directories', 'scr_dir', fallback=current_dir)
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+# 将路径转换为绝对路径,便于直接使用
+download_dir = os.path.abspath(download_dir) + "/"
+build_dir = os.path.abspath(build_dir) + "/"
+log_dir = os.path.abspath(log_dir) + "/"
+scr_dir = os.path.abspath(scr_dir) + "/"
 
+package_name = ""
 
-def install_source_package(address):
+def install_source_package():
     """
-    安装源码包
-
-    Args:
-        address ([string]): [源码包本地目录]
+    下载与安装源码包
     """
-    print(" ")
-    print("-----------------------------------------")
-    print("第一步：安装源码包（XXX.src.rpm）")
-    print("-----------------------------------------")
-    print(" ")
-    source_list = []
-    status, res = subprocess.getstatusoutput("ls" + " " + address)
-    print("已检测到的源码包为： ")
-    for src_rpm in res.split('\n'):
-        if src_rpm.endswith(".src.rpm"):
-            print(src_rpm)
-            source_list.append(src_rpm)
-
-    # 使用 dnf install 的方式安装软件包，便于后续使用预设值自动生成测试用例时测试
-    print("使用 yum install 的方式安装源码包")
-    for rpm in res.split('\n'):
-        rpm = rpm.lstrip()
-        name_list = rpm.split("-")
-        name = name_list[0]
-        for i in range(1, len(name_list)):
-            if name_list[i].isspace():
-                continue
-            if 0 <= ord(name_list[i][0]) - ord('0') <= 9:
-                break
-            name = name + "-" + name_list[i]
-        sub_status, sub_res = subprocess.getstatusoutput("yum list installed | grep" + " " + name)
-        if len(str(sub_res)) == 0:
-            sub_status, sub_res = subprocess.getstatusoutput("yum install -y" + " " + name)
-            if sub_status != 0:
-                logging.error("软件包 " + name + " 安装失败")
-            else :
-                logging.info("软件包 " + name + " 安装完成")
-        else:
-            logging.info("软件包 " + name + " 已存在，无需安装")
-
-    for name in res.split('\n'):
-        sub_status, sub_res = subprocess.getstatusoutput("rpm -ivh" + " " + str(address) + "/" + name)
+    # 从配置文件中读取软件包名称
+    packages = config.get("Packages", "packages").split(",")
+    # 创建日志打印目录
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    # 下载软件包的 src.rpm 文件
+    for package in packages:
+        package = package.strip()
+        # 创建下载目录
+        if not os.path.exists(download_dir + "" + package + "/"):
+            os.makedirs(download_dir + "" + package + "/")
+        cur_log_dir = log_dir + "" + package + "/"
+        if not os.path.exists(cur_log_dir):
+            os.makedirs(cur_log_dir)
+        log.info("第一步：下载源码包", f"{cur_log_dir}{package}.txt")
+        command = f"yumdownloader --source {package} --destdir {download_dir}{package}/"
+        sub_status, sub_res = subprocess.getstatusoutput(command)
         if sub_status != 0:
-            logging.error("SRPM包 " + name + " 安装失败")
+            log.error("源码包 " + package + " 下载失败", cur_log_dir + "" + package + ".txt")
+            continue
         else:
-            logging.info("SRPM包 " + name + " 安装完成")
-
-    compile_rpm_package.compile_rpm_package(source_list)
-
-def input_directory():
-    """
-        获取本地源码包路径
-    """
-    print("请输入是否需要全自动生成测试用例 [y/n]")
-    global is_auto
-    is_auto = input()
-    print("请输入本地源码包路径, 例如：/root/test (默认为 /root/test)")
-    address = input()
-    if is_auto == '':
-        is_auto = "y"
-    if address == '':
-        address = "/root/test"
-    status, res = subprocess.getstatusoutput("ls" + " " + address)
-    address_flag = False
-    for name in res.split('\n'):
-        if name.endswith(".src.rpm"):
-            address_flag = True
-            break
-    if not address_flag:
-        logging.info("输入的地址中不包含源码包")
-        return
-
-    # 初始化参数映射
-    parameter_classify.initialize_parameters()
-    # 安装源码包
-    install_source_package(address)
+            log.info("源码包 " + package + " 下载成功", cur_log_dir + "" + package + ".txt")
+        source_dir = download_dir + "" + package + "/"
+        sub_status, sub_res = subprocess.getstatusoutput(f"ls {source_dir}")
+        source_name = sub_res
+        log_file = f"{cur_log_dir}{package}.txt"
+        log.info("第二步：安装源码包", log_file)
+        if not os.path.exists(build_dir + "" + package + "/"):
+            os.makedirs(build_dir + "" + package + "/")
+        install_command = f"rpm -ivh --define '_topdir {build_dir}{package}/' {source_dir}{source_name}"
+        sub_status, sub_res = subprocess.getstatusoutput(install_command)
+        if sub_status != 0:
+            log.error("SRPM包 " + source_name + " 安装失败", log_file)
+            continue
+        else:
+            log.info("SRPM包 " + source_name + " 安装完成", log_file)
+        log.info("第三步：使用 yum install 的方式安装软件包", log_file)
+        sub_status, sub_res = subprocess.getstatusoutput("yum list installed | grep" + " " + package)
+        if len(str(sub_res)) == 0:
+            sub_status, sub_res = subprocess.getstatusoutput("yum install -y" + " " + package)
+            if sub_status != 0:
+                log.error("软件包 " + package + " 安装失败", log_file)
+            else:
+                log.info("软件包 " + package + " 安装完成", log_file)
+        else:
+            log.info("软件包 " + package + " 已存在，无需安装", log_file)
+        # 便于后续模块存储时使用
+        global package_name
+        package_name = package
+        compile_rpm_package.compile_rpm_package(build_dir + "" + package +"/", log_file)
 
 if __name__ == '__main__':
     """
     工具入口
     """
-    input_directory()
+    # 初始化参数映射
+    parameter_classify.initialize_parameters()
+    # 安装源码包
+    install_source_package()
