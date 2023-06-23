@@ -22,7 +22,7 @@ import logging
 class MyLogger:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.INFO)
+        self.logger.setLevel(logging.DEBUG)
         self.formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
     def create_directory(self, file_path):
@@ -50,6 +50,22 @@ class MyLogger:
             file_handler.setFormatter(self.formatter)
             self.logger.addHandler(file_handler)
             self.logger.info(message)
+            self.logger.removeHandler(file_handler)
+
+    def debug(self, message, file_path):
+        """
+        输出 ERROR 级别的日志消息到指定文件
+
+        Args:
+            message (str): 日志消息
+            file_path (str): 日志文件路径
+        """
+        self.create_directory(file_path)
+        with open(file_path, 'a') as file:
+            file_handler = logging.StreamHandler(file)
+            file_handler.setFormatter(self.formatter)
+            self.logger.addHandler(file_handler)
+            self.logger.debug(message)
             self.logger.removeHandler(file_handler)
 
     def warning(self, message, file_path):
