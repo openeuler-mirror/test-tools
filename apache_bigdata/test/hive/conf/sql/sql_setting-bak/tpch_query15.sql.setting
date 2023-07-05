@@ -1,0 +1,11 @@
+use tpch_flat_orc_1000;
+
+set hive.execution.engine=tez;
+set hive.cbo.enable=true;
+#set hive.tez.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+set mapred.reduce.tasks=80;
+set hive.tez.container.size=4096;
+set tez.am.resource.memory.mb=4096;
+set tez.task.resource.memory.mb=4096;
+set tez.runtime.io.sort.mb=384;
+set hive.merge.tezfiles=true;

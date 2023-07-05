@@ -1,0 +1,18 @@
+# arrch64
+
+#  CentOS
+CentOS_7.6
+CentOS_7.6_4k_bcache
+CentOS_8.2
+CentOS_8.2_4k_bcache
+
+# openEuler
+openEuler20.03_SP3
+openEuler20.03_SP3_4k_bcache
+openEuler22.03_LTS
+
+
+
+# x86_64
+
+

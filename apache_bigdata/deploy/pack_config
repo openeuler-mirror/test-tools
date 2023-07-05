@@ -1,0 +1,54 @@
+tools_os_iso=openEuler-20.03-LTS-everything-aarch64-dvd.iso
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   hekeming
+# @Contact   :   hk16897@126.com
+# @Date      :   2023/07/03
+# @License   :   Mulan PSL v2
+# @Desc      :   Test SSH link
+# ############################################
+tools_jdk_package=jdk8u222-b10-aarch64.tar.gz
+tools_expect_rpm_package=expect-5.45.4-3.oe1.aarch64.rpm
+tools_tcl_rpm_package=tcl-8.6.8-8.oe1.aarch64.rpm
+zookeeper_version=3.4.6
+zookeeper_package=zookeeper-3.4.6.tar.gz
+zookeeper_platform=APACHE
+hadoop_version=3.1.1.3.1.0.0-78
+hadoop_package=hadoop-3.1.1.3.1.0.0-78.tar.gz
+hadoop_platform=HDP
+tez_version=0.9.1.3.1.0.0-78
+tez_package=tez-0.9.1.3.1.0.0-78.tar.gz
+tez_platform=HDP
+hive_version=3.1.0.3.1.0.0-78
+hive_package=apache-hive-3.1.0.3.1.0.0-78-bin.tar.gz
+hive_platform=HDP
+spark_version=2.3.2.3.1.0.0-78-bin-3.1.1.3.1.0.0-78
+spark_package=spark-2.3.2.3.1.0.0-78-bin-3.1.1.3.1.0.0-78.tgz
+spark_platform=HDP
+hbase_version=2.0.2.3.1.0.0-78
+hbase_package=hbase-2.0.2.3.1.0.0-78-bin.tar.gz
+hbase_platform=HDP
+flink_version=1.7.0
+flink_package=flink-1.7.0.tgz
+flink_platform=APACHE
+storm_version=1.2.1.3.1.0.0-78
+storm_package=apache-storm-1.2.1.3.1.0.0-78.tar.gz
+storm_platform=HDP
+kafka_version=2.11-2.0.0.3.1.0.0-78
+kafka_package=kafka_2.11-2.0.0.3.1.0.0-78.tgz
+kafka_platform=HDP
+redis_version=5.0.4
+redis_package=redis-bin-5.0.4.tar.gz
+redis_platform=OTHER
+elastic_version=6.7.1
+elastic_package=elasticsearch-6.7.1.tar.gz
+elastic_platform=OTHER
+online_component=zookeeper,hadoop,tez,hive,spark,hbase,flink,storm,kafka,redis,elastic

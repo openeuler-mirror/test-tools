@@ -1,0 +1,3 @@
+-nrFiles 50
+-size 1024
+-resFile /tmp/TestDFSIO_results.log

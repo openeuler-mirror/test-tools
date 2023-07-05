@@ -1,0 +1,6 @@
+orc_database_prefix=tpcds_orc_hive_
+text_database_prefix=tpcds_text_hive_
+text_output_dir=/tmp/tpcds-generate
+tpcds_file=TPC-DS-Kunpeng
+data_size=5000
+generatedata_switch=true

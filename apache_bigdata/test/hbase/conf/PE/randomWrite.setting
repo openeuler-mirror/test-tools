@@ -1,0 +1,6 @@
+--nomapred
+--client=30
+--size=100
+--table=Perform_Test
+--presplit=50
+--compress=SNAPPY

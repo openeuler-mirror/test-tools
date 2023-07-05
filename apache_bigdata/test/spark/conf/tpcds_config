@@ -1,0 +1,7 @@
+parquet_database_prefix=tpcds_parquet_spark_
+text_database_prefix=tpcds_text_spark_
+text_output_dir=/tmp/tpcds-generate
+tpcds_file=TPC-DS-Kunpeng
+data_size=5000
+spark_client_dir=/usr/local/spark
+spark_conf_file=spark-defaults.conf

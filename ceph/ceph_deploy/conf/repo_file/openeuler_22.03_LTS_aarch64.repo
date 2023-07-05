@@ -1,0 +1,7 @@
+[everything]
+name=everything
+#baseurl=https://repo.openeuler.org/openEuler-22.03-LTS/everything/aarch64/
+baseurl=http://121.36.84.172/dailybuild/openEuler-22.03-LTS/test_openeuler-2022-03-30-16-23-56/everything/aarch64/
+gpgcheck=0
+enable=1
+priority=1

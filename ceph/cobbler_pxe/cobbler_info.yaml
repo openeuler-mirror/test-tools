@@ -1,0 +1,71 @@
+service:
+  server_url: http://192.168.144.9/cobbler_api
+  user: cobbler
+  passwd: cobbler
+system_info:
+  ceph1:
+    profile: openEuler_22.03_LTS_SP1-aarch64
+    # selete ks templete
+    ks_templete:  
+    auto_adapter:
+      manage_ip: 172.168.144.10
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-3500003999812fcc5
+    power_address: 9.3.14.10
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: 84:46:fe:fd:cc:e9
+      ip_address-netinfo: 192.168.144.10
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc
+  ceph2:
+    profile: openEuler_22.03_LTS_SP1-aarch64
+    # selete ks templete
+    ks_templete: 
+    auto_adapter:
+      manage_ip: 172.168.144.11
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-350000399c8106cd5
+    power_address: 9.3.14.11
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: 44:a1:91:e5:7c:f1
+      ip_address-netinfo: 192.168.144.11
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc
+  ceph3:
+    profile: openEuler_22.03_LTS_SP1-aarch64
+    # selete ks templete
+    ks_templete:  
+    auto_adapter:
+      manage_ip: 172.168.144.12
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-350000399c8106851
+    power_address: 9.3.14.12
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: ac:b3:b5:1e:d6:cc
+      ip_address-netinfo: 192.168.144.12
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc

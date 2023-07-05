@@ -1,0 +1,31 @@
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   hekeming
+# @Contact   :   hk16897@126.com
+# @Date      :   2023/07/03
+# @License   :   Mulan PSL v2
+# @Desc      :   Test SSH link
+# ############################################
+run_mysql.sh
+测试命令
+基线场景（只加STEAL参数优化）：sh -x run_mysql.sh -a base -b 5 -f mysql-8.0.20-No -t 192.168.1.10 -n enp4s0
+基线场景二次测试 ：sh -x run_mysql.sh -a rerun_base -b 5 -f mysql-8.0.20-No -t 192.168.1.10 -n enp4s0
+所有优化场景（STEAL+tmpfs+hugepage+Gazelle）：sh -x run_mysql.sh -a all -b 5 -f mysql-8.0.20-all -t 192.168.1.10 -n enp4s0
+所有优化场景二次测试：sh -x run_mysql.sh -a rerun_all -b 5 -f mysql-8.0.20-all -t 192.168.1.10 -n enp4s0
+安装部署完环境 ：sh -x run_mysql.sh -a install -b 5 -f mysql-8.0.20-No -t 192.168.1.10 -n enp4s0
+
+注：1. 测试命令中-a 指定测试场景、-b指定测试网卡绑定中断数、-f为指定安装的mysql路径名、-t为服务端测试网卡ip  -n为服务端测试网卡名、-i为指定绑定中断核数、-m为服务端测试网卡mac、-c为客户端ip、-d为拷贝数据路径名。
+       2. 黄区测试环境31/41中在除-a（测试场景）、-f（mysql路径名）、-b（中断数）外均可默认，其他环境需根据实际环境设置进行参数指定。
+       
+
+
+
+

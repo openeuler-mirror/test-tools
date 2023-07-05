@@ -1,0 +1,116 @@
+service:
+  server_url: http://192.168.144.9/cobbler_api
+  user: cobbler
+  passwd: cobbler
+system_info:
+  ceph1:
+    profile: openEuler_20.03_SP3-aarch64
+    # selete ks templete
+    ks_templete: common-ks.templete
+    auto_adapter:
+      manage_ip: 172.168.144.10
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-3500003999812fcc5
+    power_address: 9.3.14.10
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: 84:46:fe:fd:cc:e9
+      ip_address-netinfo: 192.168.144.10
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc
+  ceph2:
+    profile: openEuler_20.03_SP3-aarch64
+    # selete ks templete
+    ks_templete: common-ks.templete
+    auto_adapter:
+      manage_ip: 172.168.144.11
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-350000399c8106cd5
+    power_address: 9.3.14.11
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: 44:a1:91:e5:7c:f1
+      ip_address-netinfo: 192.168.144.11
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc
+  ceph3:
+    profile: openEuler_20.03_SP3-aarch64
+    # selete ks templete
+    ks_templete: common-ks.templete
+    auto_adapter:
+      manage_ip: 172.168.144.12
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-350000399c8106cd5
+    power_address: 9.3.14.12
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: ac:b3:b5:1e:d6:cc
+      ip_address-netinfo: 192.168.144.12
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc
+
+  client1:
+    profile: openEuler_20.03_SP3-aarch64
+    # selete ks templete
+    ks_templete: common-ks.templete
+    auto_adapter:
+      manage_ip: 172.168.144.7
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-35000c500c27977ab
+    power_address: 9.3.14.7
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: 44:a1:91:9f:9a:9a
+      ip_address-netinfo: 192.168.144.7
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc
+  client2:
+    profile: openEuler_20.03_SP3-aarch64
+    # selete ks templete
+    ks_templete: common-ks.templete
+    auto_adapter:
+      manage_ip: 172.168.144.8
+      manage_prefix: 16
+      manage_gateway: 172.168.131.1
+      disk_uuid: scsi-350000399b8917ed5
+    power_address: 9.3.14.8
+    power_user: Administrator
+    power_pass: Admin@9000
+    power_type: ipmitool
+    gateway: 192.168.144.5
+    netboot_enabled: 1
+    boot_loader: pxelinux
+    modify_interface:
+      mac_address-netinfo: 44:a1:91:9f:9a:da
+      ip_address-netinfo: 192.168.144.8
+      static-netinfo: 1
+      netmask-netinfo: 255.255.255.0
+      interface_type-netinfo: bmc

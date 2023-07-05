@@ -1,0 +1,54 @@
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   hekeming
+# @Contact   :   hk16897@126.com
+# @Date      :   2023/07/03
+# @License   :   Mulan PSL v2
+# @Desc      :   Test SSH link
+# ############################################
+# 是否为在线环境，若为true则会从download_url配置的地址下载安装包
+is_online=false
+# 在线环境安装包下载路径
+download_url=http://172.168.144.9/bigdata
+# 是否使用本地OS镜像文件，使用则替换当前系统的repo源，默认不适用，
+local_iso_flag=false
+# 待配置基础环境的节点IP地址和主机名映射清单，支持绝对路径和相对路径两种，相对路径以tools工具根目录为起点; 另外，该文件当前不支持注释
+ip_list=conf/ip_hostname_map.list
+# ssh登陆账号
+user=root
+# ssh登陆密码
+passwd=Huawei12#$
+# 待配置节点CPU架构 x86_64 or aarch64
+arch=aarch64
+# OS镜像挂载的目录
+yum_mount_path=/media
+# JDK压缩包解压后的目录名
+jdk_name=bisheng-jdk1.8.0_262
+# JDK安装目录
+target_path=/usr/local
+
+# 因CPU架构、OS不同而不同的文件，需根据当前环境选择合适的文件
+# OS挂载镜像文件，用于配置本地yum源，一般与当前操作系统保持一致
+#os_iso=CentOS-7-aarch64-Everything-1810.iso
+#os_iso=CentOS-7-x86_64-DVD-1810.iso
+os_iso=openEuler-20.03-LTS-SP3-everything-aarch64-dvd.iso
+
+# 待安装JDK文件
+#jdk_package=jdk8u282-b08-x86_64.tar.gz
+jdk_package=bisheng-jdk1.8.0_262-aarch64.tar.gz
+
+
+# 是否需要更改os参数支持true和TRUE 其他均不修改os参数
+is_need_os=false
+
+# 需要更改的机器ip
+os_ip_list=xx
+

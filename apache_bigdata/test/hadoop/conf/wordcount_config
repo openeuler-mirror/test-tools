@@ -1,0 +1,4 @@
+jar_file=
+data_local_file=conf/wordcount/word_data.txt
+data_hdfs_input_dir=/data/wordcount/input
+data_hdfs_output_dir=/data/wordcount/output

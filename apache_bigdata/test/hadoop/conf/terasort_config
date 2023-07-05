@@ -1,0 +1,6 @@
+jar_file=
+data_size=10737418
+map_tasks=100
+reduce_tasks=50
+terasort_input_data=
+terasort_output_data=

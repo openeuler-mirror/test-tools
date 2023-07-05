@@ -1,0 +1,24 @@
+use tpcds_orc_hive_5000;
+set hive.map.aggr=true;
+set hive.vectorized.execution.enabled=true;
+set hive.auto.convert.join=true;
+set hive.auto.convert.join.noconditionaltask=true;
+set hive.limit.optimize.enable=true;
+##
+set hive.exec.parallel=true;
+#set mapreduce.map.output.compress=true;
+#set mapreduce.map.output.compress=true;
+#set mapreduce.map.output.compress.codec=org.apache.hadoop.io.compress.SnappyCodec;
+#set hive.cbo.enable=true;
+#set hive.exec.compress.intermediate=true;
+#set mapreduce.reduce.memory.mb=4096;
+#set mapreduce.reduce.memory.mb=5120;
+#set mapreduce.reduce.cpu.vcores=1;
+#set mapreduce.map.memory.mb=3072;
+#set mapreduce.map.memory.mb=5120;
+#set mapreduce.map.cpu.vcores=1;
+#set mapreduce.input.fileinputformat.split.maxsize=1433600000;
+#set mapreduce.input.fileinputformat.split.maxsize=640000000;
+set hive.exec.reducers.max=376;
+#set mapred.reduce.slowstart.completed.maps=0.8;
+set hive.tez.container.size=6148;

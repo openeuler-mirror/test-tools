@@ -1,0 +1,13 @@
+bmc_ip=9.3.14.12
+bmc_user=Administrator
+bmc_pwd=Admin@9000
+
+manage_ip=172.168.144.12
+manage_prefix=16
+manage_gateway=172.168.131.1
+dhcp_ip=192.168.144.12
+system_name=CentOS_8.2
+#system_name=CentOS_8.2
+arch_name=aarch64
+efi_name=grubaa64.efi
+disk_uuid=350000399c8106f55

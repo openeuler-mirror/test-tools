@@ -1,0 +1,7 @@
+[everything]
+name=everything
+#baseurl=https://repo.openeuler.org/openEuler-20.23-LTS-Next/everything/$basearch/
+baseurl=http://121.36.84.172/dailybuild/openEuler-22.03-LTS-Next/performance_test_openeuler-2022-08-22-19-53-32/everything/$basearch/
+gpgcheck=0
+enable=1
+priority=1

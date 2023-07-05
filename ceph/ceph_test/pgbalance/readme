@@ -1,0 +1,26 @@
+1、获取所有的pg信息
+ceph pg dump pgs|awk '{print $1,$17}' > pgdump
+
+说明：本次导出的pgdump无需删除第一行和末尾的字符，保证导出的数据格式 pgid [osdid1, osdid2, osdid3]
+
+2、获取所有的osd信息（计算pg均衡的时候以UP为标识）
+ceph osd tree up > osdtree
+
+3、执行工具生成新的pg map信息
+./primarypgbalancer-opt-arm-v3 pgdump osdtree > newpgmap
+
+4、只需要首次设置
+ceph osd set-require-min-compat-client luminous --yes-i-really-mean-it
+
+5、source newpgmap
+
+
+
+
+
+
+
+清楚upmap调整pg操作
+ceph osd dump | grep pg_upmap_items | awk '{print $2}' | xargs -n 1 ceph osd rm-pg-upmap-item
+
+

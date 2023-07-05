@@ -1,0 +1,34 @@
+############################# 操作系统配置项 ##################################################
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   hekeming
+# @Contact   :   hk16897@126.com
+# @Date      :   2023/07/03
+# @License   :   Mulan PSL v2
+# @Desc      :   Test SSH link
+# ############################################
+#deploy_mode=tar
+#deploy_mode=ambari
+deploy_mode=tar
+
+
+############################# 命令行前缀配置项 ##################################################
+command_prefix_ambari_hdfs="sudo -u hdfs"
+
+command_prefix_tar_hdfs=""
+
+command_prefix_ambari_hbase="sudo -u hbase"
+
+command_prefix_tar_hbase=""
+
+command_user_tar=""
+
+command_user_ambari="sudo -u hdfs"

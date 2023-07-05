@@ -1,0 +1,4 @@
+yarn.timeline-service.enabled=true
+yarn.timeline-service.hostname={master}
+yarn.timeline-service.http-cross-origin.enabled=true
+yarn.resourcemanager.system-metrics-publisher.enabled=true
