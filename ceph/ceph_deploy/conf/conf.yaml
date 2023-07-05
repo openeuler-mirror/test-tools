@@ -1,0 +1,7 @@
+# proxy:
+#  http_proxy: xxxxx
+#  https_proxy: xxxxx
+
+pip:
+  remote_mirror:  https://repo.huaweicloud.com/repository/pypi/simple
+  trusted_host: https://repo.huaweicloud.com

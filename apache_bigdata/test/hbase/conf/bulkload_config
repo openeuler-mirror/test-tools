@@ -1,0 +1,19 @@
+hbase_cmd_file=create_table.hbase.sh
+mapreduce_split_minsize=1073741824
+node_num=3
+
+######################## bulkload测试相关参数########################
+# 测试数据大小，单位KB，数据生成脚本每条数据为1024Byte 参考值 1T = 1073741824 KB，数据太大生成耗时较久，三思而行
+bulkloaddatasize=1073741824
+
+# hdfs文件系统测试文件
+data_hdfs_file=/data/hbase/datadirImport/Bulkdata1.csv
+
+# 是否强制重新生成测试数据,默认为false
+csvdataregenerateflag=false
+
+# hdfs文件系统中测试数据源路径
+bulk_input=/data/hbase/datadirImport
+
+# bulkload测试数据结果输出路径
+bulk_output=/data/hbase/hfile

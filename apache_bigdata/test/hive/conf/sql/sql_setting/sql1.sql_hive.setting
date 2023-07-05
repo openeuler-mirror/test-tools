@@ -1,0 +1,45 @@
+use tpcds_orc_hive_5000;
+#set hive.map.aggr=true;
+#set mapreduce.job.map.output.collector.class=org.apache.hadoop.mapred.nativetask.NativeMapOutputCollectorDelegator;
+#set hive.vectorized.execution.enabled=true;
+#set hive.auto.convert.join=true;
+#set hive.auto.convert.join.noconditionaltask=true;
+#set hive.limit.optimize.enable=true;
+set hive.exec.parallel=true;
+#set mapreduce.map.output.compress=true;
+#set mapreduce.map.output.compress.codec=org.apache.hadoop.io.compress.SnappyCodec;
+set hive.cbo.enable=true;
+set hive.exec.compress.intermediate=true;
+#set mapreduce.reduce.memory.mb=8192;
+#set mapreduce.reduce.cpu.vcores=2;
+#set mapreduce.reduce.cpu.vcores=4;
+#set mapreduce.map.memory.mb=3072;
+#set mapreduce.map.memory.mb=5120;
+#set mapreduce.map.cpu.vcores=1;
+#set mapreduce.map.java.opts=-Xmx2648m;
+#set mapreduce.input.fileinputformat.split.maxsize=1900000000; #1400s
+#set mapreduce.input.fileinputformat.split.maxsize=300000000; #859s
+#set mapreduce.input.fileinputformat.split.maxsize=300000000;
+#set hive.exec.reducers.max=144;
+#set mapred.map.tasks=1080;
+#set mapred.reduce.slowstart.completed.maps=0.05;
+#set mapred.reduce.slowstart.completed.maps=0;
+set hive.tez.container.size=5120; 
+#set hive.tez.container.size=7168;
+set tez.runtime.io.sort.mb=32;
+#set hive.tez.java.opts=-Xshare:off -XX:+UseAppCDS -XX:DumpLoadedClassList=/home/test/hive-%p.lst -XX:+UseG1GC;
+#set hive.tez.java.opts=-Xshare:dump -XX:+UseAppCDS -XX:SharedClassListFile=/home/test/hive.lst -XX:SharedArchiveFile=/home/test/hive.jsa -XX:+UseG1GC;
+set hive.tez.java.opts=-Xshare:on -XX:+UseAppCDS -XX:SharedArchiveFile=/home/test/hive.jsa -XX:+UseG1GC;
+
+#set tez.am.task.max.failed.attempts=10;
+#set tez.am.max.app.attempts=8;
+#set mapreduce.map.memory.mb=2048;
+#set mapreduce.reduce.memory.mb=2048;
+#set tez.am.resource.memory.mb=8192
+#set yarn.nodemanager.vmem-pmem-ratio=4.2;
+#set  hive.execution.engine=tez;
+#set hive.vectorized.execution.enabled=false;
+#set hive.vectorized.execution.reduce.enabled=false;
+#set hive.stats.fetch.column.stats=true;
+#set hive.stats.fetch.column.stats=true;
+#set hive.exec.dynamic.partition=False;

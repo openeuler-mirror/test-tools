@@ -1,0 +1,25 @@
+use tpcds_orc_hive_5000;
+set hive.map.aggr=true;
+#set mapreduce.job.map.output.collector.class=org.apache.hadoop.mapred.nativetask.NativeMapOutputCollectorDelegator;
+set hive.vectorized.execution.enabled=true;
+set hive.auto.convert.join=true;
+set hive.auto.convert.join.noconditionaltask=true;
+set hive.limit.optimize.enable=true;
+##
+set hive.exec.parallel=true;
+#set mapreduce.map.output.compress=false;
+#set mapreduce.map.output.compress.codec=org.apache.hadoop.io.compress.SnappyCodec;
+set hive.cbo.enable=true;
+#set hive.exec.compress.intermediate=true;
+#set mapreduce.reduce.memory.mb=4096;
+#set mapreduce.reduce.cpu.vcores=1;
+#set mapreduce.map.memory.mb=4096;
+#set mapreduce.map.cpu.vcores=1;
+#set mapreduce.map.java.opts=-Xmx4096m -Djava.net.preferIPv4Stack=true -Djava.security.krb5.conf=/opt/huawei/Bigdata/common/runtime/krb5.conf;
+#set mapreduce.input.fileinputformat.split.maxsize=1024000000;
+set hive.exec.reducers.max=1;
+#set hive.exec.reducers.max=375;
+#set mapred.reduce.slowstart.completed.maps=0.8;
+#set mapred.reduce.slowstart.completed.maps=0;
+#set -v;
+#set mapreduce.map.java.opts=-Djava.net.preferIPv4Stack=true -Xmx4096m -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=512M  -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Djava.security.krb5.conf=/opt/huawei/Bigdata/common/runtime/krb5.conf;

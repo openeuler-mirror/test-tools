@@ -1,0 +1,6 @@
+orc_database_prefix=tpch_flat_orc_
+text_database_prefix=tpch_text_
+text_output_dir=/tmp/tpch-generate
+tpch_file=TPC-H-Kunpeng
+data_size=1000
+generatedata_switch=true

@@ -1,0 +1,38 @@
+# component_name;config_file;config_iterm_key_value;
+
+spark;conf/HibenchConf/hadoop.conf;hibench.hadoop.home /usr/hdp/current/hadoop-client;
+spark;conf/HibenchConf/spark.conf;hibench.spark.home /usr/hdp/current/spark2-client;
+spark;conf/tpcds_config;spark_client_dir=/usr/hdp/current/spark2-client/;
+spark;conf/spark-defaults.conf;spark.sql.hive.metastore.jars /usr/hdp/current/spark2-client/standalone-metastore/*;
+spark;conf/HibenchConf/hadoop.conf;hibench.hdfs.master hdfs://server1:8020/;
+kafka;conf/config;kafka_home=/usr/hdp/current/kafka-broker;
+kafka;conf/config;kafka_remote_dir=/usr/hdp/3.1.0.0-78/kafka;
+kafka;conf/config;kafka_install_dir=/usr/hdp/3.1.0.0-78;
+storm;conf/hibench_config;kafka_remote_dir=/usr/hdp/3.1.0.0-78/kafka;
+storm;conf/hibench_config;kafka_ln_dir=/usr/hdp/current/kafka-broker;
+storm;conf/hibench_config;kafka_install_dir=/usr/hdp/3.1.0.0-78;
+storm;conf/storm_fixwindow.ini;storm_home=/usr/hdp/current/storm-nimbus;
+storm;conf/storm_fixwindow.ini;kafka_home=/usr/hdp/3.1.0.0-78/kafka;
+storm;conf/storm_fixwindow.ini;java_home=/usr/local/jdk8u222-b10;
+storm;conf/storm_identity.ini;storm_home=/usr/hdp/current/storm-nimbus;
+storm;conf/storm_identity.ini;kafka_home=/usr/hdp/3.1.0.0-78/kafka;
+storm;conf/storm_identity.ini;java_home=/usr/local/jdk8u222-b10;
+storm;conf/storm_wordcount.ini;storm_home=/usr/hdp/current/storm-nimbus;
+storm;conf/storm_wordcount.ini;kafka_home=/usr/hdp/3.1.0.0-78/kafka;
+storm;conf/storm_wordcount.ini;java_home=/usr/local/jdk8u222-b10;
+storm;conf/HibenchConf/hadoop.conf;hibench.hadoop.home /usr/hdp/current/hadoop-client;
+storm;conf/HibenchConf/hadoop.conf;hibench.hdfs.master hdfs://server1:8020;
+storm;conf/HibenchConf/hibench.conf;hibench.streambench.kafka.home /usr/hdp/current/kafka-broker;
+storm;conf/HibenchConf/storm.conf;hibench.streambench.storm.home /usr/hdp/current/storm-nimbus;
+hadoop;conf/dfsio_config;jar_file=/usr/hdp/3.1.0.0-78/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-3.1.1.3.1.0.0-78-tests.jar;
+hadoop;conf/terasort_config;jar_file=/usr/hdp/3.1.0.0-78/hadoop-mapreduce/hadoop-mapreduce-examples.jar;
+hadoop;conf/wordcount_config;jar_file=/usr/hdp/3.1.0.0-78/hadoop-mapreduce/hadoop-mapreduce-examples.jar;
+hadoop;conf/terasort_config;terasort_input_data=/user/hdfs/terasort/${data_size}-input;
+hadoop;conf/terasort_config;terasort_output_data=/user/hdfs/terasort/${data_size}-output;
+flink;conf/config;KAFKA_HOME=/usr/hdp/3.1.0.0-78/kafka;
+flink;conf/config;kafka_install_dir=/usr/hdp/3.1.0.0-78;
+flink;conf/config;kafka_remote_dir=/usr/hdp/3.1.0.0-78/kafka;
+flink;conf/config;FLINK_HOME=/usr/local/flink;
+flink;conf/config;zookeeper_install_dir=/usr/hdp/3.1.0.0-78/zookeeper;
+
+

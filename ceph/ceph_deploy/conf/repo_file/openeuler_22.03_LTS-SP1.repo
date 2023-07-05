@@ -1,0 +1,9 @@
+[everything]
+name=everything
+# baseurl=http://121.36.84.172/dailybuild/EBS-openEuler-22.03-LTS-SP1/pre_beta_openeuler-2022-12-02-21-01-03/everything/$basearch/
+#baseurl=http://121.36.84.172/dailybuild/EBS-openEuler-22.03-LTS-SP1/rc3_openeuler-2022-12-10-04-00-31/everything/$basearch/
+#baseurl=http://121.36.84.172/dailybuild/EBS-openEuler-22.03-LTS-SP1/rc5_openeuler-2022-12-22-23-45-08/everything/$basearch/
+baseurl=https://repo.openeuler.org/openEuler-22.03-LTS-SP1/everything/$basearch/
+gpgcheck=0
+enable=1
+priority=1

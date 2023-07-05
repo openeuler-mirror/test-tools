@@ -1,0 +1,29 @@
+----------------------------------------------------------------
+# Copyright (c) 2023. Huawei Technologies Co.,Ltd.ALL rights reserved.
+# This program is licensed under Mulan PSL v2.
+# You can use it according to the terms and conditions of the Mulan PSL v2.
+#          http://license.coscl.org.cn/MulanPSL2
+# THIS PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+# EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+# MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+# See the Mulan PSL v2 for more details.
+
+# #############################################
+# @Author    :   hekeming
+# @Contact   :   hk16897@126.com
+# @Date      :   2023/07/03
+# @License   :   Mulan PSL v2
+# @Desc      :   Test SSH link
+# ############################################
+Sat Dec 17 08:25:46 CST 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0185-1d78-fb92-00002a948988 
+on database directory memory:/home/bigdata_auto/deploy/spark/bin/switch with class loader sun.misc.Launcher$AppClassLoader@13221655 
+Loaded from file:/usr/local/spark-3.0.0-bin-3.2.0/jars/derby-10.12.1.1.jar
+java.vendor=Bisheng
+java.runtime.version=1.8.0_352-b08
+user.dir=/home/bigdata_auto/deploy/spark/bin/switch
+os.name=Linux
+os.arch=aarch64
+os.version=5.10.0-136.3.0.77.oe2203sp1.aarch64
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,2 @@
+hadoop.proxyuser.root.hosts=*
+hadoop.proxyuser.root.groups=*

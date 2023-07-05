@@ -1,0 +1,4 @@
+regenerate_data=false
+sleep_time=120
+hibench_file=HiBench-HiBench-7.0
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-2.oe2203.aarch64/

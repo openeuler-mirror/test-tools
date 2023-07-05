@@ -1,0 +1,10 @@
+use tpch_flat_orc_1000;
+
+set hive.execution.engine=tez;
+set hive.cbo.enable=true;
+set hive.exec.reducers.max=300;
+set hive.tez.container.size=6144;
+set tez.am.resource.memory.mb=6144;
+set tez.task.resource.memory.mb=6144;
+set tez.runtime.io.sort.mb=128;
+set hive.merge.tezfiles=true;

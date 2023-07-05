@@ -1,0 +1,4 @@
+driver_memory=36G
+executor_memory=24G
+num_executors=30
+executor_cores=6

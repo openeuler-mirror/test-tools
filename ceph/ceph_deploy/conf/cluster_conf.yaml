@@ -1,0 +1,78 @@
+ceph_common:
+     public_net: 192.168.144.0
+     public_gateway: 192.168.144.9
+     public_mask: 255.255.255.0
+     cluster_net: 192.168.2.0
+     cluster_gateway: 192.168.2.1
+     cluster_mask: 255.255.255.0
+     username: root
+     password: huawei@2022
+     port: 22
+     ntp_server: 172.168.144.9
+
+     osd_per_node_num: 11
+     rgw_per_node_num: 6
+     osd_per_dev: 1
+
+     db_size: 30
+     wal_size: 15
+     mkpart_unit: GiB
+     rgw_per_node: 6
+     firewall_open: N
+     ceph_version: 14.2.8
+     nvme_disk: nvme0n1 nvme1n1
+     local_rpm: N
+     local_rpm_path: /home/ceph/local_rpm/ceph-14.2.8.tar.gz
+     replace_system_repo: Y
+     is_bacache: N
+     bcache_size: 200
+
+servers:
+     ceph1:
+          manager_ip: 172.168.144.10
+          public_mac: [84:46:fe:fd:cc:e9, 84:46:fe:fd:cc:ea]
+          public_ip: 192.168.144.10
+          cluster_mac: [84:46:fe:fd:cc:eb, 84:46:fe:fd:cc:ec]
+          cluster_ip: 192.168.2.10
+          mgr: Y
+          mon: Y
+          osd: Y
+          mds: N
+          rgw: N
+     ceph2:
+          manager_ip: 172.168.144.11
+          public_mac: [44:a1:91:e5:7c:f1, 44:a1:91:e5:7c:f2]
+          public_ip: 192.168.144.11
+          cluster_mac: [44:a1:91:e5:7c:f3, 44:a1:91:e5:7c:f4]
+          cluster_ip: 192.168.2.11
+          mgr: Y
+          mon: Y
+          osd: Y
+          mds: N
+          rgw: N
+     ceph3:
+          manager_ip: 172.168.144.12
+          public_mac: [ac:b3:b5:1e:d6:cb, ac:b3:b5:1e:d6:cc]
+          public_ip: 192.168.144.12
+          cluster_mac: [ac:b3:b5:1e:d6:cd, ac:b3:b5:1e:d6:ce]
+          cluster_ip: 192.168.2.12
+          mgr: Y
+          mon: Y
+          osd: Y
+          mds: N
+          rgw: N
+
+
+clients:
+     client1:
+          manager_ip: 172.168.144.7
+          public_mac: [44:a1:91:9f:9a:9b, 44:a1:91:9f:9a:9a]
+          public_ip: 192.168.144.7
+     client2:
+          manager_ip: 172.168.144.8
+          public_mac: [44:a1:91:9f:9a:db, 44:a1:91:9f:9a:da]
+          public_ip: 192.168.144.8
+     client3:
+          manager_ip: 172.168.144.9
+          public_mac: [44:a1:91:9f:9c:fa, 44:a1:91:9f:9c:fb]
+          public_ip: 192.168.144.9
