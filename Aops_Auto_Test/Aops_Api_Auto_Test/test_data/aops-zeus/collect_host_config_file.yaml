@@ -1,0 +1,46 @@
+#收集主机配置文件信息
+- case_name: "收集主机的单个配置文件信息"
+  token: '$token'
+  port: "11111"
+  path: "/manage/config/collect"
+  data:
+    infos:
+      - host_id: $host_id
+        config_list:
+          - "/etc/gala-gopher/gala-gopher.conf"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+- case_name: "收集主机的多个配置文件信息"
+  token: '$token'
+  port: "11111"
+  path: "/manage/config/collect"
+  data:
+    infos:
+      - host_id: $host_id
+        config_list:
+          - "/etc/gala-gopher/gala-gopher.conf"
+          - "/etc/yum.repos.d/openEuler.repo"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+#---
+#case_name: "收集多个主机的配置文件信息"
+#port: "11111"
+#path: "/manage/config/collect"
+#data:
+#  infos:
+#    - host_id: 75
+#      config_list:
+#        - "/etc/gala-gopher/gala-gopher.conf"
+#    - host_id: 5
+#      config_list:
+#        - "/etc/gala-gopher/gala-gopher.conf"
+#except:
+#  code: 200
+#  label: "Succeed"
+#  message: "operation succeed"

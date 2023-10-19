@@ -1,0 +1,13 @@
+#注册主机组
+- case_name: "注册主机组-所有数据正确"
+  token: "$token"
+  port: "11111"
+  path: "/manage/host/group/add"
+  data:
+      description: "api-group1"
+      host_group_name: "api-group1"
+  sql: "select * from host_group where host_group_name='api-group1'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
