@@ -197,7 +197,7 @@ def FortitySource_check(filename:str)->str:
 
 def IntegerOverflow_check(filename:str)->str:
     IntegerOverflow_sh = '''
-        IO_func="$(readelf --dyn-syms '%s' 2> /dev/null | awk '{ print $8 }' | sed -e 's/_*//' -e 's/@.*//' -e '/^$/d')"
+        IO_func="$(readelf -s '%s' 2> /dev/null | awk '{ print $8 }' | sed -e 's/_*//' -e 's/@.*//' -e '/^$/d')"
         # echo $IO_func
         add="addv"
         sub="subv"
@@ -247,7 +247,7 @@ def elflog(msg:str)->None:
     with open(logfile, 'a+') as fd:
         fd.write(logtime + msg + "\n")
 
-def CheckELF(filename:str)->dict:
+def CheckELF(filename:str):
     elflog("\nChecking " + filename)
 
     yes =  { 'PIC' : 0, 'PIE'  : 0, 'SP': 0, 'NX' : 0, 'RELRO': 0, 
@@ -259,6 +259,7 @@ def CheckELF(filename:str)->dict:
     del(listfilename[0])
     objectName = listfilename.pop()
     filePath = "/".join(listfilename) + '/'
+    filePath = filePath.replace('tmp/rpm/', '')
     detail = [filePath, objectName]
     y = 'YES'
     n = 'NO'
