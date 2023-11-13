@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cvrfdoc xmlns="http://www.icasi.org/CVRF/schema/cvrf/1.1" xmlns:cvrf="http://www.icasi.org/CVRF/schema/cvrf/1.1">
+	<DocumentTitle xml:lang="en">An update for exiv2 is now available for openEuler-22.03-LTS</DocumentTitle>
+	<DocumentType>Security Advisory</DocumentType>
+	<DocumentPublisher Type="Vendor">
+		<ContactDetails>openeuler-security@openeuler.org</ContactDetails>
+		<IssuingAuthority>openEuler security committee</IssuingAuthority>
+	</DocumentPublisher>
+	<DocumentTracking>
+		<Identification>
+			<ID>openEuler-SA-2022-2044</ID>
+		</Identification>
+		<Status>Final</Status>
+		<Version>1.0</Version>
+		<RevisionHistory>
+			<Revision>
+				<Number>1.0</Number>
+				<Date>2022-11-04</Date>
+				<Description>Initial</Description>
+			</Revision>
+		</RevisionHistory>
+		<InitialReleaseDate>2022-11-04</InitialReleaseDate>
+		<CurrentReleaseDate>2022-11-04</CurrentReleaseDate>
+		<Generator>
+			<Engine>openEuler SA Tool V1.0</Engine>
+			<Date>2022-11-04</Date>
+		</Generator>
+	</DocumentTracking>
+	<DocumentNotes>
+		<Note Title="Synopsis" Type="General" Ordinal="1" xml:lang="en">exiv2 security update</Note>
+		<Note Title="Summary" Type="General" Ordinal="2" xml:lang="en">An update for exiv2 is now available for openEuler-22.03-LTS.</Note>
+		<Note Title="Description" Type="General" Ordinal="3" xml:lang="en">Exiv2 is a Cross-platform C++ library and a command line utility to manage image metadata. It provides fast and easy read and write access to the Exif, IPTC and XMP metadata and the ICC Profile embedded within digital images in various formats.
+
+Security Fix(es):
+
+An integer overflow in Exiv2 through 0.27.1 allows an attacker to cause a denial of service (SIGSEGV) via a crafted PNG image file, because PngImage::readMetadata mishandles a zero value for iccOffset.(CVE-2019-13108)
+
+There is an out-of-bounds read in Exiv2::MrwImage::readMetadata in mrwimage.cpp in Exiv2 through 0.27.2.(CVE-2019-13504)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. A null pointer dereference was found in Exiv2 versions v0.27.4 and earlier. The null pointer dereference is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the interpreted (translated) data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p t` or `-P t`). The bug is fixed in version v0.27.5.(CVE-2021-37616)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. A null pointer dereference was found in Exiv2 versions v0.27.4 and earlier. The null pointer dereference is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the interpreted (translated) data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p t` or `-P t`). The bug is fixed in version v0.27.5.(CVE-2021-37615)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. The assertion failure is triggered when Exiv2 is used to modify the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when modifying the metadata, which is a less frequently used Exiv2 operation than reading the metadata. For example, to trigger the bug in the Exiv2 command-line application, you need to add an extra command-line argument such as `fi`. ### Patches The bug is fixed in version v0.27.5. ### References Regression test and bug fix: #1739 ### For more information Please see our [security policy](https://github.com/Exiv2/exiv2/security/policy) for information about Exiv2 security.(CVE-2021-32815)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop was found in Exiv2 versions v0.27.4 and earlier. The infinite loop is triggered when Exiv2 is used to modify the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when deleting the IPTC data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-d I rm`). The bug is fixed in version v0.27.5.(CVE-2021-37623)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop was found in Exiv2 versions v0.27.4 and earlier. The infinite loop is triggered when Exiv2 is used to modify the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when deleting the IPTC data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-d I rm`). The bug is fixed in version v0.27.5.(CVE-2021-37622)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop is triggered when Exiv2 is used to read the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. The bug is fixed in version v0.27.5.(CVE-2021-34334)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An out-of-bounds read was found in Exiv2 versions v0.27.4 and earlier. The out-of-bounds read is triggered when Exiv2 is used to read the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. The bug is fixed in version v0.27.5.(CVE-2021-37620)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop was found in Exiv2 versions v0.27.4 and earlier. The infinite loop is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the image ICC profile, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p C`). The bug is fixed in version v0.27.5.(CVE-2021-37621)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. A floating point exception (FPE) due to an integer divide by zero was found in Exiv2 versions v0.27.4 and earlier. The FPE is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the interpreted (translated) data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p t` or `-P t`). The bug is fixed in version v0.27.5.(CVE-2021-34335)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An out-of-bounds read was found in Exiv2 versions v0.27.4 and earlier. The out-of-bounds read is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the image ICC profile, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p C`). The bug is fixed in version v0.27.5.(CVE-2021-37618)
+
+A flaw was found in exiv2. A integer wraparound in the CrwMap:encode0x1810 function leads to memcpy call with a very large size allowing an attacker, who can provide a malicious image, to crash an application which uses the exiv2 library. The highest threat from this vulnerability is to service availability.(CVE-2021-31292)
+
+Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An out-of-bounds read was found in Exiv2 versions v0.27.4 and earlier. The out-of-bounds read is triggered when Exiv2 is used to write metadata into a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service by crashing Exiv2, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when writing the metadata, which is a less frequently used Exiv2 operation than reading the metadata. For example, to trigger the bug in the Exiv2 command-line application, you need to add an extra command-line argument such as insert. The bug is fixed in version v0.27.5.(CVE-2021-37619)</Note>
+		<Note Title="Topic" Type="General" Ordinal="4" xml:lang="en">An update for exiv2 is now available for openEuler-22.03-LTS.
+
+openEuler Security has rated this update as having a security impact of high. A Common Vunlnerability Scoring System(CVSS)base score,which gives a detailed severity rating, is available for each vulnerability from the CVElink(s) in the References section.</Note>
+		<Note Title="Severity" Type="General" Ordinal="5" xml:lang="en">High</Note>
+		<Note Title="Affected Component" Type="General" Ordinal="6" xml:lang="en">exiv2</Note>
+	</DocumentNotes>
+	<DocumentReferences>
+		<Reference Type="Self">
+			<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+		</Reference>
+		<Reference Type="openEuler CVE">
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2019-13108</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2019-13504</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37616</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37615</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-32815</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37623</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37622</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-34334</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37620</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37621</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-34335</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37618</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-31292</URL>
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2021-37619</URL>
+		</Reference>
+		<Reference Type="Other">
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2019-13108</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2019-13504</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37616</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37615</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-32815</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37623</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37622</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-34334</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37620</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37621</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-34335</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37618</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-31292</URL>
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2021-37619</URL>
+		</Reference>
+	</DocumentReferences>
+	<ProductTree xmlns="http://www.icasi.org/CVRF/schema/prod/1.1">
+		<Branch Type="Product Name" Name="openEuler">
+			<FullProductName ProductID="openEuler-22.03-LTS" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">openEuler-22.03-LTS</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="aarch64">
+			<FullProductName ProductID="exiv2-devel-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-devel-0.27.5-2.oe2203.aarch64.rpm</FullProductName>
+			<FullProductName ProductID="exiv2-debugsource-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-debugsource-0.27.5-2.oe2203.aarch64.rpm</FullProductName>
+			<FullProductName ProductID="exiv2-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-0.27.5-2.oe2203.aarch64.rpm</FullProductName>
+			<FullProductName ProductID="exiv2-debuginfo-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-debuginfo-0.27.5-2.oe2203.aarch64.rpm</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="noarch">
+			<FullProductName ProductID="exiv2-help-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-help-0.27.5-2.oe2203.noarch.rpm</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="src">
+			<FullProductName ProductID="exiv2-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-0.27.5-2.oe2203.src.rpm</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="x86_64">
+			<FullProductName ProductID="exiv2-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-0.27.5-2.oe2203.x86_64.rpm</FullProductName>
+			<FullProductName ProductID="exiv2-debugsource-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-debugsource-0.27.5-2.oe2203.x86_64.rpm</FullProductName>
+			<FullProductName ProductID="exiv2-devel-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-devel-0.27.5-2.oe2203.x86_64.rpm</FullProductName>
+			<FullProductName ProductID="exiv2-debuginfo-0.27.5-2" CPE="cpe:/a:openEuler:openEuler:22.03-LTS">exiv2-debuginfo-0.27.5-2.oe2203.x86_64.rpm</FullProductName>
+		</Branch>
+	</ProductTree>
+	<Vulnerability Ordinal="1" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="1" xml:lang="en">An integer overflow in Exiv2 through 0.27.1 allows an attacker to cause a denial of service (SIGSEGV) via a crafted PNG image file, because PngImage::readMetadata mishandles a zero value for iccOffset.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2019-13108</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>6.5</BaseScore>
+				<Vector>AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="2" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="2" xml:lang="en">There is an out-of-bounds read in Exiv2::MrwImage::readMetadata in mrwimage.cpp in Exiv2 through 0.27.2.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2019-13504</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>6.5</BaseScore>
+				<Vector>AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="3" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="3" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. A null pointer dereference was found in Exiv2 versions v0.27.4 and earlier. The null pointer dereference is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the interpreted (translated) data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p t` or `-P t`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37616</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="4" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="4" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. A null pointer dereference was found in Exiv2 versions v0.27.4 and earlier. The null pointer dereference is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the interpreted (translated) data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p t` or `-P t`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37615</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="5" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="5" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. The assertion failure is triggered when Exiv2 is used to modify the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when modifying the metadata, which is a less frequently used Exiv2 operation than reading the metadata. For example, to trigger the bug in the Exiv2 command-line application, you need to add an extra command-line argument such as `fi`. ### Patches The bug is fixed in version v0.27.5. ### References Regression test and bug fix: #1739 ### For more information Please see our [security policy](https://github.com/Exiv2/exiv2/security/policy) for information about Exiv2 security.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-32815</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="6" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="6" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop was found in Exiv2 versions v0.27.4 and earlier. The infinite loop is triggered when Exiv2 is used to modify the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when deleting the IPTC data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-d I rm`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37623</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="7" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="7" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop was found in Exiv2 versions v0.27.4 and earlier. The infinite loop is triggered when Exiv2 is used to modify the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when deleting the IPTC data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-d I rm`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37622</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="8" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="8" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop is triggered when Exiv2 is used to read the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-34334</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="9" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="9" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An out-of-bounds read was found in Exiv2 versions v0.27.4 and earlier. The out-of-bounds read is triggered when Exiv2 is used to read the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37620</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="10" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="10" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An infinite loop was found in Exiv2 versions v0.27.4 and earlier. The infinite loop is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the image ICC profile, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p C`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37621</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="11" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="11" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. A floating point exception (FPE) due to an integer divide by zero was found in Exiv2 versions v0.27.4 and earlier. The FPE is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the interpreted (translated) data, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p t` or `-P t`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-34335</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="12" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="12" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An out-of-bounds read was found in Exiv2 versions v0.27.4 and earlier. The out-of-bounds read is triggered when Exiv2 is used to print the metadata of a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when printing the image ICC profile, which is a less frequently used Exiv2 operation that requires an extra command line option (`-p C`). The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37618</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="13" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="13" xml:lang="en">A flaw was found in exiv2. A integer wraparound in the CrwMap:encode0x1810 function leads to memcpy call with a very large size allowing an attacker, who can provide a malicious image, to crash an application which uses the exiv2 library. The highest threat from this vulnerability is to service availability.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-31292</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>High</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>7.5</BaseScore>
+				<Vector>AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+	<Vulnerability Ordinal="14" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="14" xml:lang="en">Exiv2 is a command-line utility and C++ library for reading, writing, deleting, and modifying the metadata of image files. An out-of-bounds read was found in Exiv2 versions v0.27.4 and earlier. The out-of-bounds read is triggered when Exiv2 is used to write metadata into a crafted image file. An attacker could potentially exploit the vulnerability to cause a denial of service by crashing Exiv2, if they can trick the victim into running Exiv2 on a crafted image file. Note that this bug is only triggered when writing the metadata, which is a less frequently used Exiv2 operation than reading the metadata. For example, to trigger the bug in the Exiv2 command-line application, you need to add an extra command-line argument such as insert. The bug is fixed in version v0.27.5.</Note>
+		</Notes>
+		<ReleaseDate>2022-11-04</ReleaseDate>
+		<CVE>CVE-2021-37619</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>Medium</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>5.5</BaseScore>
+				<Vector>AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>exiv2 security update</Description>
+				<DATE>2022-11-04</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2022-2044</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+</cvrfdoc>

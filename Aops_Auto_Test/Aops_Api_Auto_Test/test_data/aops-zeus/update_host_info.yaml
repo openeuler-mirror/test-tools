@@ -1,0 +1,123 @@
+#更新主机信息
+- case_name: "更新主机信息-更新有效的主机名"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    host_name: 'modify_host_name'
+  sql: "select host_name from host where host_id='$host_id'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+- case_name: "更新主机信息-更新ssh_user、password为有效值"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    ssh_user: "root"
+    password: "123456"
+  sql: "select ssh_user from host where host_id='$host_id'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+- case_name: "更新主机-参数校验-host_id不存在"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: "non-exist-id"
+    ssh_user: "root"
+    password: "123456"
+  except:
+    code: 1000
+    label: "Param.Error"
+    message: "request parameter error"
+
+- case_name: "更新主机-参数校验-host_id为空"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: None
+    ssh_user: "root"
+    password: "123456"
+  except:
+    code: 1000
+    label: "Param.Error"
+    message: "request parameter error"
+
+
+- case_name: "更新主机-参数校验-host_group_name不存在"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    host_group_name: "non-exist-group"
+  except:
+    code: 1000
+    label: "Param.Error"
+    message: "there is no host group name non-exist-group in database when update host $host_id!"
+
+
+- case_name: "更新主机-参数校验-ssh_port更新为有效值,其他值不修改"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    ssh_port: 26
+  except:
+    code: 1000
+    label: "Param.Error"
+    message: "please update password"
+
+- case_name: "更新主机-参数校验-ssh_port和password修改为有效值"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    ssh_port: 26
+    password: 'openEuler34#$$'
+  sql: "select * from host where ssh_port='26'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+- case_name: "更新主机-参数校验-ssh_user和password均更新为有效值"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    ssh_user: "update-user"
+    password: 'openEuler34#$$'
+  sql: "select * from host where ssh_port='26'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+- case_name: "更新主机-参数校验-ssh_user更新为有效值，password值为空"
+  token: '$token'
+  port: "11111"
+  path: "/manage/host/update"
+  data:
+    host_id: $host_id
+    ssh_user: "update-user"
+    password: ""
+  except:
+    code: 1000
+    label: "Param.Error"
+    message: "request parameter error"
+
+
+

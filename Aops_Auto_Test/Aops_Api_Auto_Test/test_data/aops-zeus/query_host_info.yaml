@@ -1,0 +1,28 @@
+#查询主机信息
+- case_name: "查询主机基础信息-basic为true"
+  token: "$token"
+  port: '11111'
+  path: "/manage/host/info/query"
+  data:
+    host_list:
+      - '$host_id'
+    basic: true
+  sql: "select * from host where host_id='$host_id'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"
+
+- case_name: "查询basic参数为false查询主机基础信息"
+  token: "$token"
+  port: '11111'
+  path: "/manage/host/info/query"
+  data:
+    host_list:
+     - '$host_id'
+    basic: false
+  sql: "select * from host where host_id='$host_id'"
+  except:
+    code: 200
+    label: "Succeed"
+    message: "operation succeed"

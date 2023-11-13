@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cvrfdoc xmlns="http://www.icasi.org/CVRF/schema/cvrf/1.1" xmlns:cvrf="http://www.icasi.org/CVRF/schema/cvrf/1.1">
+	<DocumentTitle xml:lang="en">An update for tmux is now available for openEuler-22.03-LTS-SP1</DocumentTitle>
+	<DocumentType>Security Advisory</DocumentType>
+	<DocumentPublisher Type="Vendor">
+		<ContactDetails>openeuler-security@openeuler.org</ContactDetails>
+		<IssuingAuthority>openEuler security committee</IssuingAuthority>
+	</DocumentPublisher>
+	<DocumentTracking>
+		<Identification>
+			<ID>openEuler-SA-2023-1070</ID>
+		</Identification>
+		<Status>Final</Status>
+		<Version>1.0</Version>
+		<RevisionHistory>
+			<Revision>
+				<Number>1.0</Number>
+				<Date>2023-02-10</Date>
+				<Description>Initial</Description>
+			</Revision>
+		</RevisionHistory>
+		<InitialReleaseDate>2023-02-10</InitialReleaseDate>
+		<CurrentReleaseDate>2023-02-10</CurrentReleaseDate>
+		<Generator>
+			<Engine>openEuler SA Tool V1.0</Engine>
+			<Date>2023-02-10</Date>
+		</Generator>
+	</DocumentTracking>
+	<DocumentNotes>
+		<Note Title="Synopsis" Type="General" Ordinal="1" xml:lang="en">tmux security update</Note>
+		<Note Title="Summary" Type="General" Ordinal="2" xml:lang="en">An update for tmux is now available for openEuler-22.03-LTS-SP1.</Note>
+		<Note Title="Description" Type="General" Ordinal="3" xml:lang="en">is a terminal multiplexer. It lets you switch easily between several programs in one terminal, detach them (they keep running in the background) and reattach them to a different terminal.
+
+Security Fix(es):
+
+A null pointer dereference issue was discovered in function window_pane_set_event in window.c in tmux 3.0 thru 3.3 and later, allows attackers to cause denial of service or other unspecified impacts.(CVE-2022-47016)</Note>
+		<Note Title="Topic" Type="General" Ordinal="4" xml:lang="en">An update for tmux is now available for openEuler-22.03-LTS-SP1.
+
+openEuler Security has rated this update as having a security impact of high. A Common Vunlnerability Scoring System(CVSS)base score,which gives a detailed severity rating, is available for each vulnerability from the CVElink(s) in the References section.</Note>
+		<Note Title="Severity" Type="General" Ordinal="5" xml:lang="en">High</Note>
+		<Note Title="Affected Component" Type="General" Ordinal="6" xml:lang="en">tmux</Note>
+	</DocumentNotes>
+	<DocumentReferences>
+		<Reference Type="Self">
+			<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2023-1070</URL>
+		</Reference>
+		<Reference Type="openEuler CVE">
+			<URL>https://www.openeuler.org/en/security/cve/detail.html?id=CVE-2022-47016</URL>
+		</Reference>
+		<Reference Type="Other">
+			<URL>https://nvd.nist.gov/vuln/detail/CVE-2022-47016</URL>
+		</Reference>
+	</DocumentReferences>
+	<ProductTree xmlns="http://www.icasi.org/CVRF/schema/prod/1.1">
+		<Branch Type="Product Name" Name="openEuler">
+			<FullProductName ProductID="openEuler-22.03-LTS-SP1" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">openEuler-22.03-LTS-SP1</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="aarch64">
+			<FullProductName ProductID="tmux-debuginfo-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-debuginfo-3.2a-3.oe2203sp1.aarch64.rpm</FullProductName>
+			<FullProductName ProductID="tmux-debugsource-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-debugsource-3.2a-3.oe2203sp1.aarch64.rpm</FullProductName>
+			<FullProductName ProductID="tmux-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-3.2a-3.oe2203sp1.aarch64.rpm</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="noarch">
+			<FullProductName ProductID="tmux-help-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-help-3.2a-3.oe2203sp1.noarch.rpm</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="src">
+			<FullProductName ProductID="tmux-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-3.2a-3.oe2203sp1.src.rpm</FullProductName>
+		</Branch>
+		<Branch Type="Package Arch" Name="x86_64">
+			<FullProductName ProductID="tmux-debuginfo-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-debuginfo-3.2a-3.oe2203sp1.x86_64.rpm</FullProductName>
+			<FullProductName ProductID="tmux-debugsource-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-debugsource-3.2a-3.oe2203sp1.x86_64.rpm</FullProductName>
+			<FullProductName ProductID="tmux-3.2a-3" CPE="cpe:/a:openEuler:openEuler:22.03-LTS-SP1">tmux-3.2a-3.oe2203sp1.x86_64.rpm</FullProductName>
+		</Branch>
+	</ProductTree>
+	<Vulnerability Ordinal="1" xmlns="http://www.icasi.org/CVRF/schema/vuln/1.1">
+		<Notes>
+			<Note Title="Vulnerability Description" Type="General" Ordinal="1" xml:lang="en">A null pointer dereference issue was discovered in function window_pane_set_event in window.c in tmux 3.0 thru 3.3 and later, allows attackers to cause denial of service or other unspecified impacts.</Note>
+		</Notes>
+		<ReleaseDate>2023-02-10</ReleaseDate>
+		<CVE>CVE-2022-47016</CVE>
+		<ProductStatuses>
+			<Status Type="Fixed">
+				<ProductID>openEuler-22.03-LTS-SP1</ProductID>
+			</Status>
+		</ProductStatuses>
+		<Threats>
+			<Threat Type="Impact">
+				<Description>High</Description>
+			</Threat>
+		</Threats>
+		<CVSSScoreSets>
+			<ScoreSet>
+				<BaseScore>7.8</BaseScore>
+				<Vector>AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H</Vector>
+			</ScoreSet>
+		</CVSSScoreSets>
+		<Remediations>
+			<Remediation Type="Vendor Fix">
+				<Description>tmux security update</Description>
+				<DATE>2023-02-10</DATE>
+				<URL>https://www.openeuler.org/en/security/safety-bulletin/detail.html?id=openEuler-SA-2023-1070</URL>
+			</Remediation>
+		</Remediations>
+	</Vulnerability>
+</cvrfdoc>

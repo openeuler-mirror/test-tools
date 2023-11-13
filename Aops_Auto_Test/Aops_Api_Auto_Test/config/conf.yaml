@@ -1,0 +1,14 @@
+BASE:
+  log_level: "info"
+  log_extension: ".logs"
+  test:
+    url: "http://172.168.107.60"
+    username: 'admin'
+    password: 'changeme'
+
+db:
+  host: '172.168.107.60'
+  user: 'root'
+  database: 'aops'
+  port: '3306'
+
