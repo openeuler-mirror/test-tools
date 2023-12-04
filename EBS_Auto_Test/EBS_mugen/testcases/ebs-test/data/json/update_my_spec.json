@@ -1,0 +1,12 @@
+{
+  "my_specs": [
+    {
+      "spec_name": "cmark",
+      "spec_url": "https://gitee.com/src-openeuler/cmark.git"
+    },
+    {
+      "spec_name": "tepl",
+      "spec_url": "https://gitee.com/src-openeuler/tepl.git"
+    }
+  ]
+}

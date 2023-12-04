@@ -1,0 +1,15 @@
+{
+	"my_specs": [
+                {
+                        "spec_name": "redis",
+                        "spec_url": "https://gitee.com/src-openeuler/redis.git",
+                        "spec_branch": "openEuler-22.03-LTS"
+                },
+		{
+                        "spec_name": "python-ovsdbapp",
+                        "spec_url": "https://gitee.com/src-openeuler/python-ovsdbapp.git",
+                        "spec_branch": "openEuler-22.03-LTS-SP1",
+			"spec_description": "test for mugen"
+                }
+        ]
+}

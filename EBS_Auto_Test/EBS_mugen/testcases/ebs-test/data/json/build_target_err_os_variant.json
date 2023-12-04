@@ -1,0 +1,13 @@
+{
+	"build_targets": [
+                {
+                        "os_variant": 12,
+                        "flags": {
+                                "build": true,
+                                "publish": true
+                        },
+                        "ground_projects": [],
+                        "architecture": "aarch64"
+                }
+        ]
+}

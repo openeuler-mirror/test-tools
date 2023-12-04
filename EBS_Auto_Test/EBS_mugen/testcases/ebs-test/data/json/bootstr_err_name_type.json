@@ -1,0 +1,8 @@
+{
+	"bootstrap_rpm_repo": [
+                {
+                        "name": 12,
+                        "repo": "https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS/everything/"
+                }
+        ]
+}

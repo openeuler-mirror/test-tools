@@ -1,0 +1,13 @@
+{
+	"build_targets": [
+                {
+                        "os_variant": "openEuler-22.03-LTS",
+                        "flags": {
+                                "build": true,
+                                "publish": true
+                        },
+                        "ground_projects": 12,
+                        "architecture": "aarch64"
+                }
+        ]
+}

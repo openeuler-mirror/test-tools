@@ -1,0 +1,11 @@
+{
+    "path": "$OET_PATH/testcases/ebs-test/oe_test_ebs_update",
+    "cases": [
+        {
+                "name": "oe_test_ebs_update_01"
+        },
+        {
+                "name": "oe_test_ebs_update_02"
+        }
+    ]
+}

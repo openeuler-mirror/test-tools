@@ -1,0 +1,17 @@
+{
+    "path": "$OET_PATH/testcases/ebs-test/oe_test_ebs_create_project",
+    "cases": [
+    	{
+        	"name": "oe_test_ebs_create_project_01"
+    	},
+    	{
+		"name": "oe_test_ebs_create_project_02"	
+    	},
+    	{
+        	"name": "oe_test_ebs_create_project_03" 
+    	},
+    	{
+		"name": "oe_test_ebs_create_project_04"	
+    	}
+    ]
+}

@@ -1,0 +1,12 @@
+{
+  "layer_urls+": [
+    {
+      "layer_name": "base",
+      "git_url": "https://gitee.com/zhangpanting/customization-base.git"
+    },
+    {
+      "layer_name": "custom",
+      "git_url": "https://gitee.com/zhangpanting/customization_1013.git"
+    }
+  ]
+}

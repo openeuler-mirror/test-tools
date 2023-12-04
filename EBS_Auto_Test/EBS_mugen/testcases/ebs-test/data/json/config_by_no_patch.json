@@ -1,0 +1,16 @@
+{
+	"project_type": "ci-hotpatch",
+        "spec_branch": "openEuler-22.03-LTS-SP2",
+        "package_repos": [
+                {
+                        "spec_name": "hot-patch_metadata",
+                        "spec_url": "https://gitee.com/wanghuan158/hot-patch_metadata.git",
+                        "spec_branch": "master"
+                }
+        ],
+        "package_overrides": {
+                "hot-patch_metadata": {
+                        "pr_id": "122"
+                }
+        }
+}
