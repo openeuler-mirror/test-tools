@@ -1,28 +1,151 @@
 #查询主机信息
-- case_name: "查询主机基础信息-basic为true"
-  token: "$token"
-  port: '11111'
-  path: "/manage/host/info/query"
+- case_name: 查询主机基础信息-basic为true
   data:
     host_list:
-      - '$host_id'
+      - $host_id
     basic: true
-  sql: "select * from host where host_id='$host_id'"
-  except:
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    data:
+      host_infos:
+        - host_group_name: $host_group_name
+          host_id: $host_id
+          host_ip: $host_ip
+          host_name: $host_name
+          management: true
+          os_version: null
+          scene: null
+          ssh_port: 22
+          ssh_user: root
+          status: 0
+    label: Succeed
+    message: operation succeed
 
-- case_name: "查询basic参数为false查询主机基础信息"
-  token: "$token"
-  port: '11111'
-  path: "/manage/host/info/query"
+- case_name: 查询basic参数为false查询主机基础信息
   data:
     host_list:
-     - '$host_id'
+     - $host_id
     basic: false
-  sql: "select * from host where host_id='$host_id'"
-  except:
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    data:
+      host_infos:
+        - host_id: 123
+          host_info:
+            cpu:
+              architecture: x86_64
+              core_count: '1'
+              l1d_cache: 32 KiB (1 instance)
+              l1i_cache: 32 KiB (1 instance)
+              l2_cache: 4 MiB (1 instance)
+              l3_cache: 16 MiB (1 instance)
+              model_name: Intel Xeon Processor (Skylake, IBRS)
+              vendor_id: GenuineIntel
+            disk:
+              - capacity: unknown
+                model: QEMU DVD-ROM
+              - capacity: 20.0 GB
+                model: Virtual I/O device
+            memory:
+              info:
+                - manufacturer: Red Hat
+                  size: 10 GB
+                  speed: Unknown
+                  type: RAM
+              size: 10G
+              total: 1
+            os:
+              bios_version: 1.11.0-2.el7
+              kernel: 6.4.0-10.1.0.20
+              os_version: openEuler-23.09
+
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查询主机基础信息-host id为空
+  data:
+    host_list: [ ]
+    basic: true
+  validate:
+    code: 200
+    data:
+      host_infos: [ ]
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查询主机基础信息-host id不存在
+  data:
+    host_list: ["aaa" ]
+    basic: true
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机基础信息-host id不存在
+  data:
+    host_list: ["aaa" ]
+    basic: true
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机基础信息-basic非bool
+  data:
+    host_list:
+      - $host_id
+    basic: test
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机基础信息-缺少host_list字段
+  data:
+    basic: test
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机基础信息-缺少basic字段
+  data:
+    host_list:
+      - $host_id
+  validate:
+    code: 200
+    data:
+      host_infos:
+        - host_id: 123
+          host_info:
+            cpu:
+              architecture: x86_64
+              core_count: 1
+              l1d_cache: 32 KiB (1 instance)
+              l1i_cache: 32 KiB (1 instance)
+              l2_cache: 4 MiB (1 instance)
+              l3_cache: 16 MiB (1 instance)
+              model_name: Intel Xeon Processor (Skylake, IBRS)
+              vendor_id: GenuineIntel
+            disk:
+              - capacity: unknown
+                model: QEMU DVD-ROM
+              - capacity: 20.0 GB
+                model: Virtual I/O device
+            memory:
+              info:
+                - manufacturer: Red Hat
+                  size: 10 GB
+                  speed: Unknown
+                  type: RAM
+              size: 10G
+              total: 1
+            os:
+              bios_version: 1.11.0-2.el7
+              kernel: 6.4.0-10.1.0.20
+              os_version: openEuler-23.09
+
+    label: Succeed
+    message: operation succeed
+

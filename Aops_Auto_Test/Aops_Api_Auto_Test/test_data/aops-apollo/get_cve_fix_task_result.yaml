@@ -1,0 +1,64 @@
+#修复任务报告查询
+- case_name: 修复任务报告查询-热补丁修复任务所有信息均正确
+  data:
+      task_id: $hot_fix_way_task_id
+  validate:
+      code: 200
+      data:
+        - host_id: $host_id
+          host_ip: $host_ip
+          host_name: $host_name
+          latest_execute_time: ^[0-9]{1,20}$$
+          status: succeed
+          task_id: $hot_fix_way_task_id
+          task_result:
+            check_items: []
+            dnf_event_end: ^[0-9]{1,20}$$
+            dnf_event_start: ^[0-9]{1,20}$$
+            rpms:
+              - available_rpm: $hot_available_rpm
+                log: ^.+$$
+                result: succeed
+            timed: true
+          task_type: cve fix
+      label: Succeed
+      message: operation succeed
+
+- case_name: 修复任务报告查询-冷补丁修复任务所有信息均正确
+  data:
+      task_id: $cold_fix_way_task_id
+  validate:
+      code: 200
+      data:
+        - host_id: $host_id
+          host_ip: $host_ip
+          host_name: $host_name
+          latest_execute_time: ^[0-9]{1,20}$$
+          status: succeed
+          task_id: $cold_fix_way_task_id
+          task_result:
+            check_items: []
+            rpms:
+              - available_rpm: $cold_available_rpm
+                log: ^.+$$
+                result: succeed
+            timed: true
+          task_type: cve fix
+      label: Succeed
+      message: operation succeed
+
+- case_name: 修复任务报告查询-task_id不正确
+  data:
+      task_id: non-exist
+  validate:
+      code: 1108
+      label: No.Data
+      message: No data found in database
+
+- case_name: 修复任务报告查询-task_id为空
+  data:
+      task_id:
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error

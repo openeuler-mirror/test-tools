@@ -13,7 +13,7 @@ class Request:
             self.log.debug("发送的data数据==>> %s", str(params))
         elif method == "post":
             self.log.debug("发送post请求")
-            res = requests.post(url, json=json, data=params, files=files, headers=headers, cookies=cookies)
+            res = requests.post(url, json=json, data=params, files=files, headers=headers, cookies=cookies,timeout=120)
         elif method == "delete":
             self.log.debug("发送delete请求")
             res = requests.delete(url, json=json, data=params, headers=headers, cookies=cookies)

@@ -1,0 +1,26 @@
+#删除repo源
+- case_name: 删除repo源-有效值
+  data:
+    repo_name_list:
+      - $repo_name
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: "select * from repo where repo_name='$repo_name'"
+
+- case_name: 删除repo源-repo_list为空
+  data:
+    repo_name_list: []
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 删除repo源-repo_name不存在
+  data:
+    repo_name_list: ["non-exist-repo"]
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed

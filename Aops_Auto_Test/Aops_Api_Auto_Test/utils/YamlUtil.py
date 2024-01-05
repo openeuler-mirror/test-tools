@@ -1,13 +1,15 @@
+from string import Template
 import yaml
 import os
 
 
-class YamlReader:
+class Yaml:
     def __init__(self, yamlf):
+
         if os.path.exists(yamlf):
             self.yamlf = yamlf
         else:
-            raise FileNotFoundError("%s 文件不存在"%yamlf)
+            raise FileNotFoundError("%s 文件不存在" % yamlf)
         self._data = None
         self._data_all = None
 
@@ -24,15 +26,16 @@ class YamlReader:
         return self._data_all
 
     def write_yaml(self, data):
-        with open(self.yamlf, 'a', encoding='utf-8') as f:
+        with open(self.yamlf, 'a') as f:
             yaml.dump(data=data, stream=f, allow_unicode=True)
 
+    def replace_yaml(self, target_yaml):
+        with open(self.yamlf, "rb") as f1:
+            common_dict = yaml.safe_load(f1)
+        with open(target_yaml, encoding='utf-8') as f2:
+            re = Template(f2.read()).substitute(common_dict)
+            return yaml.safe_load(stream=re)
 
-
-
-
-
-
-
-
-
+    def clear_yaml(self):
+        with open(self.yamlf, "w", encoding='utf-8') as f:
+            f.truncate()

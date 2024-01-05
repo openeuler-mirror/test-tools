@@ -1,99 +1,90 @@
 #批量添加主机
-- case_name: "所有信息正确，添加多个主机"
-  token: '$token'
-  port: '11111'
-  path: "/manage/host/add/batch"
+- case_name: 所有信息正确，添加多个主机
   data:
     host_list:
-      - host_ip: "1.1.1.1"
+      - host_ip: 1.1.1.1
         ssh_port: 1
-        ssh_user: "root"
-        password: "openEuler12#$$"
-        host_name: "batch_add_host_1"
-        host_group_name: "$host_group_name"
+        ssh_user: root
+        password: openEuler12#$$
+        host_name: batch_add_host_1
+        host_group_name: $host_group_name
         management: false
-      - host_ip: "1.1.1.2"
+        ssh_pkey: ""
+      - host_ip: 1.1.1.2
         ssh_port: 1
-        ssh_user: "root"
-        password: "openEuler12#$$"
-        host_name: "batch_add_host_2"
-        host_group_name: "$host_group_name"
+        ssh_user: root
+        password: openEuler12#$$
+        host_name: batch_add_host_2
+        host_group_name: $host_group_name
         management: false
-  sql: "select count(host_name) from host where host_name like 'batch%'"
-  except:
+        ssh_pkey: ""
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host where host_name like 'batch%'
 
-- case_name: "批量添加主机-参数校验-host_list为空"
-  token: '$token'
-  port: '11111'
-  path: "/manage/host/add/batch"
+- case_name: 批量添加主机-参数校验-host_list为空
   data:
     host_list: None
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "批量添加主机-参数校验-host_list非list类型"
-  token: '$token'
-  port: '11111'
-  path: "/manage/host/add/batch"
+- case_name: 批量添加主机-参数校验-host_list非list类型
   data:
-    host_list: "add_batch_host"
-  except:
+    host_list: add_batch_host
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "批量添加主机-场景校验-添加已存在的主机"
-  token: '$token'
-  port: '11111'
-  path: "/manage/host/add/batch"
+- case_name: 批量添加主机-场景校验-添加已存在的主机
   data:
     host_list:
-      - host_ip: "1.1.1.1"
+      - host_ip: 1.1.1.1
         ssh_port: 1
-        ssh_user: "root"
-        password: "openEuler12#$$"
-        host_name: "batch_add_host_1"
-        host_group_name: "$host_group_name"
+        ssh_user: root
+        password: openEuler12#$$
+        host_name: batch_add_host_1
+        host_group_name: $host_group_name
         management: false
-      - host_ip: "1.1.1.1"
+        ssh_pkey:
+      - host_ip: 1.1.1.1
         ssh_port: 1
-        ssh_user: "root"
-        password: "openEuler12#$$"
-        host_name: "batch_add_host_1"
-        host_group_name: "$host_group_name"
+        ssh_user: root
+        password: openEuler12#$$
+        host_name: batch_add_host_1
+        host_group_name: $host_group_name
         management: false
-  except:
+        ssh_pkey:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "批量添加主机-场景校验-部分主机信息缺失或错误"
-  token: '$token'
-  port: '11111'
-  path: "/manage/host/add/batch"
+- case_name: 批量添加主机-场景校验-部分主机信息缺失或错误
   data:
     host_list:
-      - host_ip: "1.1.1.1"
+      - host_ip: 1.1.1.1
         ssh_port: 1
-        ssh_user: "root"
-        password: "openEuler12#$$"
-        host_name: "batch_add_host_1"
+        ssh_user: root
+        ssh_pkey: ""
+        password: openEuler12#$$
+        host_name: batch_add_host_1
         host_group_name: ""
         management: false
-      - host_ip: "1.1.1.2"
+      - host_ip: 1.1.1.2
         ssh_port: 1
-        ssh_user: "root"
-        password: "openEuler12#$$"
-        host_name: "batch_add_host_2"
-        host_group_name: "$host_group_name"
+        ssh_user: root
+        ssh_pkey: ""
+        password: openEuler12#$$
+        host_name: batch_add_host_2
+        host_group_name: $host_group_name
         management: false
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
