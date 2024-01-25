@@ -1,0 +1,84 @@
+#查看cve修复任务详情信息
+- case_name: 查看cve修复任务详情信息-所有信息正确
+  data:
+    task_id: $hot_fix_way_task_id
+    filter:
+      status: ["running","succeed","fail","unknown"]
+    page: 1
+    per_page: 10
+  validate:
+    code: 200
+    data:
+      result:
+        - cve_num: ^[0-9]*$$
+          host_id: $host_id
+          host_ip: $host_ip
+          host_name: $host_name
+          status: ^\b(running|succeed|fail|unknown)\b$$
+      total_count: ^[0-9]*$$
+      total_page: ^[0-9]*$$
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查看cve修复任务详情信息-过滤条件为空
+  data:
+    task_id: $hot_fix_way_task_id
+    filter: { }
+    page: 1
+    per_page: 10
+  validate:
+    code: 200
+    data:
+      result:
+        - cve_num: ^[0-9]*$$
+          host_id: $host_id
+          host_ip: $host_ip
+          host_name: $host_name
+          status: ^\b(running|succeed|fail|unknown)\b$$
+      total_count: ^[0-9]*$$
+      total_page: ^[0-9]*$$
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查看cve修复任务详情信息-task_id不正确
+  data:
+    task_id: non-exist
+    filter: { }
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查看任务信息-task_id为空
+  data:
+    task_id:
+    filter: { }
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查看任务信息-过滤条件为running
+  data:
+    task_id: $hot_fix_way_task_id
+    filter:
+      "status": ["running"]
+    page: 1
+    per_page: 10
+  validate:
+    code: 200
+    data:
+      result:
+        - cve_num: ^[0-9]*$$
+          host_id: $host_id
+          host_ip: $host_ip
+          host_name: $host_name
+          status: ^\b(running|succeed|fail|unknown)\b$$
+      total_count: ^[0-9]*$$
+      total_page: ^[0-9]*$$
+    label: Succeed
+    message: operation succeed

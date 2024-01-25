@@ -1,409 +1,361 @@
 #添加单个主机
-- case_name: "所有信息正确，注册单个主机"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 所有信息正确，注册单个主机
   data:
-    host_name: "api_test_host01"
-    host_group_name: "$host_group_name"
-    host_ip: "2.2.2.2"
+    host_name: api_test_host01
+    host_group_name: $host_group_name
+    host_ip: 2.2.2.2
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: 'openEuler12#$$'
     management: true
-  except:
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
-  sql: "select host_name from host where host_name='api_test_host01'"
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host where host_name='api_test_host01'
 
-- case_name: "添加单个主机-参数校验-host_name超过50个字符"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加单个主机-参数校验-host_name超过50个字符
   data:
-    host_name: "111111111111111111111111111111111111111111111111111"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 111111111111111111111111111111111111111111111111111
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_name以空格开头"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_name以空格开头
   data:
-    host_name: " 1111"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name:  1111
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_name以空格结尾"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_name以空格结尾
   data:
-    host_name: "1111  "
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 1111
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_name为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_name为空
   data:
     host_name: ""
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_name数据类型非str"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_name数据类型非str
   data:
     host_name: 123
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_group_name不存在"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_group_name不存在
   data:
-    host_name: "123"
-    host_group_name: "不存在的group"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: 不存在的group
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_group_name为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_group_name为空
   data:
-    host_name: "123"
+    host_name: 123
     host_group_name: ""
-    host_ip: "1.1.1.1"
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_group_name数据类型非str"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_group_name数据类型非str
   data:
-    host_name: "123"
+    host_name: 123
     host_group_name: 123
-    host_ip: "1.1.1.1"
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_ip为0.0.0.-1"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_ip为0.0.0.-1
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "0.0.0.-1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 0.0.0.-1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_ip为255.255.255.256"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_ip为255.255.255.256
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "255.255.255.256"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 255.255.255.256
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_ip为255.255.255"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_ip为255.255.255
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "255.255.255"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 255.255.255
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_ip为255.255.255.255.1"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_ip为255.255.255.255.1
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "255.255.255.255.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 255.255.255.255.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_ip数据类型非str"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_ip数据类型非str
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
+    host_name: 123
+    host_group_name: $host_group_name
     host_ip: 123
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-host_ip为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-host_ip为空
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
+    host_name: 123
+    host_group_name: $host_group_name
     host_ip: ""
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-ssh_port小于0"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-ssh_port小于0
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: -1
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-ssh_port大于65535"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-ssh_port大于65535
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 65536
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-ssh_port非int"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-ssh_port非int
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
-    ssh_port: "2.66"
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
+    ssh_port: 2.66
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-ssh_port为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-ssh_port为空
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: None
-    ssh_user: "root"
-    password: "openEuler12#$$"
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-ssh_user长度超过32"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-ssh_user长度超过32
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "111111111111111111111111111111111111112"
-    password: "openEuler12#$$"
+    ssh_user: 111111111111111111111111111111111111112
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-ssh_user为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-ssh_user为空
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
     ssh_user: ""
-    password: "openEuler12#$$"
+    ssh_pkey: ""
+    password: openEuler12#$$
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-password为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-password为空
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
+    ssh_user: root
+    ssh_pkey: ""
     password: ""
     management: true
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-management为空"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-management为空
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
-    management: None
-  except:
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
+    management: ""
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "添加主机-参数校验-management非bool"
-  token: '$token'
-  port: '11111'
-  path: '/manage/host/add'
+- case_name: 添加主机-参数校验-management非bool
   data:
-    host_name: "123"
-    host_group_name: "$host_group_name"
-    host_ip: "1.1.1.1"
+    host_name: 123
+    host_group_name: $host_group_name
+    host_ip: 1.1.1.1
     ssh_port: 22
-    ssh_user: "root"
-    password: "openEuler12#$$"
-    management: "test"
-  except:
+    ssh_user: root
+    ssh_pkey: ""
+    password: openEuler12#$$
+    management: test
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error

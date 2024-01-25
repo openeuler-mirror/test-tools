@@ -1,0 +1,25 @@
+#执行任务
+- case_name: 执行任务-正确task_id
+  data:
+      task_id: $cold_fix_way_task_id
+  validate:
+      code: 200
+      label: Succeed
+      message: operation succeed
+
+- case_name: 执行任务-task_id为空
+  data:
+      task_id:
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error
+
+
+- case_name: 执行任务-task_id不存在
+  data:
+      task_id: non-exist
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error

@@ -1,123 +1,95 @@
 #更新主机信息
-- case_name: "更新主机信息-更新有效的主机名"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机信息-更新有效的主机名
   data:
     host_id: $host_id
-    host_name: 'modify_host_name'
-  sql: "select host_name from host where host_id='$host_id'"
-  except:
+    host_name: modify_host_name
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host where host_name='modify_host_name'
 
-- case_name: "更新主机信息-更新ssh_user、password为有效值"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机信息-更新ssh_user、password为有效值
   data:
     host_id: $host_id
-    ssh_user: "root"
-    password: "123456"
-  sql: "select ssh_user from host where host_id='$host_id'"
-  except:
+    ssh_user: change
+    password: '1234567'
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host where ssh_user='change'
 
-- case_name: "更新主机-参数校验-host_id不存在"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-host_id不存在
   data:
-    host_id: "non-exist-id"
-    ssh_user: "root"
-    password: "123456"
-  except:
+    host_id: non-exist-id
+    ssh_user: root
+    password: 123456
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-- case_name: "更新主机-参数校验-host_id为空"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-host_id为空
   data:
     host_id: None
-    ssh_user: "root"
-    password: "123456"
-  except:
+    ssh_user: root
+    password: 123456
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
-
-- case_name: "更新主机-参数校验-host_group_name不存在"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-host_group_name不存在
   data:
     host_id: $host_id
-    host_group_name: "non-exist-group"
-  except:
+    host_group_name: non-exist-group
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "there is no host group name non-exist-group in database when update host $host_id!"
+    label: Param.Error
+    message: there is no host group name non-exist-group in database when update host $host_id!
 
 
-- case_name: "更新主机-参数校验-ssh_port更新为有效值,其他值不修改"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-ssh_port更新为有效值,其他值不修改
   data:
     host_id: $host_id
     ssh_port: 26
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "please update password"
+    label: Param.Error
+    message: please update password or authentication key.
 
-- case_name: "更新主机-参数校验-ssh_port和password修改为有效值"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-ssh_port和password修改为有效值
   data:
     host_id: $host_id
     ssh_port: 26
-    password: 'openEuler34#$$'
-  sql: "select * from host where ssh_port='26'"
-  except:
+    password: openEuler34#$$
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host where ssh_port='26'
 
-- case_name: "更新主机-参数校验-ssh_user和password均更新为有效值"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-ssh_user和password均更新为有效值
   data:
     host_id: $host_id
-    ssh_user: "update-user"
-    password: 'openEuler34#$$'
-  sql: "select * from host where ssh_port='26'"
-  except:
+    ssh_user: update-user
+    password: openEuler34#$$
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host where ssh_user='update'
 
-- case_name: "更新主机-参数校验-ssh_user更新为有效值，password值为空"
-  token: '$token'
-  port: "11111"
-  path: "/manage/host/update"
+- case_name: 更新主机-参数校验-ssh_user更新为有效值，password值为空
   data:
     host_id: $host_id
-    ssh_user: "update-user"
+    ssh_user: update-user
     password: ""
-  except:
+  validate:
     code: 1000
-    label: "Param.Error"
-    message: "request parameter error"
+    label: Param.Error
+    message: request parameter error
 
 
 

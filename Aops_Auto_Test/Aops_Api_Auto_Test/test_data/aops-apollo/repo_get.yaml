@@ -1,0 +1,55 @@
+#获取repo源
+- case_name: 获取repo源-有效值
+  data:
+    repo_name_list:
+      - $repo_name
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    data:
+      result:
+        - repo_attr: ''
+          repo_data: '$repo_data'
+          repo_id: $repo_id
+          repo_name: $repo_name
+
+- case_name: 获取repo源-部分repo存在
+  data:
+    repo_name_list:
+      - $repo_name
+      -  non-exist-repo
+  validate:
+    code: 206
+    label: Partial.Succeed
+    message: partial succeed
+    data:
+      result: [{repo_attr: "", repo_data: '$repo_data', repo_id: $repo_id, repo_name: $repo_name}]
+
+- case_name: 获取repo源-不存在的repo
+  data:
+    repo_name_list:
+      - non-exist-repo
+  validate:
+    code: 1108
+    label: No.Data
+    message: No data found in database
+    data: {'result': []}
+
+- case_name: 获取repo源-repo list为空
+  data:
+    repo_name_list: []
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    data:
+      result: [{repo_attr: "", repo_data: '$repo_data', repo_id: $repo_id, repo_name: $repo_name}]
+
+- case_name: 获取repo源-repo_name非str类型
+  data:
+    repo_name_list: [123, 456]
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

@@ -1,9 +1,6 @@
 #下载批量添加主机的模板
-- case_name: "下载批量添加主机的模板"
-  token: '$token'
-  port: '11111'
-  path: "/manage/host/file/template"
-  except:
+- case_name: 下载批量添加主机的模板
+  validate:
     code: 200
-    label: "Succeed"
-    message: "operation succeed"
+    label: Succeed
+    message: operation succeed

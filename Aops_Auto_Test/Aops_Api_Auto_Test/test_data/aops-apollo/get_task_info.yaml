@@ -1,0 +1,48 @@
+#查看任务信息
+- case_name: 查看任务信息-查看冷补丁修复任务信息，所有信息均正确
+  data:
+      task_id: $cold_fix_way_task_id
+  validate:
+      code: 200
+      data:
+        result:
+          accept: True
+          description: ^.{1,50}$$
+          host_num: 1
+          latest_execute_time: null
+          takeover: False
+          task_name: ^.{1,20}$$
+      label: Succeed
+      message: operation succeed
+
+- case_name: 查看任务信息-查看热补丁修复任务信息，所有信息均正确
+  data:
+      task_id: $hot_fix_way_task_id
+  validate:
+      code: 200
+      data:
+        result:
+          accept: true
+          description: ^.{1,50}$$
+          host_num: 1
+          latest_execute_time: null
+          takeover: true
+          task_name: ^.{1,20}$$
+      label: Succeed
+      message: operation succeed
+
+- case_name: 查看任务信息-task_id为空
+  data:
+      task_id: ~
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error
+
+- case_name: 查看任务信息-task_id不存在
+  data:
+      task_id: non-exist
+  validate:
+      code: 1108
+      label: No.Data
+      message: No data found in database

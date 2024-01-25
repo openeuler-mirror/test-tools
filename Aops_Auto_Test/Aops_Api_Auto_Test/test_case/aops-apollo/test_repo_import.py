@@ -1,40 +1,30 @@
-# -- coding: utf-8 --
 import os
 import pytest
-from Aops_Api_Auto_Test.api.aops_zeus import ApiZeus
 from Aops_Api_Auto_Test.config import conf
+from Aops_Api_Auto_Test.query.aops_zeus import QueryDataBase
 from Aops_Api_Auto_Test.utils.AssertUtil import AssertUtil
 from Aops_Api_Auto_Test.utils.LogUtil import my_log
 from Aops_Api_Auto_Test.utils.YamlUtil import Yaml
-from Aops_Api_Auto_Test.query.aops_zeus import QueryDataBase
-from Aops_Api_Auto_Test.test_case.setup import CreateData
+from Aops_Api_Auto_Test.api.aops_apollo import ApiApollo
 
-data_file = os.path.join(conf.get_data_path(), "aops-zeus", "register_host.yaml")
+data_file = os.path.join(conf.get_data_path(), "aops-apollo", "repo_import.yaml")
+ApiApollo()
 log = my_log()
-CreateData().get_group_name()
 
-
-class TestRegisterHost:
-
-    @staticmethod
-    def teardown_method():
-        log.info("清理当前测试用例数据")
-        QueryDataBase().delete_host(host_ip)
+class TestRepoImport:
 
     @staticmethod
     def teardown_class():
         log.info("清理当前测试套数据")
-        QueryDataBase().delete_host_group(Yaml(conf.get_common_yaml_path()).data()['host_group_name'])
+        QueryDataBase().delete_repo(repo_name)
         Yaml(conf.get_common_yaml_path()).clear_yaml()
 
     @pytest.mark.parametrize('test_data', Yaml(conf.get_common_yaml_path()).replace_yaml(data_file))
-    def test_register_host(self, test_data):
+    def test_repo_import(self, test_data):
         log.info("test_data: {}".format(test_data))
-        data = test_data["data"]
-        global host_ip
-        host_ip = data['host_ip']
-        print("host_ip: ", host_ip)
-        res = ApiZeus().register_host(data)
+        global repo_name
+        repo_name = test_data["data"]["repo_name"]
+        res = ApiApollo().import_repo(test_data['data'])
         assert_res = AssertUtil()
         assert_res.assert_code(res["body"]["code"], test_data["validate"]["code"])
         assert_res.assert_label(res["body"]["label"], test_data["validate"]["label"])
