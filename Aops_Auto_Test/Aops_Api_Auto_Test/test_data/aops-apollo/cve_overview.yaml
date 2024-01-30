@@ -1,0 +1,12 @@
+#查看各级别cve的数量
+- case_name: 查看各级别cve的数量
+  data:
+  validate:
+      code: 200
+      label: Succeed
+      message: operation succeed
+      sql_critical: select count(*) from cve_host_match inner join cve on cve.cve_id=cve_host_match.cve_id and cve.severity='Critical'
+      sql_high: select count(*) from cve_host_match inner join cve on cve.cve_id=cve_host_match.cve_id and cve.severity='High'
+      sql_low: select count(*) from cve_host_match inner join cve on cve.cve_id=cve_host_match.cve_id and cve.severity='Low'
+      sql_medium: select count(*) from cve_host_match inner join cve on cve.cve_id=cve_host_match.cve_id and cve.severity='Medium'
+      sql_unknown: select count(*) from cve_host_match inner join cve on cve.cve_id=cve_host_match.cve_id and cve.severity='Unknown'

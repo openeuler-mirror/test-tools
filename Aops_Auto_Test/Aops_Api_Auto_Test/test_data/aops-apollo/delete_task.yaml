@@ -1,0 +1,38 @@
+#删除任务
+- case_name: 删除任务-正确的task_list
+  data:
+    task_list:
+      - $cold_fix_way_task_id
+  validate:
+    code: 200
+    data:
+      running_task: [ ]
+    label: Succeed
+    message: operation succeed
+
+- case_name: 删除任务-task_list为空
+  data:
+    task_list:
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error
+
+- case_name: 删除任务-task_list数据类型错误
+  data:
+    task_list: $cold_fix_way_task_id
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error
+
+- case_name: 删除任务-task_id不存在
+  data:
+    task_list:
+      - non-exist
+  validate:
+    code: 200
+    data:
+      running_task: [ ]
+    label: Succeed
+    message: operation succeed

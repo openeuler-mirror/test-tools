@@ -10,10 +10,13 @@ from Aops_Api_Auto_Test.utils.YamlUtil import Yaml
 from Aops_Api_Auto_Test.test_case.setup import CreateData
 data_file = os.path.join(conf.get_data_path(), "aops-zeus", "collect_host_config_file.yaml")
 log = my_log()
-CreateData().get_host_info()
 
 
 class TestCollectHostConfigInfo:
+
+    @staticmethod
+    def setup_class():
+        CreateData().get_host_info()
 
     @staticmethod
     def teardown_class():
@@ -22,8 +25,9 @@ class TestCollectHostConfigInfo:
         QueryDataBase().delete_host_group(Yaml(conf.get_common_yaml_path()).data()['host_group_name'])
         Yaml(conf.get_common_yaml_path()).clear_yaml()
 
-    @pytest.mark.parametrize('test_data', Yaml(conf.get_common_yaml_path()).replace_yaml(data_file))
+    @pytest.mark.parametrize('test_data', Yaml(data_file).data())
     def test_collect_host_config_info(self, test_data):
+        test_data = Yaml(conf.get_common_yaml_path()).replace_yaml(test_data)
         log.info("test_data: {}".format(test_data))
         data = test_data["data"]
         res = ApiZeus().collect_host_config_info(data)

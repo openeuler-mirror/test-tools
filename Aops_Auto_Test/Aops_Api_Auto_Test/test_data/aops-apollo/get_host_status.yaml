@@ -1,0 +1,38 @@
+#查询主机的扫描状态
+- case_name: 查询主机的扫描状态-host_list为空
+  data:
+    host_list: []
+  validate:
+    code: '200'
+    data:
+      result:
+        $host_id: ^[0-3]$$
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查询主机的扫描状态-查询1个主机
+  data:
+    host_list: [$host_id]
+  validate:
+    code: '200'
+    data:
+      result:
+        $host_id: ^[0-3]$$
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查询主机的扫描状态-host_id不存在
+  data:
+    host_list: ["non-exist"]
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的扫描状态-host_list数据类型错误
+  data:
+    host_list: 123
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

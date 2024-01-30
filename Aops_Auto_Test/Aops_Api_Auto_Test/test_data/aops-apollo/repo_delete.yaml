@@ -7,7 +7,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: "select * from repo where repo_name='$repo_name'"
+    sql: "select count(*) from repo where repo_name='$repo_name'"
 
 - case_name: 删除repo源-repo_list为空
   data:
@@ -24,3 +24,11 @@
     code: 200
     label: Succeed
     message: operation succeed
+
+- case_name: 删除repo源-repo_name非str类型
+  data:
+    repo_name_list: [1]
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

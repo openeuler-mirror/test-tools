@@ -6,8 +6,8 @@
     host_ip: 2.2.2.2
     ssh_port: 22
     ssh_user: root
-    ssh_pkey: ""
-    password: 'openEuler12#$$'
+    ssh_pkey:
+    password: openEuler12#$$
     management: true
   validate:
     code: 200
