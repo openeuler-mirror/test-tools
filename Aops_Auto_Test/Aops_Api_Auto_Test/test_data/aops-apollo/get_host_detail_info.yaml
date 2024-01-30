@@ -1,0 +1,34 @@
+#获取主机详细信息
+- case_name: 获取主机详细信息-host_id正确
+  data:
+    host_id: $host_id
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    data:
+      affected_cve_num: ^[0-9]*$$
+      fixed_cve_num: ^[0-9]*$$
+      host_group: $host_group_name
+      host_ip: $host_ip
+      host_name: $host_name
+      last_scan: ^$|[0-9]{1,20}$$
+      reboot: false
+      repo: null
+      unaffected_cve_num: ^[0-9]*$$
+
+- case_name: 获取主机详细信息-host_id不存在
+  data:
+    host_id: non-exist
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取主机列表-host_id数据类型错误
+  data:
+    host_id: test
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

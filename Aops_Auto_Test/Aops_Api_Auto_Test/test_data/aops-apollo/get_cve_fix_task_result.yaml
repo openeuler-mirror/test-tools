@@ -17,7 +17,7 @@
             dnf_event_start: ^[0-9]{1,20}$$
             rpms:
               - available_rpm: $hot_available_rpm
-                log: ^.+$$
+                log: ^[\s\S]*
                 result: succeed
             timed: true
           task_type: cve fix
@@ -40,7 +40,7 @@
             check_items: []
             rpms:
               - available_rpm: $cold_available_rpm
-                log: ^.+$$
+                log: ^[\s\S]*
                 result: succeed
             timed: true
           task_type: cve fix
@@ -58,6 +58,14 @@
 - case_name: 修复任务报告查询-task_id为空
   data:
       task_id:
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error
+
+- case_name: 修复任务报告查询-task_id非str类型
+  data:
+      task_id: 1
   validate:
       code: 1000
       label: Param.Error

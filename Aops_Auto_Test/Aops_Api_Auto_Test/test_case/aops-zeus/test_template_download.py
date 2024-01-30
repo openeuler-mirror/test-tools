@@ -18,12 +18,18 @@ log = my_log()
 class TestDownloadTemplate:
 
     @staticmethod
+    def setup_class():
+        log.info("准备测试数据")
+        CreateData()
+
+    @staticmethod
     def teardown_class():
         log.info("清理当前测试套数据")
         Yaml(conf.get_common_yaml_path()).clear_yaml()
 
-    @pytest.mark.parametrize('test_data', Yaml(conf.get_common_yaml_path()).replace_yaml(data_file))
+    @pytest.mark.parametrize('test_data', Yaml(data_file).data())
     def test_download_template(self, test_data):
+        test_data = Yaml(conf.get_common_yaml_path()).replace_yaml(test_data)
         log.info("test_data: {}".format(test_data))
         res = ApiZeus().download_template()
         log.info("res: {}".format(res))

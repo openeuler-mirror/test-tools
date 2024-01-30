@@ -15,10 +15,17 @@
       label: Param.Error
       message: request parameter error
 
-
 - case_name: 执行任务-task_id不存在
   data:
       task_id: non-exist
+  validate:
+      code: 1000
+      label: Param.Error
+      message: request parameter error
+
+- case_name: 执行任务-task_id类型错误
+  data:
+      task_id: 1
   validate:
       code: 1000
       label: Param.Error

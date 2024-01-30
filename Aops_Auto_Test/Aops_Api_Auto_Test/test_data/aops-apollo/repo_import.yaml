@@ -54,9 +54,9 @@
     label: Param.Error
     message: request parameter error
 
-- case_name: 导入repo-repo_name为空
+- case_name: 导入repo-repo_name非str类型
   data:
-    repo_name:
+    repo_name: 1
     repo_data: test_repo_data
   validate:
     code: 1000

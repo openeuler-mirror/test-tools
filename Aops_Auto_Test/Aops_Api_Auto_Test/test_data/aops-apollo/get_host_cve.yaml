@@ -1,0 +1,209 @@
+#查询主机的cve信息
+#- case_name: 查询主机的cve信息-所有筛选条件均正确
+#  data:
+#    host_id: $host_id
+#    sort: cvss_score
+#    direction: asc
+#    filter:
+#      search_key: CVE
+#      affected: true
+#      severity:
+#        - Critical
+#    page: 1
+#    per_page: 10
+#  validate:
+#    code: 200
+#    label: Succeed
+#    message: operation succeed
+#    sql:
+
+- case_name: 查询主机的cve信息-只传入有效的host_id
+  data:
+    host_id: $host_id
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id') as tmp
+
+- case_name: 查询主机的cve信息-不存在的host_id
+  data:
+    host_id: non-exist
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-host_id为空
+  data:
+    host_id:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-host_id数据类型错误
+  data:
+    host_id: nonint
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-severity为空
+  data:
+    host_id: $host_id
+    filter:
+      severity: [ ]
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id') as tmp
+
+- case_name: 查询主机的cve信息-severity数据类型错误
+  data:
+    host_id: $host_id
+    filter:
+      severity: Critical
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-fixed为true
+  data:
+    host_id: $host_id
+    filter:
+      fixed: true
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id' and fixed=1) as tmp
+
+- case_name: 查询主机的cve信息-fixed为false
+  data:
+    host_id: $host_id
+    filter:
+      fixed: false
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id' and fixed=0) as tmp
+
+- case_name: 查询主机的cve信息-fixed为空
+  data:
+    host_id: $host_id
+    filter:
+      fixed:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-fixed数据类型错误
+  data:
+    host_id: $host_id
+    filter:
+      fixed: test
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-search_key包含正确的cve_id
+  data:
+    host_id: $host_id
+    filter:
+      search_key: 'CVE'
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_id from cve_host_match where host_id='$host_id' and cve_id LIKE '%CVE%') as tmp
+
+- case_name: 查询主机的cve信息-search_key包含正确的package name
+  data:
+    host_id: $host_id
+    filter:
+      search_key: 'kernel'
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve_affected_pkgs where cve_host_match.host_id='$host_id' and cve_host_match.cve_id=cve_affected_pkgs.cve_id and cve_affected_pkgs.package='kernel') as tmp
+
+- case_name: 查询主机的cve信息-search_key不存在
+  data:
+    host_id: $host_id
+    filter:
+      search_key: 'non'
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve_affected_pkgs where cve_host_match.host_id='$host_id' and cve_host_match.cve_id=cve_affected_pkgs.cve_id and cve_host_match.cve_id LIKE '%non%' or cve_affected_pkgs.package LIKE '%non%') as tmp
+
+- case_name: 查询主机的cve信息-search_key非str类型
+  data:
+    host_id: $host_id
+    filter:
+      search_key: 1
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-search_key为空
+  data:
+    host_id: $host_id
+    filter:
+      search_key:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-affected为false
+  data:
+    host_id: $host_id
+    filter:
+      affected: false
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_id from cve_host_match where host_id='$host_id' and affected='0') as tmp
+
+- case_name: 查询主机的cve信息-affected为true
+  data:
+    host_id: $host_id
+    filter:
+      affected: true
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_id from cve_host_match where host_id='$host_id' and affected='1') as tmp
+
+- case_name: 查询主机的cve信息-affected为空
+  data:
+    host_id: $host_id
+    filter:
+      affected:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-affected为其他值
+  data:
+    host_id: $host_id
+    filter:
+      affected: test
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

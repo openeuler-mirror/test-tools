@@ -1,10 +1,8 @@
 """
 断言封装
 """
-
 from .LogUtil import my_log
 import re
-
 from .MysqlUtil import ql
 
 
@@ -59,7 +57,7 @@ class AssertUtil:
             self.log.error("不包含或者body错误，body is %s,excepted_body is %s" % (body, excepted_body))
             raise
 
-    def assert_str_and_int(self,data1,data2):
+    def assert_str_and_int(self, data1, data2):
 
         if type(data2) is str and data2.startswith("^"):
             try:
@@ -83,9 +81,7 @@ class AssertUtil:
                 self.log.error("返回数据断言失败，{}，{}不相等".format(data1, data2))
                 raise
 
-
     def assert_data(self, res_data, except_data):
-        print(res_data, except_data)
         """
         断言data相等
         """
@@ -96,8 +92,7 @@ class AssertUtil:
                 raise
             except:
                 for except_key, except_value in except_data.items():
-                    res_value = res_data[except_key]
-                    print(except_data, res_value)
+                    res_value = res_data[str(except_key)]
                     if isinstance(except_data, dict) or isinstance(except_data, list):
                         self.assert_data(res_value, except_value)
                     else:
@@ -109,7 +104,6 @@ class AssertUtil:
                 raise
             except:
                 for i in range(len(except_data)):
-                    print(except_data[i], res_data[i])
                     if isinstance(except_data[i], list) or isinstance(except_data[i], dict):
                         self.assert_data(res_data[i], except_data[i])
                     else:
@@ -117,11 +111,11 @@ class AssertUtil:
         else:
             self.assert_str_and_int(res_data, except_data)
 
-    def assert_search(self,res,expect_field):
+    def assert_search(self, res, expect_field):
         """
         断言搜索结果，当前只支持搜索条件的断言
         """
-        #判断列表为空
+        # 判断列表为空
         if isinstance(expect_field, list) and len(expect_field) == 0:
             try:
                 assert res == expect_field
@@ -150,45 +144,16 @@ class AssertUtil:
                             self.log.info("搜索条件断言成功，{}, {}".format(expect_field[key], item[key]))
                             raise
 
-
-
     def assert_database(self, sql, excepted_result):
         """
         断言数据库
         """
         ql.connect()
-        aa = ql.fetchall(sql)
-        if excepted_result == 0:
-            try:
-                assert len(aa) == excepted_result
-                self.log.info(
-                    "数据库校验通过,数据库查询结果： {}; 期望结果是： {}".format(ql.fetchall(sql),excepted_result))
-            except:
-                self.log.error(
-                    "数据库校验失败,数据库查询结果： {}; 期望结果是： {}".format(ql.fetchall(sql)[0]['count(*)'],
-                                                                               excepted_result))
-                raise
-        else:
-            try:
-                assert ql.fetchall(sql)[0]['count(*)'] == excepted_result
-                self.log.info("数据库校验通过,数据库查询结果： {}; 期望结果是： {}".format(ql.fetchall(sql)[0]['count(*)'], excepted_result))
-            except:
-                self.log.error(
-                    "数据库校验失败,数据库查询结果： {}; 期望结果是： {}".format(ql.fetchall(sql)[0]['count(*)'],
-                                                                               excepted_result))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        sql_result = ql.fetchall(sql)[0]['count(*)']
+        try:
+            assert sql_result == excepted_result
+            self.log.info(
+                "数据库校验通过,数据库查询结果： {}; 期望结果是： {}".format(sql_result, excepted_result))
+        except:
+            self.log.error(
+                "数据库校验失败,数据库查询结果： {}; 期望结果是： {}".format(sql_result, excepted_result))

@@ -6,12 +6,18 @@ from Aops_Api_Auto_Test.utils.AssertUtil import AssertUtil
 from Aops_Api_Auto_Test.utils.LogUtil import my_log
 from Aops_Api_Auto_Test.utils.YamlUtil import Yaml
 from Aops_Api_Auto_Test.api.aops_apollo import ApiApollo
+from Aops_Api_Auto_Test.api.aops_zeus import ApiZeus
 
 data_file = os.path.join(conf.get_data_path(), "aops-apollo", "repo_import.yaml")
-ApiApollo()
 log = my_log()
 
+
 class TestRepoImport:
+
+    @staticmethod
+    def setup_class():
+        log.info("准备测试套依赖数据")
+        ApiZeus()
 
     @staticmethod
     def teardown_class():
@@ -19,8 +25,9 @@ class TestRepoImport:
         QueryDataBase().delete_repo(repo_name)
         Yaml(conf.get_common_yaml_path()).clear_yaml()
 
-    @pytest.mark.parametrize('test_data', Yaml(conf.get_common_yaml_path()).replace_yaml(data_file))
+    @pytest.mark.parametrize('test_data', Yaml(data_file).data())
     def test_repo_import(self, test_data):
+        test_data = Yaml(conf.get_common_yaml_path()).replace_yaml(test_data)
         log.info("test_data: {}".format(test_data))
         global repo_name
         repo_name = test_data["data"]["repo_name"]

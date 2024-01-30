@@ -1,0 +1,131 @@
+#获取repo设置任务的详细信息
+- case_name: 获取repo设置任务的详细信息-所有信息正确
+  data:
+    task_id: $task_id
+    filter:
+      host_name: $host_name
+      status:
+        - unknown
+        - fail
+        - running
+        - succeed
+    page: 1
+    per_page: 10
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from task_host_repo where task_id='$task_id' and host_name="$host_name" and status in ("unknown","fail","running","succeed")
+
+- case_name: 获取repo设置任务的详细信息-仅传入task_id
+  data:
+    task_id: $task_id
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from task_host_repo where task_id='$task_id'
+
+- case_name: 获取repo设置任务的详细信息-status为空list
+  data:
+    task_id: $task_id
+    filter:
+      host_name: $host_name
+      status: []
+    page: 1
+    per_page: 10
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from task_host_repo where task_id='$task_id' and host_name="$host_name"
+
+- case_name: 获取repo设置任务的详细信息-task_id不正确
+  data:
+    task_id: non-exist
+    filter: { }
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取repo设置任务的详细信息-task_id为空
+  data:
+    task_id:
+    filter: { }
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取repo设置任务的详细信息-task_id数据类型错误
+  data:
+    task_id: 1
+    filter: { }
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取repo设置任务的详细信息-status数据类型错误
+  data:
+    task_id: $task_id
+    filter:
+      status: running
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取repo设置任务的详细信息-status为其他值
+  data:
+    task_id: $task_id
+    filter:
+      status: ["test"]
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取repo设置任务的详细信息-status元素为空字符
+  data:
+    task_id: $task_id
+    filter:
+      status: [""]
+    page: 1
+    per_page: 10
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取repo设置任务的详细信息-host_name不存在
+  data:
+    task_id: $task_id
+    filter:
+      host_name: non-exist
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from task_host_repo where task_id='$task_id' and host_name="non-exist"
+
+- case_name: 获取repo设置任务的详细信息-host_name为空
+  data:
+    task_id: $task_id
+    filter:
+      host_name:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

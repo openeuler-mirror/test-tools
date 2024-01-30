@@ -3,6 +3,7 @@ from Aops_Api_Auto_Test.utils.MysqlUtil import ql
 
 class QueryDataBase:
     ql.connect()
+
     def query_group_name(self, host_group_name):
         sql = "select host_group_name from host_group where host_group_name='{}'".format(host_group_name)
         query_result = ql.fetchall(sql)
@@ -10,7 +11,6 @@ class QueryDataBase:
 
     def delete_host_group(self, host_group_name):
         sql = "delete from host_group where host_group_name='{}';".format(host_group_name)
-        print("sql: ", sql)
         return ql.exec(sql)
 
     def query_host_info(self, field):
@@ -22,7 +22,6 @@ class QueryDataBase:
 
     def delete_host(self, field):
         sql = "delete from host where host_ip='{}'".format(field)
-        print("sql:" ,sql)
         return ql.exec(sql)
 
     def batch_delete_host(self):

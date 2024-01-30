@@ -10,7 +10,8 @@
     data:
       result:
         - repo_attr: ''
-          repo_data: '$repo_data'
+          repo_data: |
+            $repo_data
           repo_id: $repo_id
           repo_name: $repo_name
 
@@ -24,7 +25,12 @@
     label: Partial.Succeed
     message: partial succeed
     data:
-      result: [{repo_attr: "", repo_data: '$repo_data', repo_id: $repo_id, repo_name: $repo_name}]
+      result:
+        - repo_attr: ''
+          repo_data: |
+            $repo_data
+          repo_id: $repo_id
+          repo_name: $repo_name
 
 - case_name: 获取repo源-不存在的repo
   data:
@@ -44,7 +50,12 @@
     label: Succeed
     message: operation succeed
     data:
-      result: [{repo_attr: "", repo_data: '$repo_data', repo_id: $repo_id, repo_name: $repo_name}]
+      result:
+        - repo_attr: ''
+          repo_data: |
+            $repo_data
+          repo_id: $repo_id
+          repo_name: $repo_name
 
 - case_name: 获取repo源-repo_name非str类型
   data:
