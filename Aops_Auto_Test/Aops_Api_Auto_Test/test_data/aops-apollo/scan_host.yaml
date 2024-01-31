@@ -1,0 +1,54 @@
+#扫描主机
+- case_name: 扫描主机-主机列表为空，过滤为空
+  data:
+    host_list: [ ]
+    filter: { }
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+
+- case_name: 扫描主机-所有信息均正确
+  data:
+    host_list:
+      - $host_id
+    filter:
+      host_name: host
+      host_group:
+        - $host_group_name
+      repo:
+        - ''
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+
+- case_name: 扫描主机-host正确
+  data:
+    host_list:
+      - $host_id
+    filter: { }
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+
+- case_name: 扫描主机-不存在的host
+  data:
+    host_list:
+      - 10000
+    filter: { }
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 扫描主机-host数据类型为str
+  data:
+    host_list:
+      - "$host_id"
+    filter: { }
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed

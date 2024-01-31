@@ -1,0 +1,27 @@
+#识别主机场景
+- case_name: 识别主机场景-所有信息正确
+  data:
+    host_id: $host_id
+  validate:
+    code: 200
+    data:
+      collect_items: null
+      scene: normal
+    label: Succeed
+    message: operation succeed
+
+- case_name: 识别主机场景-host_id不存在
+  data:
+    host_id: non-exist
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 识别主机场景-host_id为空
+  data:
+    host_id:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

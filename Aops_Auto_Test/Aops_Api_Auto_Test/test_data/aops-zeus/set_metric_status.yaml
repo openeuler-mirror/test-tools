@@ -1,0 +1,104 @@
+#设置探针状态
+- case_name: 设置探针状态-设置正确的探针状态
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher:
+        example: "on"
+  validate:
+    code: 200
+    data:
+      resp:
+        gala-gopher:
+          failure: [ ]
+          success:
+            - example
+    label: Succeed
+    message: operation succeed
+
+- case_name: 设置探针状态-host不存在
+  data:
+    host_id: non-exist
+    plugins:
+      gala-gopher:
+        example: "off"
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 设置探针状态-host为空
+  data:
+    host_id:
+    plugins:
+      gala-gopher:
+        example: "off"
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 设置探针状态-插件为空
+  data:
+    host_id: $host_id
+    plugins:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 设置探针状态-插件为其他值
+  data:
+    host_id: $host_id
+    plugins:
+      invalid:
+        example: "off"
+  validate:
+    code: 200
+    data:
+      resp:
+        invalid:
+          failure:
+            - example
+          success: [ ]
+    label: Succeed
+    message: operation succeed
+
+- case_name: 设置探针状态-无效的探针
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher:
+        invalid: "off"
+  validate:
+    code: 200
+    data:
+      resp:
+        gala-gopher:
+          failure:
+            - invalid
+          success: [ ]
+    label: Succeed
+    message: operation succeed
+
+- case_name: 设置探针状态-无效的探针值
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher:
+        example: invalid
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 设置探针状态-探针值为空
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher:
+        example:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

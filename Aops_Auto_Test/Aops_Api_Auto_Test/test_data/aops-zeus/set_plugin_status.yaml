@@ -1,0 +1,68 @@
+#设置插件状态
+- case_name: 设置插件状态-设置状态为inactive
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher: inactive
+  validate:
+    code: 200
+    data:
+      failed_list: []
+      succeed_list:
+        - gala-gopher
+    label: Succeed
+    message: operation succeed
+
+- case_name: 设置插件状态-设置状态为active
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher: active
+  validate:
+    code: 200
+    data:
+      failed_list: []
+      succeed_list:
+        - gala-gopher
+    label: Succeed
+    message: operation succeed
+
+- case_name: 设置插件状态-host不存在
+  data:
+    host_id: 100000
+    plugins:
+      gala-gopher: active
+  validate:
+    code: 1108
+    label: No.Data
+    message: No data found in database
+
+- case_name: 设置插件状态-host为空
+  data:
+    host_id:
+    plugins:
+      gala-gopher: active
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 设置插件状态-插件状态为空
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 设置插件状态-插件状态为其他值
+  data:
+    host_id: $host_id
+    plugins:
+      gala-gopher: invalid
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

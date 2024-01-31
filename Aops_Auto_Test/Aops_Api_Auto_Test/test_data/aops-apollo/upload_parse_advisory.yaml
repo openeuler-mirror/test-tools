@@ -1,0 +1,52 @@
+#上传安全公告
+- case_name: 上传安全公告-上传受影响的安全公告,格式为xml
+  data: cvrf-openEuler-SA-2023-1070.xml
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from parse_advisory_record
+
+- case_name: 上传安全公告-上传受影响的安全公告,格式为zip
+  data: valid_parse_zip.zip
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from parse_advisory_record
+
+- case_name: 上传安全公告-上传空xml文件
+  data: empty.xml
+  validate:
+    code: 1004
+    label: Wrong.File.Format
+    message: wrong file format
+
+- case_name: 上传安全公告-上传内容不正确的zip文件
+  data: invalid_parse.zip
+  validate:
+    code: 1004
+    label: Wrong.File.Format
+    message: wrong file format
+
+- case_name: 上传安全公告-上传内容缺失的xml文件
+  data: content-missing.xml
+  validate:
+    code: 1004
+    label: Wrong.File.Format
+    message: wrong file format
+
+- case_name: 上传安全公告-压缩包内文件数大于100
+  data: more_100.zip
+  validate:
+    code: 1004
+    label: Wrong.File.Format
+    message: wrong file format
+
+- case_name: 上传安全公告-文件权限错误的xml文件
+  data: invalid-file-permission.xml
+
+- case_name: 上传安全公告-文件权限错误的zip文件
+  data: invalid-file-permission.zip
+
+

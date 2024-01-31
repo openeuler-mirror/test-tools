@@ -1,0 +1,67 @@
+#获取任务进度
+
+- case_name: 获取任务进度-task_list包含正确的设置repo任务、cve修复任务
+  data:
+    task_list:
+      - $task_id
+      - $hot_fix_way_task_id
+      - $cold_fix_way_task_id
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    data:
+      result:
+        $task_id:
+          fail: ^[0-1]$$
+          running: ^[0-1]$$
+          succeed: ^[0-1]$$
+          unknown: ^[0-1]$$
+        $hot_fix_way_task_id:
+          fail: ^[0-1]$$
+          running: ^[0-1]$$
+          succeed: ^[0-1]$$
+          unknown: ^[0-1]$$
+        $cold_fix_way_task_id:
+          fail: ^[0-1]$$
+          running: ^[0-1]$$
+          succeed: ^[0-1]$$
+          unknown: ^[0-1]$$
+
+- case_name: 获取任务进度-task_list为空
+  data:
+    task_list: []
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    data:
+      result: {}
+
+- case_name: 获取任务进度-task_id不存在
+  data:
+    task_list:
+      - non-exist
+  validate:
+    code: 1108
+    data:
+      result: { }
+    label: No.Data
+    message: No data found in database
+
+- case_name: 获取任务进度-task_id数据类型错误
+  data:
+    task_list:
+      - 1
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 获取任务进度-task_list数据类型错误
+  data:
+    task_list: $task_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

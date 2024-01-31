@@ -17,7 +17,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name is null and c.fixed='0' and h.host_name='$host_name' order by last_scan asc limit 10;
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name is null and c.fixed='0' and h.host_name='$host_name' order by last_scan asc limit 10;
 
 - case_name: 查询cve的主机信息-cve_id正确
   data:
@@ -26,7 +26,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host, cve_host_match where cve_host_match.cve_id='$host_id' and host.host_id=cve_host_match.host_id
+    sql: select count(*) from host, cve_host_match where cve_host_match.cve_id='$host_id' and host.host_id=cve_host_match.host_id
 
 - case_name: 查询cve的主机信息-cve_id不存在
   data:
@@ -35,7 +35,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host, cve_host_match where cve_host_match.cve_id='non-exist' and host.host_id=cve_host_match.host_id
+    sql: select count(*) from host, cve_host_match where cve_host_match.cve_id='non-exist' and host.host_id=cve_host_match.host_id
 
 - case_name: 查询主机的cve信息-cve_id为空
   data:
@@ -63,7 +63,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name' and c.fixed='0'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name' and c.fixed='0'
 
 - case_name: 查询cve的主机信息-host_name正确,fixed为true
   data:
@@ -75,7 +75,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name' and c.fixed='1'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name' and c.fixed='1'
 
 - case_name: 查询cve的主机信息-host_name为空
   data:
@@ -106,9 +106,10 @@
       fixed: false
       host_name: non-exist
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name'
 
 - case_name: 查询cve的主机信息-fixed为非bool类型
   data:
@@ -140,7 +141,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and c.fixed='1'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and c.fixed='1'
 
 - case_name: 查询cve的主机信息-group_name正确
   data:
@@ -153,7 +154,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' h.host_group_name='$host_group_name' and c.fixed='0'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_group_name='$host_group_name'
 
 - case_name: 查询cve的主机信息-host_group数据类型错误
   data:
@@ -173,10 +174,9 @@
       fixed: false
       host_group: non-exist
   validate:
-    code: 200
-    label: Succeed
-    message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' h.host_group_name='$host_group_name' and c.fixed='0'
+    code: 1000
+    label: Param.Error
+    message: request parameter error
 
 - case_name: 查询cve的主机信息-repo正确
   data:
@@ -189,7 +189,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' h.repo_name='$repo_name' and c.fixed='0'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name='$repo_name'
 
 - case_name: 查询cve的主机信息-repo为空
   data:
@@ -201,7 +201,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' h.repo_name is null and c.fixed='0'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name is null and c.fixed='0'
 
 - case_name: 查询cve的主机信息-repo name不存在
   data:
@@ -214,7 +214,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select * from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' h.repo_name='non-exist' and c.fixed='0'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name='non-exist' and c.fixed='0'
 
 - case_name: 查询cve的主机信息-repo name数据类型错误
   data:
