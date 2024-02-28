@@ -15,6 +15,21 @@
     message: operation succeed
     sql: select count(*) from host where host_name='api_test_host01'
 
+- case_name: 注册主机-重复注册主机
+  data:
+    host_name: api_test_host01
+    host_group_name: $host_group_name
+    host_ip: 2.2.2.2
+    ssh_port: 22
+    ssh_user: root
+    ssh_pkey:
+    password: openEuler12#$$
+    management: true
+  validate:
+    code: 1105
+    label: Data.Exist
+    message: data has existed
+
 - case_name: 添加单个主机-参数校验-host_name超过50个字符
   data:
     host_name: 111111111111111111111111111111111111111111111111111

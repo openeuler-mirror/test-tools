@@ -1,0 +1,37 @@
+#导出cve信息
+- case_name: 导出cve信息-host_list中主机正确
+  data:
+    host_list:
+      - $host_id
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from cve_host_match where host_id='$host_id' and host_user='admin'
+
+- case_name: 导出cve信息-host_list为空
+  data:
+    host_list: []
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from cve_host_match where host_user='admin'
+
+- case_name: 导出cve信息-host不存在
+  data:
+    host_list:
+      - 100000
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from cve_host_match where host_id='100000' and host_user='admin'
+
+- case_name: 导出cve信息-host_list类型错误
+  data:
+    host_list: 100000
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

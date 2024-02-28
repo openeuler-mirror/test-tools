@@ -1,8 +1,9 @@
+import os
 import time
 
 from Aops_Api_Auto_Test.config import conf
 from Aops_Api_Auto_Test.utils.LogUtil import my_log
-from Aops_Api_Auto_Test.config.conf import ConfigYaml
+from Aops_Api_Auto_Test.config.conf import ConfigYaml, BASE_DIR
 from Aops_Api_Auto_Test.utils.RequestsUtil import Request
 from Aops_Api_Auto_Test.utils.YamlUtil import Yaml
 
@@ -33,6 +34,39 @@ class ApiApollo:
         self.log.info("Download template result: {}".format(res))
         return res
 
+    def upload_parse_advisory(self, file_name):
+        """
+        Upload_parse_advisory
+        :return:
+        """
+        headers = {'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/advisory/upload"
+        file_path = os.path.join(BASE_DIR, "test_file", file_name)
+        try:
+            with open(file_path, 'rb') as file:
+                res = Request().post(url=url, files={'file': file}, headers=headers)
+                self.log.info("Upload parse advisory result: {}".format(res))
+                return res
+        except PermissionError:
+            self.log.info("PermissionError")
+
+    def upload_unaffected_cve(self, file_name):
+        """
+        upload_unaffected_cve
+        :return:
+        """
+        headers = {'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/unaffected/upload"
+        file_path = os.path.join(BASE_DIR, "test_file", file_name)
+        try:
+            with open(file_path, 'rb') as file:
+                res = Request().post(url=url, files={'file': file}, headers=headers)
+                self.log.info("Upload unaffected cve result: {}".format(res))
+                return res
+        except PermissionError:
+            self.log.info("PermissionError")
+
+
     def cve_overview(self):
         """
         View the number of CVEs at each leve
@@ -43,6 +77,24 @@ class ApiApollo:
         url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/overview"
         res = Request().get(url=url, params=None, headers=headers)
         self.log.info("Get cve number result: {}".format(res))
+        return res
+
+    def cve_info_export(self, data):
+        """
+        Export cve infos
+        :param:
+        {
+  "host_list": [
+    host_id
+  ]
+}
+        :return:
+        """
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/info/export"
+        res = Request().post(url=url, json=data, headers=headers)
+        self.log.info("Export cve info result: {}".format(res))
         return res
 
 
@@ -177,6 +229,32 @@ class ApiApollo:
         url = ConfigYaml().get_conf_url() + ":11116/vulnerability/task/info/get"
         res = Request().get(url=url, params=data, headers=headers)
         self.log.info("Get task info: {}".format(res))
+        return res
+
+    def get_task_list(self, data):
+        """
+        data:
+        {
+  "sort": "create_time",
+  "direction": "asc",
+  "filter": {
+    "task_name": "修复",
+    "task_type": [
+      "cve fix"
+    ]
+  },
+  "page": 1,
+  "per_page": 10
+}
+
+        :return
+        """
+
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/task/list/get"
+        res = Request().post(url=url, params=data, headers=headers)
+        self.log.info("Get task list: {}".format(res))
         return res
 
     def execute_task(self, data):
@@ -436,3 +514,23 @@ class ApiApollo:
         self.log.info("Get host_cve: {}".format(res))
         return res
 
+    def get_cve_host(self, data):
+        """
+        :param
+        {
+  "cve_id": "CVE-2023-1068",
+  "filter": {
+    "fixed": false
+  },
+  "page": 1,
+  "per_page": 10
+}
+       :return:
+
+        """
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/host/get"
+        res = Request().post(url=url, json=data, headers=headers)
+        self.log.info("Get cve host: {}".format(res))
+        return res

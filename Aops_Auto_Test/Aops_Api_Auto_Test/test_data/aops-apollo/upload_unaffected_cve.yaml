@@ -1,0 +1,16 @@
+#上传不受影响的CVE
+
+- case_name: 上传不受影响的CVE-上传空xml文件
+  data: empty.xml
+  validate:
+    code: 1004
+    label: Wrong.File.Format
+    message: wrong file format
+
+- case_name: 上传安全公告-文件权限错误的xml文件
+  data: invalid-file-permission.xml
+
+- case_name: 上传安全公告-文件权限错误的zip文件
+  data: invalid-file-permission.zip
+
+

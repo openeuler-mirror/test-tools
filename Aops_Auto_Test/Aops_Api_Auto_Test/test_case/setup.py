@@ -94,7 +94,6 @@ class CreateData:
                                 Yaml(conf.get_common_yaml_path()).write_yaml({"hot_available_rpm": hot_available_rpm})
                                 Yaml(conf.get_common_yaml_path()).write_yaml({"cve_id": get_host_cve_res["body"]["data"]["result"][0]["cve_id"]})
                                 break
-
         except:
             log.error("准备测试数据失败！")
 

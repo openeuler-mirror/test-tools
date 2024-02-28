@@ -159,3 +159,54 @@ class ApiZeus:
         res = Request().get(url=url, params=None, headers=headers)
         log.info("Download template result: {}".format(res))
         return res
+
+    def set_plugin_status(self,data):
+        """
+        :param
+        {
+  "host_id": "684",
+  "plugins": {
+    "gala-gopher": "inactive"
+  }
+}
+        :return:
+        """
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11111/manage/agent/plugin/set"
+        res = Request().post(url=url, json=data, headers=headers)
+        log.info("Set plugin status: {}".format(res))
+        return res
+
+    def set_metric_status(self, data):
+        """
+        :param
+        {
+  "host_id": "698",
+  "plugins": {
+    "gala-gopher": {
+      "example": "off"
+    }
+  }
+}
+        :return:
+        """
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11111/manage/agent/metric/set"
+        res = Request().post(url=url, json=data, headers=headers)
+        log.info("Set metric status: {}".format(res))
+        return res
+
+    def get_host_scene(self, data):
+            """
+            :param
+            host_id=698
+            :return:
+            """
+            headers = {'Content-Type': 'application/json',
+                       'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+            url = ConfigYaml().get_conf_url() + ":11111/manage/host/scene/get"
+            res = Request().get(url=url, params=data, headers=headers)
+            log.info("Get host scene: {}".format(res))
+            return res
