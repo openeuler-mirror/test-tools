@@ -534,3 +534,16 @@ class ApiApollo:
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Get cve host: {}".format(res))
         return res
+		
+    def get_cve_list(self, data):
+        """
+        data:{"task_id": "task_id"}
+
+        :return
+        """
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/list/get"
+        res = Request().post(url=url, json=data, headers=headers)
+        self.log.info("Get cve list: {}".format(res))
+        return res
