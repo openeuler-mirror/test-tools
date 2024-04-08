@@ -2,16 +2,16 @@ BASE:
   log_level: info
   log_extension: .logs
   test:
-    url: http://172.168.14.157
+    url: http://172.168.71.131
     username: admin
     password: changeme
 
 db:
-  host: 172.168.14.157
+  host: 172.168.71.131
   user: root
   database: aops
   port: 3306
 
-host: 172.168.167.19
+host: 172.168.219.154
 
 

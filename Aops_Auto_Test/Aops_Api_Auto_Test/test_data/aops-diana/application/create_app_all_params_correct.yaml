@@ -1,0 +1,23 @@
+---
+case_name: "所有参数都正确"
+port: '11112'
+path: '/check/app/create'
+data:
+  app_name: "mysql_network013"
+  version: "2.0"
+  description: "22111"
+  api:
+    type: "api"
+    address: "execute"
+  detail:
+    singlecheck:
+      default_model: "Nsigma-1"
+      odel_info: ""
+    multicheck:
+      default_model: "StatisticalCheck-1"
+    diag:
+      default_model: "StatisticDiag-1"
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"

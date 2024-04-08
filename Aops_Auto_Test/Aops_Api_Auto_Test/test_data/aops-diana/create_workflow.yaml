@@ -1,0 +1,153 @@
+#创建工作流
+- case_name: 创建工作流-所有参数均正确
+  data:
+    workflow_name: workflow1
+    description: workflow1
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 200
+    data:
+      workflow_id: c61e8e88efc911eeb242525400be8073
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from workflow where workflow_name='workflow1'
+
+- case_name: 创建工作流-workflow_name为空
+  data:
+    workflow_name:
+    description: workflow1
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 创建工作流-workflow_name数据类型错误
+  data:
+    workflow_name: 1
+    description: workflow1
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 创建工作流-workflow_name长度超过50
+  data:
+    workflow_name: w12345678901234567890123456789012345678901234567890
+    description: workflow1
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1102
+    label: Database.Insert.Error
+    message: insert data into database fail
+
+- case_name: 创建工作流-description为空
+  data:
+    workflow_name: workflow1
+    description:
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 创建工作流-description数据类型错误
+  data:
+    workflow_name: workflow1
+    description: 1
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 创建工作流-description长度超过100
+  data:
+    workflow_name: workflow1
+    description: w1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+    app_name: mysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1102
+    label: Database.Insert.Error
+    message: insert data into database fail
+
+- case_name: 创建工作流-app_name为空
+  data:
+    workflow_name: workflow1
+    description: workflow1
+    app_name:
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 创建工作流-app_name数据类型错误
+  data:
+    workflow_name: workflow1
+    description: workflow1
+    app_name: 1
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 创建工作流-app_name长度超过100
+  data:
+    workflow_name: workflow1
+    description: workflow1
+    app_name: mysql_networkmysql_networkmysql_networkmysql_networkmysql_networkmysql_networkmysql_networkmysql_network
+    app_id: mysql_network
+    input:
+      domain: $host_group_name
+      hosts:
+        - $host_id
+  validate:
+    code: 1102
+    label: Database.Insert.Error
+    message: insert data into database fail

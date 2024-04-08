@@ -32,3 +32,11 @@
     code: 1000
     label: Param.Error
     message: request parameter error
+
+- case_name: 删除repo源-删除用于任务的repo源
+  data:
+    repo_name_list: [1]
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

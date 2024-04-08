@@ -1,0 +1,68 @@
+#查询应用详情
+- case_name: 查询应用详情-输入正确的应用id
+  data:
+    app_id: mysql_network
+  validate:
+    code: 200
+    data:
+      result:
+        api:
+          address: execute
+          type: api
+        app_id: mysql_network
+        app_name: mysql_network
+        description:
+        detail:
+          multicheck:
+            default_model: intelligent-for-mysql
+        username: admin
+        version: 1.0
+    label: Succeed
+    message: operation succeed
+
+- case_name: 查询应用详情-不输入app_id
+  data:
+    app_id:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询应用详情-app_id超过32位
+  data:
+    app_id: 123456789012345678901234567890123
+  validate:
+    code: 1108
+    label: No.Data
+    message: No data found in database
+
+- case_name: 查询应用详情-输入的app_id包含特殊字符
+  data:
+    app_id: abcdefghijklmnopqrstuvwxyz1234567890^%&!@#
+  validate:
+    code: 1108
+    label: No.Data
+    message: No data found in database
+
+- case_name: 查询应用详情-id数据类型错误
+  data:
+    app_id: 123
+  validate:
+    code: 1108
+    label: No.Data
+    message: No data found in database
+
+- case_name: 查询应用详情-id不存在
+  data:
+    app_id: non-exist
+  validate:
+    code: 1108
+    label: No.Data
+    message: No data found in database
+
+- case_name: 查询应用详情-不传app_id
+  data:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
