@@ -1,0 +1,21 @@
+---
+case_name: "通过workflow_id删除工作流"
+port: '11112'
+path: '/check/workflow'
+data:
+  workflow_id: ""
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"
+
+---
+case_name: "通过workflow_id再次删除工作流"
+port: '11112'
+path: '/check/workflow'
+data:
+  workflow_id: ""
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"

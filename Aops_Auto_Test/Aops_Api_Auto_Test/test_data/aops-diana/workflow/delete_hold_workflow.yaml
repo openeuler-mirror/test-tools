@@ -1,0 +1,10 @@
+---
+case_name: "删除状态为hold的工作流"
+port: '11112'
+path: '/check/workflow'
+data:
+  workflow_id: ""
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"

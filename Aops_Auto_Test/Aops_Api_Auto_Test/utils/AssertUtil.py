@@ -85,31 +85,34 @@ class AssertUtil:
         """
         断言data相等
         """
-        if isinstance(except_data, dict):
-            try:
-                assert len(res_data) != len(except_data) and type(res_data) != type(except_data)
-                self.log.error("返回数据断言失败，长度或类型不同，{}，{}".format(res_data, except_data))
-                raise
-            except:
-                for except_key, except_value in except_data.items():
-                    res_value = res_data[str(except_key)]
-                    if isinstance(except_data, dict) or isinstance(except_data, list):
-                        self.assert_data(res_value, except_value)
-                    else:
-                        self.assert_str_and_int(res_value, except_value)
-        elif isinstance(except_data, list):
-            try:
-                assert len(res_data) != len(except_data) and type(res_data) != type(except_data)
-                self.log.error("返回数据断言失败，长度或类型不同，{}，{}".format(res_data, except_data))
-                raise
-            except:
-                for i in range(len(except_data)):
-                    if isinstance(except_data[i], list) or isinstance(except_data[i], dict):
-                        self.assert_data(res_data[i], except_data[i])
-                    else:
-                        self.assert_str_and_int(res_data[i], except_data[i])
-        else:
-            self.assert_str_and_int(res_data, except_data)
+        try:
+            assert type(res_data) == type(except_data) and len(res_data) == len(except_data)
+            self.log.info("{}，{}长度或类型相同".format(res_data, except_data))
+            if isinstance(except_data, dict):
+                if len(except_data) == 0:
+                    self.assert_str_and_int(len(except_data), len(res_data))
+                else:
+                    for except_key, except_value in except_data.items():
+                        res_value = res_data[str(except_key)]
+                        if isinstance(except_data, dict) or isinstance(except_data, list):
+                            self.assert_data(res_value, except_value)
+                        else:
+                            self.assert_str_and_int(res_value, except_value)
+            elif isinstance(except_data, list):
+                if len(except_data) == 0:
+                    self.assert_str_and_int(len(except_data), len(res_data))
+                else:
+                    for i in range(len(except_data)):
+                        if isinstance(except_data[i], list) or isinstance(except_data[i], dict):
+                            self.assert_data(res_data[i], except_data[i])
+                        else:
+                            self.assert_str_and_int(res_data[i], except_data[i])
+            else:
+                self.assert_str_and_int(res_data, except_data)
+        except:
+            self.log.error("{}，{}长度或类型不相同".format(res_data, except_data))
+            raise
+
 
     def assert_search(self, res, expect_field):
         """
@@ -157,3 +160,4 @@ class AssertUtil:
         except:
             self.log.error(
                 "数据库校验失败,数据库查询结果： {}; 期望结果是： {}".format(sql_result, excepted_result))
+            raise

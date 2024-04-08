@@ -39,4 +39,4 @@ class TestCveInfoExport:
             assert_res.assert_message(res["body"]["message"], test_data["validate"]["message"])
         else:
             assert_res.assert_code(res["code"], test_data["validate"]["code"])
-            assert_res.assert_database(test_data["validate"]['sql'], len((res["body"].split('\n'))))
+            assert_res.assert_database(test_data["validate"]['sql'], len((res["body"].strip().split('\n')))-1)

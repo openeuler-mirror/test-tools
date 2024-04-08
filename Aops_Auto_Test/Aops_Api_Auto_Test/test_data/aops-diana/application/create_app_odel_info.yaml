@@ -1,0 +1,93 @@
+---
+case_name: "odel_info的值为{}"
+port: '11112'
+path: '/check/app/create'
+data:
+  app_name: "mysql_network009"
+  version: "2.0"
+  description: "22111"
+  api:
+    type: "api"
+    address: "execute"
+  detail:
+    singlecheck:
+      default_model: "Nsigma-1"
+      odel_info: ""
+    multicheck:
+      default_model: "StatisticalCheck-1"
+    diag:
+      default_model: "StatisticDiag-1"
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"
+
+#---
+#case_name: "odel_info的值为其他值"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: "mysql_network"
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: "："
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 200
+#  message: "operation succeed"
+#
+#---
+#case_name: "odel_info的值含有特殊字符"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: "mysql_network"
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: "abc123!@#"
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 200
+#  message: "operation succeed"
+#
+#---
+#case_name: "odel_info的值数据类型错误"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: "mysql_network"
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: false
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 200
+#  label: "Succeed"
+#  message: "operation succeed"

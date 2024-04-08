@@ -4,12 +4,12 @@ from Aops_Api_Auto_Test.config.conf import ConfigYaml
 from Aops_Api_Auto_Test.utils.RequestsUtil import Request
 from Aops_Api_Auto_Test.utils.YamlUtil import Yaml
 
-log = my_log()
 
 
 class ApiZeus:
 
     def __init__(self):
+        self.log = my_log()
         url = ConfigYaml().get_conf_url() + ':80/api/manage/account/login'
         data = {
             "username": ConfigYaml().get_user(),
@@ -17,7 +17,7 @@ class ApiZeus:
         }
         res = Request().post(url=url, json=data)
         token_access = res["body"]["data"]['token']
-        log.info("Start get token: {}".format(token_access))
+        self.log.info("Start get token: {}".format(token_access))
         Yaml(conf.get_common_yaml_path()).write_yaml({"token": token_access})
 
     def register_group(self, register_group_data: dict):
@@ -50,7 +50,7 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/host/add"
         res = Request().post(url=url, json=host_info, headers=headers)
-        log.info("Get register host result: {}".format(res))
+        self.log.info("Get register host result: {}".format(res))
         return res
 
     def batch_register_host(self, host_list: list):
@@ -82,10 +82,10 @@ class ApiZeus:
         url = ConfigYaml().get_conf_url() + ":11111/manage/host/add/batch"
         try:
             res = Request().post(url=url, json=host_list, headers=headers)
-            log.info("Batch register host result: {}".format(res))
+            self.log.info("Batch register host result: {}".format(res))
 
         except:
-            log.error("Batch register host fail!")
+            self.log.error("Batch register host fail!")
             raise
         return res
 
@@ -107,7 +107,7 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/host/update"
         res = Request().post(url=url, json=host_info, headers=headers)
-        log.info("Update host result: {}".format(res))
+        self.log.info("Update host result: {}".format(res))
         return res
 
     def query_host_info(self, host_list):
@@ -120,7 +120,7 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/host/info/query"
         res = Request().post(url=url, json=host_list, headers=headers)
-        log.info("Query host info result: {}".format(res))
+        self.log.info("Query host info result: {}".format(res))
         return res
 
     def collect_host_config_info(self, info):
@@ -145,7 +145,7 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/config/collect"
         res = Request().post(url=url, json=info, headers=headers)
-        log.info("Collect host config info: {}".format(res))
+        self.log.info("Collect host config info: {}".format(res))
         return res
 
     def download_template(self):
@@ -157,10 +157,10 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/host/file/template"
         res = Request().get(url=url, params=None, headers=headers)
-        log.info("Download template result: {}".format(res))
+        self.log.info("Download template result: {}".format(res))
         return res
 
-    def set_plugin_status(self,data):
+    def set_plugin_status(self, data):
         """
         :param
         {
@@ -175,7 +175,7 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/agent/plugin/set"
         res = Request().post(url=url, json=data, headers=headers)
-        log.info("Set plugin status: {}".format(res))
+        self.log.info("Set plugin status: {}".format(res))
         return res
 
     def set_metric_status(self, data):
@@ -195,18 +195,18 @@ class ApiZeus:
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
         url = ConfigYaml().get_conf_url() + ":11111/manage/agent/metric/set"
         res = Request().post(url=url, json=data, headers=headers)
-        log.info("Set metric status: {}".format(res))
+        self.log.info("Set metric status: {}".format(res))
         return res
 
     def get_host_scene(self, data):
-            """
-            :param
-            host_id=698
-            :return:
-            """
-            headers = {'Content-Type': 'application/json',
-                       'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-            url = ConfigYaml().get_conf_url() + ":11111/manage/host/scene/get"
-            res = Request().get(url=url, params=data, headers=headers)
-            log.info("Get host scene: {}".format(res))
-            return res
+        """
+        :param:
+        host_id=698
+        :return:
+        """
+        headers = {'Content-Type': 'application/json',
+                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+        url = ConfigYaml().get_conf_url() + ":11111/manage/host/scene/get"
+        res = Request().get(url=url, params=data, headers=headers)
+        self.log.info("Get host scene: {}".format(res))
+        return res

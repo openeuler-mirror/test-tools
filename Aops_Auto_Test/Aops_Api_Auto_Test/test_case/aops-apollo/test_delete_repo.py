@@ -19,6 +19,7 @@ class TestDeleteRepo:
         log.info("准备测试套依赖数据")
         CreateData().get_repo_info()
 
+
     @staticmethod
     def teardown_class():
         log.info("清理当前测试套数据")
