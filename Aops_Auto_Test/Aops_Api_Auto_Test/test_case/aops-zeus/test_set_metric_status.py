@@ -11,6 +11,8 @@ from Aops_Api_Auto_Test.utils.YamlUtil import Yaml
 
 data_file = os.path.join(conf.get_data_path(), "aops-zeus", "set_metric_status.yaml")
 log = my_log()
+
+
 class TestSetMetricStatus:
 
     @staticmethod

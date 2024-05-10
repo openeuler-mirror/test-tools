@@ -79,7 +79,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host where ssh_user='update'
+    sql: select count(*) from host where ssh_user='update-user'
 
 - case_name: 更新主机-参数校验-ssh_user更新为有效值，password值为空
   data:

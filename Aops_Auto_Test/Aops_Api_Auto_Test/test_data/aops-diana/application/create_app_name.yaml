@@ -1,0 +1,138 @@
+---
+case_name: "输入正确的app_name"
+port: '11112'
+path: '/check/app/create'
+data:
+  app_name: "mysql_network"
+  version: "2.0"
+  description: "22111"
+  api:
+    type: "api"
+    address: "execute"
+  detail:
+    singlecheck:
+      default_model: "Nsigma-1"
+      odel_info: ""
+    multicheck:
+      default_model: "StatisticalCheck-1"
+    diag:
+      default_model: "StatisticDiag-1"
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"
+
+#---
+#case_name: "app_name不输入"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: ""
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: ""
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 1000
+#  message: "request parameter error"
+#
+#---
+#case_name: "输入app_name过长"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: "abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789"
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: ""
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 200
+#  message: "operation succeed"
+#
+#---
+#case_name: "app_name含有特殊字符"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: "abc123~!@"
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: ""
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 200
+#  message: "operation succeed"
+#
+#---
+#case_name: "app_name类型错误"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: 1
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: ""
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 1000
+#  message: "request parameter error"
+#
+#---
+#case_name: "app_name重复"
+#port: '11112'
+#path: '/check/app/create'
+#data:
+#  app_name: "mysql_network01"
+#  version: "2.0"
+#  description: "22111"
+#  api:
+#    type: "api"
+#    address: "execute"
+#  detail:
+#    singlecheck:
+#      default_model: "Nsigma-1"
+#      odel_info: ""
+#    multicheck:
+#      default_model: "StatisticalCheck-1"
+#    diag:
+#      default_model: "StatisticDiag-1"
+#except:
+#  code: 1105
+#  message: "data has existed"

@@ -26,7 +26,7 @@ class TestDeleteTask:
         log.info("清理当前测试套数据")
         QueryDataBase().delete_host(Yaml(conf.get_common_yaml_path()).data()['host_ip'])
         QueryDataBase().delete_host_group(Yaml(conf.get_common_yaml_path()).data()['host_group_name'])
-        # Yaml(conf.get_common_yaml_path()).clear_yaml()
+        Yaml(conf.get_common_yaml_path()).clear_yaml()
 
     @pytest.mark.parametrize('test_data', Yaml(data_file).data())
     def test_delete_task(self, test_data):
@@ -38,7 +38,7 @@ class TestDeleteTask:
         assert_res.assert_code(res["body"]["code"], test_data["validate"]["code"])
         assert_res.assert_label(res["body"]["label"], test_data["validate"]["label"])
         assert_res.assert_message(res["body"]["message"], test_data["validate"]["message"])
-        if res["body"]["code"] == 200:
+        if res["body"]["code"] == "200":
             assert_res.assert_data(res["body"]["data"],test_data["validate"]["data"])
 
 

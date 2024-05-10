@@ -1,0 +1,47 @@
+---
+case_name: "default_model的值为StatisticalCheck-1"
+port: '11112'
+path: '/check/app/create'
+data:
+  app_name: "mysql_network010"
+  version: "2.0"
+  description: "22111"
+  api:
+    type: "api"
+    address: "execute"
+  detail:
+    singlecheck:
+      default_model: "Nsigma-1"
+      odel_info: ""
+    multicheck:
+      default_model: "StatisticalCheck-1"
+    diag:
+      default_model: "StatisticDiag-1"
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"
+
+---
+case_name: "default_model的值为bool"
+port: '11112'
+path: '/check/app/create'
+data:
+  app_name: "mysql_network011"
+  version: "2.0"
+  description: "22111"
+  api:
+    type: "api"
+    address: "execute"
+  detail:
+    singlecheck:
+      default_model: "Nsigma-1"
+      odel_info: ""
+    multicheck:
+      default_model: false
+    diag:
+      default_model: "StatisticDiag-1"
+except:
+  code: 200
+  label: "Succeed"
+  message: "operation succeed"

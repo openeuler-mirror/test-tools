@@ -6,9 +6,10 @@
   validate:
     code: 200
     data:
-      running_task: [ ]
+      running_task: []
     label: Succeed
     message: operation succeed
+
 
 - case_name: 删除任务-task_list为空
   data:
