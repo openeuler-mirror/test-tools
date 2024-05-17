@@ -1,0 +1,20 @@
+{
+    "path": "$OET_PATH/testcases/dnf-hotpatch-plugin",
+    "machine type": "kvm",
+    "add network interface": 1,
+    "machine num": 1,
+    "cases": [
+        {
+            "name": "oe_test_hotpatch_01"
+	},
+        {
+            "name": "oe_test_hotpatch_02"
+        },
+	{
+            "name": "oe_test_hot-updateinfo"
+        },
+	{
+            "name": "oe_test_hotupgrade"
+        }
+    ]
+}

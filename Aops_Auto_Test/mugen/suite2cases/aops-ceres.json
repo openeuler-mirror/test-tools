@@ -1,0 +1,29 @@
+{
+    "path": "$OET_PATH/testcases/aops-ceres",
+    "machine type": "kvm",
+    "add network interface": 1,
+    "machine num": 1,
+    "cases": [
+        {
+            "name": "oe_test_ceres_apollo_fix"
+	},
+        {
+            "name": "oe_test_ceres_apollo_set-repo"
+        },
+	{
+            "name": "oe_test_ceres_collect_host"
+        },
+	{
+            "name": "oe_test_ceres_apollo_register"
+        },
+	{
+            "name": "oe_test_ceres_collect_application"
+        },
+	{
+            "name": "oe_test_ceres_apollo_scan"
+        },
+	{
+            "name": "oe_test_ceres_collect_file"
+        }
+    ]
+}
