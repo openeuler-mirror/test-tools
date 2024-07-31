@@ -12,8 +12,8 @@ class TestLogin:
     def test_login_01_valid_data(self, drivers, open_aops, logout):
         login = UserMagtPage(drivers)
         login.user_login(ini.user, ini.password)
-        sleep(2)
-        assert ini.user in login.get_source
+        sleep(5)
+        assert ini.user in login.get_source, '页面未找到元素'
 
     def test_login_02_invalid_username(self, drivers):
         login = UserMagtPage(drivers)
@@ -24,13 +24,11 @@ class TestLogin:
     def test_login_03_invalid_password(self, drivers):
         login = UserMagtPage(drivers)
         login.user_login(ini.user, "invalidpassword")
-        sleep(2)
         assert "incorrect username or password" in login.get_notification_text()
 
     def test_login_04_invalid_password(self, drivers):
         login = UserMagtPage(drivers)
         login.user_login("invaliduser", "invalidpassword")
-        sleep(2)
         assert "incorrect username or password" in login.get_notification_text()
 
 

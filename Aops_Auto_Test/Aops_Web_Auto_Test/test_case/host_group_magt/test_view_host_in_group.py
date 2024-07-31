@@ -3,7 +3,7 @@ import pytest
 from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 
-asset = Element('host_magt')
+asset = Element('asset_magt')
 
 
 class TestViewHostInGroup:
