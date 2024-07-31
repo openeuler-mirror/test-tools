@@ -1,7 +1,6 @@
 # -*-coding:utf-8-*-
 import pytest
 from Aops_Web_Auto_Test.common.readelement import Element
-from Aops_Web_Auto_Test.page_object import asset_magt
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 
 asset = Element('asset_magt')

@@ -2,7 +2,6 @@
 import pytest
 
 from Aops_Web_Auto_Test.page_object import asset_magt
-from Aops_Web_Auto_Test.utils.times import sleep
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 
 

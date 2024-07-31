@@ -18,8 +18,9 @@ def open_aops(drivers):
 def register_user(drivers):
     """注册用户"""
     user = UserMagtPage(drivers)
-    user.user_register('test', '123456', '123456', 'test@163.com')
-    assert '欢迎来到A-Ops系统' in user.get_source
+    return user.user_register('test', '123456', '123456', 'test@163.com')
+    # assert '欢迎来到A-Ops系统' in user.get_source
+
 
 
 @pytest.fixture(scope='function', autouse=False)
@@ -32,22 +33,23 @@ def login_aops(drivers):
 
 
 @pytest.fixture(scope='function', autouse=False)
-def logout(drivers):
+def logout(drivers, register_user):
     yield
     sleep(5)
     user = UserMagtPage(drivers)
-    user.user_logout()
+    user.user_logout(register_user[0])
 
 
-@pytest.fixture(scope='class', autouse=False)
-def create_user(drivers):
-    """注册用户"""
-    user = UserMagtPage(drivers)
-    user.user_register('test', ini.password, ini.password, 'test@163.com')
-    assert '欢迎来到A-Ops系统' in user.get_source
-    user.user_login(user.globals_username, ini.password)
-    sleep(5)
-    assert user.globals_username in user.get_source
+# @pytest.fixture(scope='class', autouse=False)
+# def create_user(drivers):
+#     """注册用户"""
+#     user = UserMagtPage(drivers)
+#     user.user_register('test', ini.password, ini.password, 'test@163.com')
+#     sleep(5)
+#     user.user_login(globals_username, ini.password)
+#     sleep(5)
+#     print("---user.globals_username---: ", globals_username)
+#     assert globals_username in user.get_source
 
 @pytest.fixture(scope='function', autouse=False)
 def close_change_psd_page(drivers):

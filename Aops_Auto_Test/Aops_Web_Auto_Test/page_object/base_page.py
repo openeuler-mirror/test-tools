@@ -1,6 +1,5 @@
 # -*-coding:utf-8-*-
 
-from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
@@ -8,15 +7,17 @@ from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.utils.times import *
 from Aops_Web_Auto_Test.utils.LogUtil import my_log
+import pandas as pd
 
 
 base_page = Element('common')
 driver = None
 
+
 class WebPage(object):
     """selenium基类"""
 
-    def __init__(self,driver):
+    def __init__(self, driver):
         self.driver = driver
         self.log = my_log()
         self.timeout = 20
@@ -52,8 +53,8 @@ class WebPage(object):
         try:
             return WebPage.element_locator(lambda *args: self.wait.until(
                 EC.presence_of_element_located(args)), locator)
-        except TimeoutException as e:
-            self.log.error('元素未找到：',locator)
+        except TimeoutException:
+            raise TimeoutException(f"寻找元素超时: {locator}")
 
     def find_elements(self, locator):
         """查找多个相同的元素"""
@@ -69,11 +70,12 @@ class WebPage(object):
     def input_text(self, locator, txt):
         """输入(输入前先清空)"""
         ele = self.find_element(locator)
-        ele.clear()
+   #     ele.clear()
         ele.send_keys(txt)
         self.log.info("输入文本：{}".format(txt))
+
     def click_element(self, locator):
-        """点击"""
+        """点击元素"""
         self.find_element(locator).click()
         self.log.info("点击元素：{}".format(locator))
 
@@ -96,6 +98,17 @@ class WebPage(object):
         self.log.info("获取notice的文本：{}".format(_text))
         return _text
 
+    def get_top_right_notice_text(self):
+        """获取系统右上角弹出notice的text"""
+        sleep(3)
+        _text = self.element_text(base_page['top_right_notice'])
+        self.log.info("获取系统notice的文本：{}".format(_text))
+        return _text
+
+    def close_right_notice(self):
+        """关闭右上角弹出notice"""
+        self.click_element(base_page['notice_close'])
+
     @property
     def get_source(self):
         """获取页面源代码"""
@@ -106,10 +119,10 @@ class WebPage(object):
         self.driver.refresh()
         self.driver.implicitly_wait(30)
 
-    def select_value_by_dropdown(self, value):
+    def select_value_by_dropdown(self, ele, value):
         """从下拉框选择值"""
-        self.click_element(base_page['host_group_dropdownbar'])
-        new_locator = self.replace_locator_text(base_page['list_box_value'], value)
+        self.click_element(ele)
+        new_locator = self.replace_locator_text(base_page['dropdown_value'], value)
         self.click_element(new_locator)
 
     def select_value_by_radio_button(self, value):
@@ -120,8 +133,29 @@ class WebPage(object):
     def upload_file(self, file_name):
         """上传文件"""
         file_path = cm.BASE_DIR + '/test_data/' + file_name
-        self.input_text(base_page['select_file_button'],file_path)
+        # self.find_element(base_page['select_file_button']).sendKeys(file_path)
+        self.input_text(base_page['select_file_button'], file_path)
         self.log.info("上传文件：{}".format(file_path))
+
+    @staticmethod
+    def read_file(file_path):
+        """
+        读取xlsx, xls, 或 csv 文件，并返回pandas DataFrame。
+        """
+        try:
+            if file_path.endswith('.xlsx'):
+                df = pd.read_excel(file_path, engine='openpyxl')
+            elif file_path.endswith('.xls'):
+                df = pd.read_excel(file_path, engine='xlrd')
+            elif file_path.endswith('.csv'):
+                df = pd.read_csv(file_path)
+            else:
+                raise ValueError(f"不支持的文件类型: {file_path}")
+            return df
+        except FileNotFoundError:
+            raise FileNotFoundError(f"文件未找到: {file_path}")
+        except Exception as e:
+            raise ValueError(f"读取文件时发生错误: {e}")
 
     def get_element_attr(self, locator, attr):
         """获取元素属性值"""
@@ -136,13 +170,16 @@ class WebPage(object):
         self.click_element(base_page['delete'])
 
     def click_refresh_button(self):
+        """点击刷新按钮"""
         self.click_element(base_page['refresh'])
 
     def click_confirm_button(self):
+        """点击确认按钮"""
         self.click_element(base_page['confirm'])
         self.log.info("点击确定按钮： {}".format(base_page['confirm']))
 
     def select_checkbox_from_table(self, value):
+        """点击复选框"""
         new_loc = self.replace_locator_text(base_page['table_list_checkbox_column'], value)
         self.click_element(new_loc)
 
