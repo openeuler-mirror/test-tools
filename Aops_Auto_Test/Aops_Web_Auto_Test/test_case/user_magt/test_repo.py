@@ -1,25 +1,14 @@
 # -*-coding:utf-8-*-
-import logging
-import math
 
-import pandas
-import openpyxl
-
-import pytest
-from Aops_Web_Auto_Test.config.conf import cm
-from Aops_Web_Auto_Test.page_object.base_page import WebPage
 from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.utils.times import *
-from selenium import webdriver
-from selenium.webdriver.support.select import Select
 from Aops_Web_Auto_Test.page_object.base_page import WebPage
-
 
 asset = Element('host_list')
 
 
 class TestRepo:
-    def test_set_repo(self,drivers):
+    def test_set_repo(self, drivers):
         repo = WebPage(drivers)
         repo.click_element(asset['host_list'])
         sleep(3)

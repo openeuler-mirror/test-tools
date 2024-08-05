@@ -8,6 +8,14 @@ from Aops_Web_Auto_Test.utils.times import sleep
 login = Element('common')
 
 
+@pytest.fixture(scope='module', autouse=True)
+def user_login(drivers):
+    """用户登录"""
+    user = UserMagtPage(drivers)
+    user.get_url(ini.url)
+    user.user_login(ini.user, ini.password)
+    user.close_right_notice()
+
 @pytest.fixture(scope='module')
 def create_data(drivers):
     """准备测试数据"""
