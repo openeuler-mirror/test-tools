@@ -32,7 +32,5 @@ class TestLogin:
         assert "incorrect username or password" in login.get_notification_text()
 
 
-
-
 if __name__ == '__main__':
     pytest.main(['Aops_Web_Auto_Test/test_case/user_magt/login_test.py','-s'])

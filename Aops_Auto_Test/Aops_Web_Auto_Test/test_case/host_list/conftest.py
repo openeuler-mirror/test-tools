@@ -26,16 +26,5 @@ def logout(drivers):
     user.user_logout()
 
 
-@pytest.fixture(scope='module', autouse=True)
-def register_host(drivers):
-    host = AssetMagtPage(drivers)
-    host.enter_host_group_magt_page()
-    host.add_host_group("web_test_group", "web_test_group_desc")
-    host.enter_host_magt_page()
-    host.add_host()
-
-    host.add_host()
-
-
 
 

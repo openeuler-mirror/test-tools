@@ -18,9 +18,8 @@ def group():
 
 def group_desc():
     """生成主机组描述，group+时间戳"""
-    length = min(1, 60)
-
-    characters = string.ascii_letters + string.digits + string.punctuation.replace("><", "")
+    length = random.randint(1, 60)
+    characters = string.ascii_letters + string.digits + ''.join(set(string.punctuation) - set("><"))
     group_desc = ''.join(random.choices(characters, k=length))
     return group_desc
 

@@ -1,6 +1,5 @@
 # -*-coding:utf-8-*-
 import time
-
 import pytest
 from Aops_Web_Auto_Test.page_object.user_magt import UserMagtPage
 
@@ -32,6 +31,7 @@ class TestRegister:
         register = UserMagtPage(drivers)
         register.user_register("test","123456", "1234567","123456@163.com")
         assert "请确保前后两次输入的密码保持一致！" in register.get_source
+
 
 if __name__ == '__main__':
     pytest.main(['Aops_Web_Auto_Test/test_case/user_magt/test_register_user.py', '-s'])

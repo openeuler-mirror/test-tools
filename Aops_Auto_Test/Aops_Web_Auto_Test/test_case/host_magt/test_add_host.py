@@ -3,6 +3,8 @@ import pytest
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 from Aops_Web_Auto_Test.utils.times import sleep
 from Aops_Web_Auto_Test.common import createtestdata
+
+
 class TestAddHost:
 
     def test_add_host_01_valid_data(self, drivers, add_host_group):

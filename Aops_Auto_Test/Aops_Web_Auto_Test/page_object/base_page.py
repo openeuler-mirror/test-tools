@@ -50,16 +50,22 @@ class WebPage(object):
 
     def find_element(self, locator):
         """寻找单个元素"""
-        try:
-            return WebPage.element_locator(lambda *args: self.wait.until(
-                EC.presence_of_element_located(args)), locator)
-        except TimeoutException:
-            raise TimeoutException(f"寻找元素超时: {locator}")
+        return WebPage.element_locator(lambda *args: self.wait.until(
+            EC.presence_of_element_located(args)), locator)
 
     def find_elements(self, locator):
         """查找多个相同的元素"""
         return WebPage.element_locator(lambda *args: self.wait.until(
             EC.presence_of_all_elements_located(args)), locator)
+
+    def element_displayed(self, locator):
+        """元素是否可见"""
+        try:
+            WebPage.element_locator(lambda *args: self.wait.until(
+                EC.visibility_of_element_located(args)), locator)
+            return True
+        except TimeoutException:
+            return False
 
     def elements_num(self, locator):
         """获取相同元素的个数"""
@@ -70,7 +76,6 @@ class WebPage(object):
     def input_text(self, locator, txt):
         """输入(输入前先清空)"""
         ele = self.find_element(locator)
-   #     ele.clear()
         ele.send_keys(txt)
         self.log.info("输入文本：{}".format(txt))
 
@@ -83,7 +88,6 @@ class WebPage(object):
         """通过java_scripts点击元素"""
         ele = self.find_element(locator)
         self.driver.execute_script("arguments[0].click();", ele)
-        sleep()
         self.log.info("点击元素：{}".format(locator))
 
     def element_text(self, locator):
@@ -133,7 +137,6 @@ class WebPage(object):
     def upload_file(self, file_name):
         """上传文件"""
         file_path = cm.BASE_DIR + '/test_data/' + file_name
-        # self.find_element(base_page['select_file_button']).sendKeys(file_path)
         self.input_text(base_page['select_file_button'], file_path)
         self.log.info("上传文件：{}".format(file_path))
 
