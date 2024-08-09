@@ -123,12 +123,6 @@ class AssetMagtPage(WebPage):
         new_loc = self.replace_locator_text(asset['host_group_delete'], groupname)
         self.click_element(new_loc)
 
-    def batch_delete_host_group(self,group_list):
-        """批量删除主机组"""
-        for group_name in group_list:
-            new_loc = self.replace_locator_text(asset['host_group_list_checkbox_column'], str(group_name))
-            self.click_element(new_loc)
-        self.click_element(asset['batch_delete'])
 
     def view_host_in_group(self, groupname):
         """查看组内主机"""
