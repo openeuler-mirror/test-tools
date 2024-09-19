@@ -1,36 +1,59 @@
 # -*-coding:utf-8-*-
 import pytest
+from Aops_Web_Auto_Test.common import createtestdata
 from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
+from Aops_Web_Auto_Test.utils.times import sleep
 
 asset = Element('asset_magt')
 
 
 class TestDeleteHostGroup:
 
-    def test_delete_host_group_001(self, drivers, create_data):
+    @pytest.fixture(scope="function")
+    def add_group(self, drivers):
+        group = AssetMagtPage(drivers)
+        global group_name
+        group_name = createtestdata.group()
+        group_desc = createtestdata.group_desc()
+        group.enter_host_group_magt_page()
+        group.add_host_group('local-cluster', group_name, group_desc)
+
+    @pytest.fixture(scope="function")
+    def add_host(self, drivers, add_group):
+        host = AssetMagtPage(drivers)
+        host_name = createtestdata.host_name()
+        port = createtestdata.host_port()
+        host_ip = createtestdata.host_ip()
+        host.enter_host_magt_page()
+        host.add_host(host_name, 'local-cluster', group_name, host_ip, port, '监控节点', 'root', 'openEuler12#$')
+        yield
+        host.enter_host_magt_page()
+        host.delete_host(host_ip)
+        host.enter_host_group_magt_page()
+        host.delete_host_group(group_name)
+        host.click_delete_button()
+
+    def test_delete_host_group_001(self, drivers, add_group):
         """删除空闲的主机组"""
         group = AssetMagtPage(drivers)
-        group.delete_single_host_group(create_data[0])
+        group.enter_host_group_magt_page()
+        group.delete_host_group(group_name)
         group.click_delete_button()
-        assert create_data[0] not in group.find_element(asset['host_group_list'])
+        sleep(5)
+        group_locator = group.replace_locator_text(Element('asset_magt')['group_name_column'], group_name)
+        assert not group.element_displayed(group_locator)
 
-    def test_delete_host_group_002(self, drivers, create_data):
+    def test_delete_host_group_002(self, drivers, add_host):
         """删除存在主机的主机组"""
         group = AssetMagtPage(drivers)
-        group.delete_single_host_group(create_data[-1])
-        group.click_delete_button()
-        assert "主机组内有主机时无法删除" in group.get_source
+        group.enter_host_group_magt_page()
+        group.delete_host_group(group_name)
+        assert group.element_text(asset['delete_group_confirm_title']) == "主机组内有主机时无法删除"
         group.click_confirm_button()
-        assert create_data[-1] in group.find_element(asset['host_group_list'])
-
-    def test_delete_host_group_003(self, drivers, create_data):
-        """批量删除主机组"""
-        group = AssetMagtPage(drivers)
-        group.batch_delete_data(create_data[0:-1])
-        for group in create_data[0:-1]:
-            assert group not in group.find_element(asset['host_group_list'])
+        group_locator = group.replace_locator_text(Element('asset_magt')['group_name_column'], group_name)
+        assert group.element_displayed(group_locator)
 
 
 if __name__ == '__main__':
-    pytest.main(['Aops_Web_Auto_Test/test_case/user_magt/login_test.py','-s'])
+    pytest.main(['Aops_Web_Auto_Test/test_case/host_group_magt/test_delete_host_group.py', '-s'])

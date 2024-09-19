@@ -19,7 +19,7 @@ class UserMagtPage(WebPage):
             self.input_text(user['password'], password)
             self.click_element(user['login'])
         except Exception as e:
-            print('登录失败： ',e)
+            print('登录失败： ', e)
 
     def user_logout(self, username):
         """退出登录"""
@@ -54,10 +54,6 @@ class UserMagtPage(WebPage):
         self.input_text(user['current_password'], current_password)
         self.input_text(user['new_password'], new_password)
         self.input_text(user['confirm_password'], confirm_password)
-
-    # def click_confirm_button(self):
-    #     self.click_element(base_page['confirm'])
-    #     self.log.info("点击确定按钮： {}".format(base_page['confirm']))
 
     def close_welcome_tips(self):
         """关闭提醒窗口"""

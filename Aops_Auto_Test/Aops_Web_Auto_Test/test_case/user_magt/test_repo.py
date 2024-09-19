@@ -23,10 +23,8 @@ class TestRepo:
         repo.click_element(asset['add_repo'])
         sleep(3)
         repo.input_text(asset['add_repo_name'], "20.03-LTS-SP1")
-        # repo.execute_script("arguments[0].click();", ele)
         data_input = repo.find_element(asset['add_repo_data'])
         repo.driver.execute_script("arguments[0].value='"+ repo_text +"';", data_input);
-        # repo.input_text(asset['add_repo_data'], repo_text)
         sleep(10)
         repo.click_element(asset['determine'])
     #

@@ -1,7 +1,5 @@
 # -*-coding:utf-8-*-
 import pytest
-
-from Aops_Web_Auto_Test.common import createtestdata
 from Aops_Web_Auto_Test.utils.times import sleep
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 
