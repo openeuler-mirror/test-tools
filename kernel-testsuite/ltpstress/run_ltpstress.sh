@@ -1,31 +1,27 @@
 #/bin/bash
 
-WORKDIR=`pwd`
+WORKDIR=$(cd `dirname $0`;pwd)
+NEWVER="20240129"
 OLDVER="20180515"
 
 download_ltp_pkg(){
     yum install -y vim tar git make automake gcc pkgconf autoconf bison flex m4 kernel-headers glibc-headers clang findutils libtirpc libtirpc-devel pkg-config
 
-    if [ ! -d "ltp" ];then
-        until(test -e "ltp")
-        do
-            git clone https://github.com/linux-test-project/ltp.git
-        done
+    if [ ! -e "${NEWVER}.zip" ];then
+        wget -c -t 30 https://github.com/linux-test-project/ltp/archive/refs/tags/${NEWVER}.zip
     fi
 
-    #select ltpstress.sh and stress.part* file to newer ltp package
-    until(test -e "${OLDVER}.zip")
-    do
+    if [ ! -e "${OLDVER}.zip" ];then
         wget -c -t 10 https://github.com/linux-test-project/ltp/archive/refs/tags/${OLDVER}.zip
-    done
+    fi
     unzip ${OLDVER}.zip
-    cp ltp-${OLDVER}/runtest/stress.part* ltp/runtest/
-    cp ltp-${OLDVER}/testscripts/ltpstress.sh ltp/testscripts/
-    rm -rf /${WORKDIR}/ltp-${OLDVER}
+    unzip ${NEWVER}.zip
+    cp ltp-${OLDVER}/runtest/stress.part* ltp-${NEWVER}/runtest
+    cp ltp-${OLDVER}/testscripts/ltpstress.sh ltp-${NEWVER}/testscripts    
 }
 
 compile_ltp(){
-    cd $WORKDIR/ltp
+    cd $WORKDIR/ltp-${NEWVER}
     make autotools
     ./configure
     make -j16
@@ -34,7 +30,10 @@ compile_ltp(){
 
 run_ltpstress(){
     cd /opt/ltp/testscripts;
-    sh ltpstress.sh -n -m 512 -t 24
+    CPU_NUM=$(lscpu | grep -E "^CPU:|^CPU\(s\):" | awk '{print $2}')
+    CORE_NUM=$(echo "scale=0;$CPU_NUM*0.7" | bc)
+    TOTALMEM=$((${CORE_NUM%.*} * 1024 + 512))
+    sh ltpstress.sh -n -p -m ${TOTALMEM} -t 168 
 }
 
 download_ltp_pkg
