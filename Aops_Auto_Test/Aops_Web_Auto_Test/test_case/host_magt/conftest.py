@@ -18,13 +18,15 @@ def user_login(drivers):
     user.user_login(ini.user, ini.password)
 
 
-@pytest.fixture(scope='class', autouse=False)
+@pytest.fixture(scope='function', autouse=False)
 def add_host_group(drivers):
     """添加主机组"""
     host = AssetMagtPage(drivers)
     host.enter_host_group_magt_page()
     host_group = createtestdata.group()
-    return host.add_host_group('local-cluster', host_group, 'group description')
+    host.add_host_group('local-cluster', host_group, 'group description')
+    return host_group
+
 
 
 

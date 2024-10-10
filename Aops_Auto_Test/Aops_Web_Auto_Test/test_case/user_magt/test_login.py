@@ -9,7 +9,7 @@ log = my_log()
 
 class TestLogin:
 
-    def test_login_01_valid_data(self, drivers, open_aops, logout):
+    def test_login_01_valid_data(self, drivers, open_aops, default_logout):
         login = UserMagtPage(drivers)
         login.user_login(ini.user, ini.password)
         sleep(5)
@@ -26,7 +26,7 @@ class TestLogin:
         login.user_login(ini.user, "invalidpassword")
         assert "incorrect username or password" in login.get_notification_text()
 
-    def test_login_04_invalid_password(self, drivers):
+    def test_login_04_invalid_user_password(self, drivers):
         login = UserMagtPage(drivers)
         login.user_login("invaliduser", "invalidpassword")
         assert "incorrect username or password" in login.get_notification_text()

@@ -24,7 +24,7 @@ class UserMagtPage(WebPage):
     def user_logout(self, username):
         """退出登录"""
         self.new_user = self.replace_locator_text(user['user'], username)
-        sleep(2)
+        sleep(10)
         self.click_element(self.new_user)
         self.click_element(user['logout'])
         self.find_element(user['info_windows'])

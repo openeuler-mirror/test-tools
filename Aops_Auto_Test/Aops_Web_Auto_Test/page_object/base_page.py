@@ -76,6 +76,7 @@ class WebPage(object):
     def input_text(self, locator, txt):
         """输入(输入前先清空)"""
         ele = self.find_element(locator)
+        ele.clear()
         ele.send_keys(txt)
         self.log.info("输入文本：{}".format(txt))
 
