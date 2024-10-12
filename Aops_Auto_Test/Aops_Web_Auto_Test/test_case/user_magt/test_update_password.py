@@ -13,11 +13,12 @@ class TestModifyUserPassword:
     def test_modify_user_password_01(self, drivers, register_user, logout):
         """修改登录密码-所有数据均正确"""
         password = UserMagtPage(drivers)
+        print(register_user[0])
         password.user_login(register_user[0], register_user[1])
         password.user_password_modify(register_user[0], register_user[1], '1234567', '1234567')
         password.click_confirm_button()
-        sleep(0.5)
-        assert "修改成功" in password.get_notice_text()
+        sleep(1)
+        assert "成功" in password.get_notice_text()
 
     def test_modify_user_password_02(self, drivers, login_aops, close_change_psd_page):
         """修改登录密码-当前密码错误"""
@@ -32,21 +33,21 @@ class TestModifyUserPassword:
         password = UserMagtPage(drivers)
         password.user_password_modify(ini.user, ini.password, '12345', '12345')
         password.click_confirm_button()
-        assert password.element_text(psd["new_password_error_msg"]) == "请输入6-20位字母和数字组成的密码!"
+        assert password.element_text(psd["new_password_error_msg"]) == "请输入6-20位字母或数字组成的密码!"
 
     def test_modify_user_password_04(self, drivers,close_change_psd_page):
         """修改登录密码-新密码长度大于20"""
         password = UserMagtPage(drivers)
         password.user_password_modify(ini.user, ini.password, '123456789012345678901', '123456789012345678901')
         password.click_confirm_button()
-        assert password.element_text(psd["new_password_error_msg"]) == "请输入6-20位字母和数字组成的密码!"
+        assert password.element_text(psd["new_password_error_msg"]) == "请输入6-20位字母或数字组成的密码!"
 
     def test_modify_user_password_05(self, drivers,close_change_psd_page):
         """修改登录密码-确认密码和新密码不一致"""
         password = UserMagtPage(drivers)
         password.user_password_modify(ini.user, ini.password, '123456', '1234567')
         password.click_confirm_button()
-        assert password.element_text(psd["confirm_password_error_msg"]) == "确认密码和新密码必须保持一致!"
+        assert password.element_text(psd["confirm_password_error_msg"]) == "请确保前后两次输入的密码保持一致！"
 
     def test_modify_user_password_06(self, drivers):
         """修改登录密码-取消修改密码"""

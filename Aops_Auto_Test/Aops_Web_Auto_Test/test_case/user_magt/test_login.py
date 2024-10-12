@@ -9,7 +9,7 @@ log = my_log()
 
 class TestLogin:
 
-    def test_login_01_valid_data(self, drivers, open_aops, logout):
+    def test_login_01_valid_data(self, drivers, open_aops, default_logout):
         login = UserMagtPage(drivers)
         login.user_login(ini.user, ini.password)
         sleep(5)

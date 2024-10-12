@@ -18,12 +18,12 @@ def login_aops(drivers):
     assert ini.user in user.get_source
 
 
-@pytest.fixture(scope='function', autouse=False)
-def logout(drivers):
-    yield
-    sleep(5)
-    user = UserMagtPage(drivers)
-    user.user_logout()
+# @pytest.fixture(scope='function', autouse=False)
+# def logout(drivers):
+#     yield
+#     sleep(5)
+#     user = UserMagtPage(drivers)
+#     user.user_logout(ini.user)
 
 
 
