@@ -12,7 +12,9 @@ class ApiApollo:
 
     def __init__(self):
         self.log = my_log()
-        url = ConfigYaml().get_conf_url() + ':80/api/manage/account/login'
+        # url = ConfigYaml().get_conf_url() + ':80/api/manage/account/login'
+        # new url for 20.03-sp4
+        url = ConfigYaml().get_conf_url() + ':80/accounts/login'
         data = {
             "username": ConfigYaml().get_user(),
             "password": ConfigYaml().get_login_password()
@@ -100,15 +102,20 @@ class ApiApollo:
 
     def import_repo(self, repo_data: dict):
         """
-        data:
-            "repo_name": repo_name
-            "repo_data": repo_data
+        data: {
+            "cluster_id": {
+                "repo_name": repo_name
+                "repo_data": repo_data
+            }
+        }
 
         :return:
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/repo/import"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/repo/import"
+        # 20.03-sp4 new url
+        url = ConfigYaml().get_conf_url() + "/distribute/vulnerabilities/repo/import"
         res = Request().post(url=url, json=repo_data, headers=headers)
         self.log.info("Import repo result: {}".format(res))
         return res
@@ -168,12 +175,15 @@ class ApiApollo:
     def scan_host(self, data):
         """
         data = {
-            "host_list": [host_id]
+            "cluster_id":{
+                "host_list": [host_id]
+            }
         }
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/scan"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/scan"
+        url = ConfigYaml().get_conf_url() + "/distribute/vulnerabilities/host/scan"
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Scan host result: {}".format(res))
         return res
@@ -181,8 +191,11 @@ class ApiApollo:
     def get_host_cve(self, data):
         """
         data = {
+  "page": 1,
+  "per_page": 10,
   "host_id": host_id,
   "filter": {
+    "affected": true,
     "fixed": false,
     "severity": []
   }
@@ -192,7 +205,8 @@ class ApiApollo:
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/cve/get"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/cve/get"
+        url = ConfigYaml().get_conf_url() + "/vulnerabilities/host/cve/get"
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Get host cve info: {}".format(res))
         return res
@@ -200,17 +214,18 @@ class ApiApollo:
     def get_cve_unfixed_packages(self, data):
         """
         data = {
-"cve_id": "CVE-2023-1070",
-"host_ids": [
-"16"
-]
-}
+            "cve_id": "CVE-2023-1070",
+            "host_ids": [
+            "16"
+            ]
+        }
        :return:
 
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/unfixed/packages/get"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/unfixed/packages/get"
+        url = ConfigYaml().get_conf_url() + "/vulnerabilities/cve/unfixed/packages/get"
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Get cve unfixed package info: {}".format(res))
         return res
@@ -323,21 +338,19 @@ class ApiApollo:
         """
         para:
         {
-  "repo_name": "repo_name",
-  "task_name": "REPO设置任务",
-  "description": "为以下1个主机设置Repo：host1",
-  "info": [
-    {
-      "host_id": 297
+    "cluster_id": {
+        "task_name": "REPO设置任务",
+        "description": "为以下1个主机设置Repo：host1",
     }
-  ]
+
 }
         return::
 
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/task/repo/generate"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/task/repo/generate"
+        url = ConfigYaml().get_conf_url() + "/distribute/vulnerabilities/task/repo/generate"
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Generate repo set task: {}".format(res))
         return res
@@ -482,37 +495,38 @@ class ApiApollo:
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/status/get"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/status/get"
+        url = ConfigYaml().get_conf_url() + "/vulnerabilities/host/status/get"
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Get host_status: {}".format(res))
         return res
 
-    def get_host_cve(self, data):
-        """
-        para:
-        {
-  "host_id": "302",
-  "sort": "cvss_score",
-  "direction": "asc",
-  "filter": {
-    "search_key": "CVE",
-    "affected": true,
-    "severity": [
-      "High"
-    ]
-  },
-  "page": 1,
-  "per_page": 10
-}
-        return:
-
-        """
-        headers = {'Content-Type': 'application/json',
-                   'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/cve/get"
-        res = Request().post(url=url, json=data, headers=headers)
-        self.log.info("Get host_cve: {}".format(res))
-        return res
+#     def get_host_cve(self, data):
+#         """
+#         para:
+#         {
+#   "host_id": "302",
+#   "sort": "cvss_score",
+#   "direction": "asc",
+#   "filter": {
+#     "search_key": "CVE",
+#     "affected": true,
+#     "severity": [
+#       "High"
+#     ]
+#   },
+#   "page": 1,
+#   "per_page": 10
+# }
+#         return:
+#
+#         """
+#         headers = {'Content-Type': 'application/json',
+#                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
+#         url = ConfigYaml().get_conf_url() + ":11116/vulnerability/host/cve/get"
+#         res = Request().post(url=url, json=data, headers=headers)
+#         self.log.info("Get host_cve: {}".format(res))
+#         return res
 
     def get_cve_host(self, data):
         """
@@ -530,7 +544,8 @@ class ApiApollo:
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/host/get"
+        # url = ConfigYaml().get_conf_url() + ":11116/vulnerability/cve/host/get"
+        url = ConfigYaml().get_conf_url() + "/vulnerabilities/cve/host/get"
         res = Request().post(url=url, json=data, headers=headers)
         self.log.info("Get cve host: {}".format(res))
         return res

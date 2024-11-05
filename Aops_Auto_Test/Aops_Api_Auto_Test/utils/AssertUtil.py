@@ -86,8 +86,12 @@ class AssertUtil:
         断言data相等
         """
         try:
-            assert type(res_data) == type(except_data) and len(res_data) == len(except_data)
-            self.log.info("{}，{}长度或类型相同".format(res_data, except_data))
+            if res_data is None or except_data is None:
+                assert res_data == except_data
+                self.log.info("{}，{}长度或类型相同".format(res_data, except_data))
+            else:
+                assert type(res_data) == type(except_data) and len(res_data) == len(except_data)
+                self.log.info("{}，{}长度或类型相同".format(res_data, except_data))
             if isinstance(except_data, dict):
                 if len(except_data) == 0:
                     self.assert_str_and_int(len(except_data), len(res_data))
@@ -161,3 +165,4 @@ class AssertUtil:
             self.log.error(
                 "数据库校验失败,数据库查询结果： {}; 期望结果是： {}".format(sql_result, excepted_result))
             raise
+

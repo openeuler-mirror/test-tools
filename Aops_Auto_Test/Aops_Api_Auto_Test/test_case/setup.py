@@ -1,3 +1,5 @@
+import time
+
 from Aops_Api_Auto_Test.api.aops_zeus import ApiZeus
 from Aops_Api_Auto_Test.api.aops_apollo import ApiApollo
 from Aops_Api_Auto_Test.config import conf
@@ -9,28 +11,38 @@ log = my_log()
 
 
 class CreateData:
+
     def get_group_name(self):
-        ApiZeus().register_group({"host_group_name": "api_test_group", "description": "api_test_group"})
+        ApiZeus().register_group({"{}".format(self.get_cluster_id()): {"cluster_id": self.get_cluster_id(), "host_group_name": "api_test_group", "description": "api_test_group"}})
         host_group_name = "api_test_group"
+        host_group_id = QueryDataBase().query_host_group_id(host_group_name)
        # host_group_name = QueryDataBase().query_group_name("api_test_group")
         Yaml(conf.get_common_yaml_path()).write_yaml({"host_group_name": host_group_name})
-        return host_group_name
+        Yaml(conf.get_common_yaml_path()).write_yaml({"host_group_id": host_group_id})
+        return host_group_name, host_group_id
+
+    def get_cluster_id(self, cluster_name="local-cluster"):
+        cluster_id = QueryDataBase().query_cluster_info(cluster_name)['cluster_id']
+        Yaml(conf.get_common_yaml_path()).write_yaml({"cluster_id": cluster_id})
+        return cluster_id
 
     def get_host_info(self):
         host_info = {
-            "host_name": "api_test_host",
-            "host_group_name": self.get_group_name(),
-            "host_ip": ConfigYaml().get_host_info(),
-            "ssh_port": 22,
-            "ssh_user": "root",
-            "password": "openEuler12#$",
-            "management": True,
-            "ssh_pkey": ""
+            "{}".format(self.get_cluster_id()): {
+                "host_name": "api_test_host",
+                "host_group_id": self.get_group_name()[1],
+                "host_ip": ConfigYaml().get_host_info(),
+                "ssh_port": 22,
+                "ssh_user": "root",
+                "password": "openEuler12#$",
+                "management": True,
+                "ssh_pkey": ""
+            }
         }
         ApiZeus().register_host(host_info)
-        host_id = QueryDataBase().query_host_info(host_info['host_name'])['host_id']
-        host_name = host_info['host_name']
-        host_ip = host_info['host_ip']
+        host_id = QueryDataBase().query_host_info(host_info[self.get_cluster_id()]['host_name'])['host_id']
+        host_name = host_info[self.get_cluster_id()]['host_name']
+        host_ip = host_info[self.get_cluster_id()]['host_ip']
         Yaml(conf.get_common_yaml_path()).write_yaml({"host_id": host_id})
         Yaml(conf.get_common_yaml_path()).write_yaml({"host_ip": host_ip})
         Yaml(conf.get_common_yaml_path()).write_yaml({"host_name": host_name})
@@ -38,44 +50,45 @@ class CreateData:
 
     def get_repo_info(self):
         repo_info = {
-  "repo_name": "api_test_repo",
-  "repo_data": "[aops-update]\nname=update\nbaseurl=https://repo.openeuler.org/openEuler-22.03-LTS/update/$basearch\nenabled=1\ngpgcheck=1\ngpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/OS/$basearch/RPM-GPG-KEY-openEuler"
+            "{}".format(self.get_cluster_id()): {
+                "repo_name": "api_test_repo",
+                "repo_data": "[aops-update]\nname=update\nbaseurl=https://repo.openeuler.org/openEuler-22.03-LTS/update/$basearch\nenabled=1\ngpgcheck=1\ngpgkey=https://repo.openeuler.org/openEuler-22.03-LTS/OS/$basearch/RPM-GPG-KEY-openEuler"
+            }
 }
         ApiApollo().import_repo(repo_info)
-        repo_id = QueryDataBase().query_repo(repo_info['repo_name'])['repo_id']
-        repo_data = QueryDataBase().query_repo(repo_info['repo_name'])['repo_data']
+        repo_id = QueryDataBase().query_repo(repo_info[self.get_cluster_id()]['repo_name'])['repo_id']
+        repo_data = QueryDataBase().query_repo(repo_info[self.get_cluster_id()]['repo_name'])['repo_data']
         Yaml(conf.get_common_yaml_path()).write_yaml({"repo_id": repo_id})
-        Yaml(conf.get_common_yaml_path()).write_yaml({"repo_name": repo_info['repo_name']})
+        Yaml(conf.get_common_yaml_path()).write_yaml({"repo_name": repo_info[self.get_cluster_id()]['repo_name']})
         Yaml(conf.get_common_yaml_path()).write_yaml({"repo_data": repo_data})
 
     def generate_repo_set_task(self):
         self.get_repo_info()
         self.get_host_info()
         data = {
-                "repo_name": Yaml(conf.get_common_yaml_path()).data()['repo_name'],
-                "task_name": "REPO设置任务",
-                "description": "为以下1个主机设置Repo：{}".format(Yaml(conf.get_common_yaml_path()).data()['host_name']),
-                "info": [
-                    {
-                        "host_id": Yaml(conf.get_common_yaml_path()).data()['host_id']
-                    }
-                ]
-            }
+                "{}".format(self.get_cluster_id()): {
+                    "task_name": "REPO设置任务",
+                    "repo_id": Yaml(conf.get_common_yaml_path()).data()['repo_id'],
+                    "description": "为以下1个主机设置Repo：{}".format(
+                        Yaml(conf.get_common_yaml_path()).data()['host_name']),
+                    "host_list": [Yaml(conf.get_common_yaml_path()).data()['host_id']]
+                }
+         }
         res = ApiApollo().generate_repo_set_task(data)
-        Yaml(conf.get_common_yaml_path()).write_yaml({"task_id": res["body"]["data"]['task_id']})
+        Yaml(conf.get_common_yaml_path()).write_yaml({"task_id": res["body"]["data"][self.get_cluster_id()]["data"]["task_id"]})
         return res
 
     def get_cve_and_patch(self):
         try:
             host_id = self.get_host_info()[0]
-            res = ApiApollo().scan_host({"host_list": [host_id]})
+            res = ApiApollo().scan_host({"{}".format(self.get_cluster_id()): {"host_list": [host_id]}})
             if res["body"]["code"] == '200':
                 while True:
                     status_res = ApiApollo().get_host_status({"host_list": [host_id]})
                     if status_res["body"]["data"]["result"][str(host_id)] == 0:
-                        get_host_cve_res = ApiApollo().get_host_cve({"host_id": host_id,"filter": {"fixed": False,"severity": []}})
+                        get_host_cve_res = ApiApollo().get_host_cve({"page": 1, "per_page": 10, "host_id": host_id, "filter": {"affected": True, "fixed": False, "severity": []}})
                         if get_host_cve_res["body"]["code"] == '200' and get_host_cve_res["body"]["data"]["result"] is not None:
-                            get_unfix_package = ApiApollo().get_cve_unfixed_packages({"cve_id": get_host_cve_res["body"]["data"]["result"][0]["cve_id"],"host_ids": [host_id]})
+                            get_unfix_package = ApiApollo().get_cve_unfixed_packages({"cve_id": get_host_cve_res["body"]["data"]["result"][0]["cve_id"], "host_ids": [host_id]})
                             if get_unfix_package["body"]["code"] == '200':
                                 for unfix in get_unfix_package["body"]["data"]:
                                     if unfix["support_way"] == 'coldpatch':

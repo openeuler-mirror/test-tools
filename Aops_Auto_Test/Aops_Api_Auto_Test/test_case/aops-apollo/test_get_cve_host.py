@@ -18,7 +18,7 @@ class TestGetCveHost:
     @staticmethod
     def setup_class():
         log.info("准备测试套依赖数据")
-        CreateData().generate_repo_set_task()
+        # CreateData().generate_repo_set_task()
         CreateData().get_cve_and_patch()
 
     @staticmethod

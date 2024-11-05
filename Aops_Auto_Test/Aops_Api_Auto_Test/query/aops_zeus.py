@@ -22,6 +22,7 @@ class QueryDataBase:
 
     def delete_host(self, field):
         sql = "delete from host where host_ip='{}'".format(field)
+
         return ql.exec(sql)
 
     def batch_delete_host(self):
@@ -37,3 +38,13 @@ class QueryDataBase:
         query_result = ql.fetchall(sql)
         return query_result[0]
 
+    def query_cluster_info(self, cluster_name):
+        sql = "select * from cluster where cluster_name='{}'".format(cluster_name)
+        query_result = ql.fetchall(sql)
+        return query_result[0]
+
+    def query_host_group_id(self, host_group_name):
+        sql = "select * from host_group where host_group_name='{}';".format(host_group_name)
+        ql.connect()
+        query_result = ql.fetchall(sql)
+        return query_result[0]['host_group_id']
