@@ -1,0 +1,8 @@
+{
+	"bootstrap_rpm_repo": [
+                {
+                        "name": "everything",
+                        "repo": "test_error_repo"
+                }
+        ]
+}

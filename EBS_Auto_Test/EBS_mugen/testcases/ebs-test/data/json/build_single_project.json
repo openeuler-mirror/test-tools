@@ -1,0 +1,40 @@
+{
+	"os_project": "test_mugen",
+	"description": "test for build single incremental package",
+	"build_env_macros": "ccache_clear: y\nccache_enable: y\nskip_check: y\npreinstall:\n- openEuler-rpm-config\n- digest-list-tools\n- selinux-policy-targeted\n- pesign-obs-integration\n- glibc\n- bash\n- rpm\n- rpm-libs\n- libcap\n- libacl\n- libdb\n- bzip2\n- lua\n- zlib\n- xz-libs\n- zstd\n- popt\n- openssl-libs\n- attr\n- libselinux\n- pcre2\n- dbus-libs\n- systemd-libs\n- lz4\n- libgcrypt\n- libgpg-error\n- filesystem\n- chkconfig\n- util-linux\n- rpm-build\n- make\n- digest-list-tools\nprefer:\n- java-1.8.0-openjdk\n- java-1.8.0-openjdk-devel\nmacros:\n- \"%packager http://openeuler.org\"\n- \"%check_target_before_unlink 1\"\n- \"%_vendor openEuler\"\n- \"%dist .oe2203sp2\"\n- \"%with_python3 1\"\n- \"%python3_pkgversion 3\"\n- \"%openEuler 1\"\n- \"%openeuler 1\"\n- \"%__brp_digest_list /usr/lib/rpm/brp-digest-list %{buildroot}\"\n- \"%gcc_secure_exclude 'podman.spec|gcc.spec|arm-trusted-firmware.spec|docker-engine-openeuler.spec|arts.spec|runc-openeuler.spec|kata-containers.spec|dyninst.spec|ipxe.spec|tboot.spec|syslinux.spec|gcc-libraries.spec|kpatch.spec|gdb.spec|xorg-x11-server.spec|xorg-x11-drv-fbdev.spec|xorg-x11-drv-vesa.spec|xorg-x11-drv-ati.spec|xorg-x11-drv-dummy.spec|xorg-x11-drv-intel.spec|xorg-x11-drv-nouveau.spec|xorg-x11-drv-qxl.spec|xorg-x11-drv-v4l.spec|xorg-x11-drv-vmware.spec|xorg-x11-drv-evdev.spec|xorg-x11-drv-synaptics.spec|xorg-x11-drv-vmmouse.spec|xorg-x11-drv-void.spec|xorg-x11-drv-wacom.spec|hivex.spec|gimp.spec|memstomp.spec|supermin.spec|system-config-firewall.spec|isdn4k-utils.spec|emacs.spec|graphviz.spec|buildah.spec|rhash.spec|automake.spec'\"\nuse_xz:\n- openEuler-logos\nuse_git_lfs:\n- firefox\n- linux-firmware\n- mozjs78\nuse_kmod_libs:\n- systemd\n- ndctl\n- dracut\n- pciutils\n- libblockdev\n- open-iscsi\ndisable_check_path:\n- kae_driver\n- kunpengsecl\n- texlive-base\n- lensfun\n- openjade\n- numpy\n- greatsql\n- trace-cmd\n- hikptool\n- mysql\n- hadoop\n- linux-sgx\n- obs-bundled-gems\n- gcc\n- libwd\n- gcc-12\n- uwsgi\n- iSulad\n- mongo-c-driver\n- libkae\n- cfitsio\n- mrtg\n- tss2\n- nodelet_core\n- iniparser\n- suitesparse\nuse_root:\n- python3\n- edk2\n- qpid-proton\n- glusterfs\n- tensorflow\n- firebird\n- conntrack-tools\n- multipath-tools\n- libadwaita\n- libnetfilter_conntrack\n- grub2\n- mina-ftpserver\n- rome\n- socket_wrapper\n- bind\n- ORBit2\n- satyr\n- wayland\n- gun-efi\n- qemu\n- rubygem-sprockets-rails\n- rubygem-pry\n- rubygem-redis\n- nodejs-commander\n- nodejs-colors\n- simple-xml\n- python-rtslib\n- eclipse\n- firefox\n- wildfly-elytron\n- pcp\n- papi\n- jruby\n- obs-bundled-gems\n- mongo-java-driver\n- icu4j\n- gradle\n- gnu-efi\n- groovy\n- libtommath\n- ansible\n- ant-contrib\n- apache-ivy\n- courier-unicode\n- eclipse-ecf\n- eclipse-emf\n- eclipse-jgit\n- eclipse-license\n- efl\n- emacs-auctex\n- findbugs\n- forbidden-apis\n- freemarker\n- gawk\n- gnu-efi\n- pstoedit\n- lucene\n- lucene3\n- lucene4\n- lz4-java\n- mrtg\n- jnr-ffi\n- gnuplot\n- gpars\n- grizzlv\n- h2\n- hadoop\n- hive\n- httpunit\n- ibus-table-array30\n- ibus-table-chinese\n- icu4i\n- ironjacamar\n- isula-build\n- jetty\n- iffi\n- libdvdread\n- liblouis\n- maildrop\n- mrtg\n- nodelet_core\n- openresty\n- openresty-openssl111\n- openresty-pcre\n- sbt\n- spark\n- sshj\n- swt-chart\n- system-config-printer\n- tycho\n- uimaj\n- wildflv-elytron\n- xmvn\n- A-Tune\n- authz\n- conmon\n- containerd\n- containernetworking-plugins\n- containers-common\n- coredns\n- delve\n- flink\n- golang\n- iSulad-img\n- isula-transform\n- kunpengsecl\n- libnetwork\n- lxcfs-tools\n- node_exporter\n- nvwa\n- podman\n- runc\n- secpaver\n- skopeo\n- syscontainer-tools\n- etcd\n- gdb\n- umoci\n- kernel\n- glibc\n- greatsql\n- iproute\n- libaio\n- multipath-tools\n- hplip\n- storm\n- gimp\n- google-noto-fonts\n- kata-containers\n- kata-agent\n- openjfx11\n- docker\n- mcelog",
+	"build_targets": [
+                {
+                        "os_variant": "openEuler:22.03-LTS-SP2",
+                        "flags": {
+                                "build": true,
+                                "publish": true
+                        },
+                        "ground_projects": [],
+                        "architecture": "aarch64"
+                }
+        ],
+	"bootstrap_rpm_repo": [
+                {
+                        "name": "everything",
+                        "repo": "https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP2/everything/"
+                },
+		{
+                        "name": "EPOL",
+                        "repo": "https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS-SP2/EPOL/main/"
+                }
+
+        ],
+	"my_specs": [
+		{
+                        "spec_name": "tepl",
+                        "spec_url": "https://gitee.com/src-openeuler/tepl.git",
+                        "spec_branch": "master"
+                },
+		{
+                        "spec_name": "cmark",
+                        "spec_url": "https://gitee.com/src-openeuler/cmark.git",
+                        "spec_branch": "master",
+			"spec_description": "test for mugen"
+                }
+        ]
+}

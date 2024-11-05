@@ -1,0 +1,15 @@
+{
+  "build_targets": [
+    {
+      "os_variant": "openEuler:20.03-LTS-SP1",
+        "architecture": "test",
+        "ground_projects": [
+          "test_for_single_incremental"
+        ],
+        "flags": {
+          "build": true,
+          "publish": true
+        }
+    }
+  ]
+}

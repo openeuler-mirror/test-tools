@@ -1,0 +1,9 @@
+{
+	"my_specs": [
+                {
+                        "spec_name": 12,
+                        "spec_url": "https://gitee.com/src-openeuler/redis.git",
+                        "spec_branch": "openEuler-22.03-LTS"
+                }
+        ]
+}

@@ -1,0 +1,45 @@
+{
+	"os_project": "test_mugen",
+	"owner": "ysc",
+	"description": "test xxxx",
+	"build_targets": [
+                {
+                        "os_variant": "openEuler:22.03-LTS-SP2",
+                        "flags": {
+                                "build": true,
+                                "publish": true
+                        },
+                        "ground_projects": [],
+                        "architecture": "aarch64"
+                },
+                {
+                        "os_variant": "openEuler:22.03-LTS",
+                        "flags": {
+                                "build": true,
+                                "publish": true
+                        },
+                        "ground_projects": [],
+                        "architecture": "x86_64"
+                }
+        ],
+		"bootstrap_rpm_repo": [
+                {
+                        "name": "everything",
+                        "repo": "https://repo.huaweicloud.com/openeuler/openEuler-22.03-LTS/everything/"
+                }
+        ],
+        "layer_urls": [
+                {
+                        "layer_name": "redis_custom",
+                        "git_url": "https://gitee.com/duan_pj/layer_redis_cus_23.git"
+                }
+        ],
+        "my_specs": [
+                {
+                        "spec_name": "redis",
+                        "spec_url": "https://gitee.com/src-openeuler/redis.git",
+                        "spec_branch": "openEuler-22.03-LTS"
+                }
+        ]
+
+}

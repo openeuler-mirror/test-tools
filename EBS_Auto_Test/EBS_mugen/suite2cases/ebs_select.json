@@ -1,0 +1,33 @@
+{
+    "path": "$OET_PATH/testcases/ebs-test/oe_test_ebs_select",
+    "cases": [
+        {
+               "name": "oe_test_ebs_select_01"
+        },
+        {
+               "name": "oe_test_ebs_select_02"
+        },
+        {
+               "name": "oe_test_ebs_select_03"
+        },
+        {
+               "name": "oe_test_ebs_select_04"
+        },
+        {
+               "name": "oe_test_ebs_select_05"
+        },
+        {
+               "name": "oe_test_ebs_select_06"
+        },
+        {
+               "name": "oe_test_ebs_select_07"
+        },
+        {
+               "name": "oe_test_ebs_select_08"
+        },
+        {
+               "name": "oe_test_ebs_select_09"
+        }
+    ]
+}
+

@@ -1,0 +1,12 @@
+{
+  "bootstrap_rpm_repo": [
+        {
+          "name": "everything",
+          "repo": "https://repo.openeuler.org/openEuler-22.03-LTS-SP2/everything/"
+        },
+        {
+          "name": "EPOL",
+          "repo": "https://repo.openeuler.org/openEuler-22.03-LTS-SP2/EPOL/main/"
+        }
+      ]
+}

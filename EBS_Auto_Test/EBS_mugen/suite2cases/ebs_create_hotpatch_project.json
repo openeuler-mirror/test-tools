@@ -1,0 +1,8 @@
+{
+    "path": "$OET_PATH/testcases/ebs-test/oe_test_ebs_create_hotpatch_project",
+    "cases": [
+	{
+		"name": "oe_test_ebs_create_hotpatch_project_01"
+	}
+    ]
+}

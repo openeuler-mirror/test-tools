@@ -1,0 +1,10 @@
+{
+  "package_repos-": [
+    {
+      "spec_name": "cmark",
+      "spec_url": "https://gitee.com/src-openeuler/cmark.git",
+      "spec_branch": "master",
+      "spec_description": "test for mugen auto_test"
+    }
+  ]
+}

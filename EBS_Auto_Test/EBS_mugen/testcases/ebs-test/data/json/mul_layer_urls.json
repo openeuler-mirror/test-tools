@@ -1,0 +1,12 @@
+{
+	"layer_urls": [
+                {
+                        "layer_name": "redis_custom",
+                        "git_url": "https://gitee.com/duan_pj/layer_redis_cus_23.git"
+                },
+		{
+                        "layer_name": "base_OS_layer",
+                        "git_url": "https://gitee.com/wu_zhende/layer_base_1.git"
+                }
+        ]
+}
