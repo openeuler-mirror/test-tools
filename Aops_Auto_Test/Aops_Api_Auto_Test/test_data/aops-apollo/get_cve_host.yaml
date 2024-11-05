@@ -7,17 +7,13 @@
     filter:
       fixed: false
       host_name: $host_name
-      host_group:
-        - $host_group_name
-      repo:
-        - null
     page: 1
     per_page: 10
   validate:
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name is null and c.fixed='0' and h.host_name='$host_name' order by last_scan asc limit 10;
+    sql: select count(*) from (select DISTINCT host_ip from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_id is null and c.fixed='0' and h.host_name='$host_name') as tmp;
 
 - case_name: 查询cve的主机信息-cve_id正确
   data:
@@ -26,7 +22,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host, cve_host_match where cve_host_match.cve_id='$host_id' and host.host_id=cve_host_match.host_id
+    sql: select count(*) from (select DISTINCT host_ip from host, cve_host_match where cve_host_match.cve_id='$cve_id' and host.host_id=cve_id=cve_host_match.host_id) as tmp
 
 - case_name: 查询cve的主机信息-cve_id不存在
   data:
@@ -63,7 +59,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name' and c.fixed='0'
+    sql: select count(*) from (select DISTINCT host_ip from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name' and c.fixed='0') as tmp
 
 - case_name: 查询cve的主机信息-host_name正确,fixed为true
   data:
@@ -109,7 +105,7 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='$host_name'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_name='non-exist'
 
 - case_name: 查询cve的主机信息-fixed为非bool类型
   data:
@@ -130,31 +126,6 @@
     code: 1000
     label: Param.Error
     message: request parameter error
-
-- case_name: 查询cve的主机信息-group_name为空
-  data:
-    cve_id: $cve_id
-    filter:
-      fixed: false
-      host_group: []
-  validate:
-    code: 200
-    label: Succeed
-    message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and c.fixed='1'
-
-- case_name: 查询cve的主机信息-group_name正确
-  data:
-    cve_id: $cve_id
-    filter:
-      fixed: false
-      host_group:
-        - $host_group_name
-  validate:
-    code: 200
-    label: Succeed
-    message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.host_group_name='$host_group_name'
 
 - case_name: 查询cve的主机信息-host_group数据类型错误
   data:
@@ -178,18 +149,18 @@
     label: Param.Error
     message: request parameter error
 
-- case_name: 查询cve的主机信息-repo正确
-  data:
-    cve_id: $cve_id
-    filter:
-      fixed: false
-      repo:
-        - $repo_name
-  validate:
-    code: 200
-    label: Succeed
-    message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name='$repo_name'
+#- case_name: 查询cve的主机信息-repo正确
+#  data:
+#    cve_id: $cve_id
+#    filter:
+#      fixed: false
+#      repo:
+#        - $repo_name
+#  validate:
+#    code: 200
+#    label: Succeed
+#    message: operation succeed
+#    sql: select count(*) from (select DISTINCT host_ip from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_id='$repo_id') as tmp
 
 - case_name: 查询cve的主机信息-repo为空
   data:
@@ -201,9 +172,9 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name is null and c.fixed='0'
+    sql: select count(*) from (select DISTINCT host_ip from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_id is null and c.fixed='0') as tmp
 
-- case_name: 查询cve的主机信息-repo name不存在
+- case_name: 查询cve的主机信息-repo_name不存在
   data:
     cve_id: $cve_id
     filter:
@@ -214,14 +185,14 @@
     code: 200
     label: Succeed
     message: operation succeed
-    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_name='non-exist' and c.fixed='0'
+    sql: select count(*) from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_id='non-exist' and c.fixed='0'
 
-- case_name: 查询cve的主机信息-repo name数据类型错误
+- case_name: 查询cve的主机信息-repo_name数据类型错误
   data:
     cve_id: $cve_id
     filter:
       fixed: false
-      repo: $repo_name
+      repo: test
   validate:
     code: 1000
     label: Param.Error
@@ -292,6 +263,120 @@
     cve_id: $cve_id
     sort: last_scan
     direction: test
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询cve的主机信息-direction为desc
+  data:
+    cve_id: $cve_id
+    sort: last_scan
+    direction: desc
+    filter:
+      fixed: false
+      host_name: $host_name
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT host_ip from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_id is null and c.fixed='0' and h.host_name='$host_name') as tmp;
+
+- case_name: 查询cve的主机信息-page为空
+  data:
+    cve_id: $cve_id
+    page:
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询cve的主机信息-page为-1
+  data:
+    cve_id: $cve_id
+    page: -1
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询cve的主机信息-page为不存在的页码0
+  data:
+    cve_id: $cve_id
+    page: 0
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询cve的主机信息-page超过当前展示的总数1500000
+  data:
+    cve_id: $cve_id
+    page: 1500000
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询cve的主机信息-per_page为正确值
+  data:
+    cve_id: $cve_id
+    per_page: 20
+    filter:
+      fixed: false
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT host_ip from host as h inner join cve_host_match as c on h.host_id=c.host_id where c.cve_id='$cve_id' and h.repo_id is null and c.fixed='0') as tmp;
+
+- case_name: 查询cve的主机信息-per_page为空
+  data:
+    cve_id: $cve_id
+    per_page:
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page为0
+  data:
+    cve_id: $cve_id
+    per_page: 0
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page为-1
+  data:
+    cve_id: $cve_id
+    per_page: -1
+    filter:
+      fixed: false
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page超出CVE数量
+  data:
+    cve_id: $cve_id
+    per_page: 10000
     filter:
       fixed: false
   validate:

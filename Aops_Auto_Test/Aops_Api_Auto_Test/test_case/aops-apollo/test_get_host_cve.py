@@ -38,4 +38,4 @@ class TestGetHostCve:
         assert_res.assert_label(res["body"]["label"], test_data["validate"]["label"])
         assert_res.assert_message(res["body"]["message"], test_data["validate"]["message"])
         if res["body"]["code"] == '200':
-            assert_res.assert_database(test_data["validate"]["sql"], len(res["body"]["data"]["result"]))
+            assert_res.assert_database(test_data["validate"]["sql"], res["body"]["data"]["total_count"])

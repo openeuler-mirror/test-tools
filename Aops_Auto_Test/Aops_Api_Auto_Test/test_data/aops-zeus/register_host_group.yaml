@@ -2,10 +2,16 @@
 - case_name: 注册主机组-所有数据正确
   token: $token
   data:
-      description: api-group1
-      host_group_name: api-group1
+      $cluster_id:
+        cluster_id: $cluster_id
+        description: api-group1
+        host_group_name: api-group1
   validate:
     code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Succeed
     label: Succeed
     message: operation succeed
     sql: select count(*) from host_group where host_group_name='api-group1'
@@ -13,9 +19,15 @@
 - case_name: 注册主机组-主机名为空字符
   token: $token
   data:
+    $cluster_id:
+      cluster_id: $cluster_id
       description: api-group1
       host_group_name: ""
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed

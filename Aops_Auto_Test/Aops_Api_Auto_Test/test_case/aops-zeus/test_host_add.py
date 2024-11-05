@@ -33,11 +33,12 @@ class TestRegisterHost:
         log.info("test_data: {}".format(test_data))
         data = test_data["data"]
         global host_ip
-        host_ip = data['host_ip']
         res = ApiZeus().register_host(data)
         assert_res = AssertUtil()
         assert_res.assert_code(res["body"]["code"], test_data["validate"]["code"])
+        assert_res.assert_data(res["body"]["data"], test_data["validate"]["data"])
         assert_res.assert_label(res["body"]["label"], test_data["validate"]["label"])
         assert_res.assert_message(res["body"]["message"], test_data["validate"]["message"])
-        if res["body"]["code"] == '200':
+        if res["body"]["data"][Yaml(conf.get_common_yaml_path()).data()['cluster_id']]["label"] == 'Succeed':
             assert_res.assert_database(test_data["validate"]['sql'], 1)
+            host_ip = data[Yaml(conf.get_common_yaml_path()).data()['cluster_id']]['host_ip']

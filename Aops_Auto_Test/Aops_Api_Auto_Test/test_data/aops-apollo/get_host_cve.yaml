@@ -207,3 +207,142 @@
     code: 1000
     label: Param.Error
     message: request parameter error
+
+- case_name: 查询主机的cve信息-page为正确值
+  data:
+    host_id: $host_id
+    page: 2
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id') as tmp
+
+- case_name: 查询主机的cve信息-page为空
+  data:
+    host_id: $host_id
+    page:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-page为-1
+  data:
+    host_id: $host_id
+    page: -1
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-page为不存在的页码0
+  data:
+    host_id: $host_id
+    page: 0
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-page超过当前展示的总数1500000
+  data:
+    host_id: $host_id
+    page: 1500000
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page为正确值
+  data:
+    host_id: $host_id
+    per_page: 20
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id') as tmp
+
+- case_name: 查询主机的cve信息-per_page为空
+  data:
+    host_id: $host_id
+    per_page:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page为0
+  data:
+    host_id: $host_id
+    per_page: 0
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page为-1
+  data:
+    host_id: $host_id
+    per_page: -1
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的cve信息-per_page超出CVE数量
+  data:
+    host_id: $host_id
+    per_page: 10000
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的CVE信息-direction为正确值asc
+  data:
+    host_id: $host_id
+    direction: asc
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id') as tmp
+
+- case_name: 查询主机的CVE信息-direction为正确值desc
+  data:
+    host_id: $host_id
+    direction: desc
+  validate:
+    code: 200
+    label: Succeed
+    message: operation succeed
+    sql: select count(*) from (select DISTINCT cve_host_match.cve_id from cve_host_match,cve where cve_host_match.host_id='$host_id') as tmp
+
+- case_name: 查询主机的CVE信息-direction为空
+  data:
+    host_id: $host_id
+    direction:
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的CVE信息-direction数据类型错误
+  data:
+    host_id: $host_id
+    direction: 1
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error
+
+- case_name: 查询主机的CVE信息-direction为其他值
+  data:
+    host_id: $host_id
+    direction: test
+  validate:
+    code: 1000
+    label: Param.Error
+    message: request parameter error

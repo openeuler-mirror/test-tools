@@ -1,73 +1,113 @@
 #导入repo源
 - case_name: 导入repo源-有效值
   data:
-    repo_name: import_repo
-    repo_data: import_repo
+    $cluster_id:
+      repo_name: import_repo
+      repo_data: import_repo
   validate:
     code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Succeed
     label: Succeed
     message: operation succeed
     sql: select count(*) from repo where repo_name='import_repo';
 
 - case_name: 导入repo-repo_name超过20
   data:
-    repo_name: repos-name-invalid-20
-    repo_data: 123122
+    $cluster_id:
+      repo_name: repos-name-invalid-20
+      repo_data: 123122
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed
 
 - case_name: 导入repo-repo_data超过512
   data:
-    repo_name: test_repo_name
-    repo_data: 123456789012345678901234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678
+    $cluster_id:
+      repo_name: test_repo_name
+      repo_data: 123456789012345678901234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678912345678901234567891234567890123456789123456789012345678
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed
 
 - case_name: 导入repo-repo_name为空
   data:
-    repo_name:
-    repo_data: repo_data
+    $cluster_id:
+      repo_name:
+      repo_data: repo_data
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed
 
 - case_name: 导入repo-repo_data为空
   data:
-    repo_name: test_repo_name
-    repo_data:
+    $cluster_id:
+      repo_name: test_repo_name
+      repo_data:
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed
 
 - case_name: 导入repo-repo_data非str类型
   data:
-    repo_name: test_repo_name
-    repo_data: 12345
+    $cluster_id:
+      repo_name: test_repo_name
+      repo_data: 12345
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed
 
 - case_name: 导入repo-repo_name非str类型
   data:
-    repo_name: 1
-    repo_data: test_repo_data
+    $cluster_id:
+      repo_name: 1
+      repo_data: test_repo_data
   validate:
-    code: 1000
-    label: Param.Error
-    message: request parameter error
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Param.Error
+    label: Succeed
+    message: operation succeed
 
 - case_name: 导入repo-重复值
   data:
-    repo_name: import_repo
-    repo_data: import_repo
+    $cluster_id:
+      repo_name: import_repo
+      repo_data: import_repo
   validate:
-    code: 1105
-    label: Data.Exist
-    message: data has existed
+    code: 200
+    data:
+      $cluster_id:
+        data: null
+        label: Data.Exist
+    label: Succeed
+    message: operation succeed

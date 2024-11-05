@@ -10,7 +10,9 @@ class ApiZeus:
 
     def __init__(self):
         self.log = my_log()
-        url = ConfigYaml().get_conf_url() + ':80/api/manage/account/login'
+        # url = ConfigYaml().get_conf_url() + ':80/api/manage/account/login'
+        # new url for 20.03-sp4
+        url = ConfigYaml().get_conf_url() + ':80/accounts/login'
         data = {
             "username": ConfigYaml().get_user(),
             "password": ConfigYaml().get_login_password()
@@ -23,12 +25,16 @@ class ApiZeus:
     def register_group(self, register_group_data: dict):
         """
         Register a host group
-        :param register_group_data:{"host_group_name": "api_test_group", "description": "api_test_group"}
+        :param register_group_data: "cluster_id": {
+                                        "cluster_id": "cluster_id",
+                                        "host_group_name": "api_test_group",
+                                        "description": "api_test_group"}
         :return: res
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11111/manage/host/group/add"
+        # url = ConfigYaml().get_conf_url() + ":11111/manage/host/group/add"
+        url = ConfigYaml().get_conf_url() + "/distribute/hosts/group"
         res = Request().post(url=url, json=register_group_data, headers=headers)
         return res
 
@@ -36,19 +42,21 @@ class ApiZeus:
         """
         Register host
         :param host_info: {
-            "host_name": "host_name",
-            "host_group_name": "host_group_name",
-            "host_ip": "host_ip",
-            "ssh_port": ssh_port,
-            "ssh_user": "ssh_user",
-            "password": "password",
-            "management": True/False
+            "cluster_id":
+                "host_name": "host_name",
+                "host_group_name": "host_group_name",
+                "host_ip": "host_ip",
+                "ssh_port": ssh_port,
+                "ssh_user": "ssh_user",
+                "password": "password",
+                "management": True/False
         }
         :return: res
         """
         headers = {'Content-Type': 'application/json',
                    'Access-Token': Yaml(conf.get_common_yaml_path()).data()['token']}
-        url = ConfigYaml().get_conf_url() + ":11111/manage/host/add"
+        # url = ConfigYaml().get_conf_url() + ":11111/manage/host/add"
+        url = ConfigYaml().get_conf_url() + "/distribute/hosts"
         res = Request().post(url=url, json=host_info, headers=headers)
         self.log.info("Get register host result: {}".format(res))
         return res
