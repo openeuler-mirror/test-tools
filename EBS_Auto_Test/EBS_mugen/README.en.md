@@ -5,7 +5,7 @@ mugen is a testing framework provided by openEuler community. This repo contains
 
 ## Update log
 - New mugen entry function
-- Added support for setting testsuit directory and testing envrionment
+- Added support for setting testsuit directory and testing environment
 - Added python util functions for testing
 
 ## How to use
@@ -13,7 +13,7 @@ mugen is a testing framework provided by openEuler community. This repo contains
 #### Installation
 Simply run `bash dep_install.sh`.
 
-#### Set testing envrionment
+#### Set testing environment
 - run `bash mugen.sh -c --ip $ip --password $passwd --user $user --port $port`
 - Parameters
   - ip: ip address of target machine

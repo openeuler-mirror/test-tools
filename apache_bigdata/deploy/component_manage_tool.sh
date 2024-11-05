@@ -202,10 +202,10 @@ function stop_component() {
 		# bash ${tool_root_dir}/${component}/bin/common/check_status.sh check_alive
 		
 		if [ $? != 0 ]; then 
-			echo ${component} stop faild
+			echo ${component} stop failed
 			exit 0
 		else
-			echo ${component} stop successed
+			echo ${component} stop successfully
 			exit 0 
 		fi
 	fi
@@ -226,10 +226,10 @@ function start_component() {
 		bash ${tool_root_dir}/${component}/bin/common/check_status.sh check_alive
 
 		if [ $? != 0 ]; then
-			echo ${component} start faild
+			echo ${component} start failed
 			exit 1
 		else
-			echo ${component} start successed
+			echo ${component} start successfully
 			exit 0
 		fi
 	fi

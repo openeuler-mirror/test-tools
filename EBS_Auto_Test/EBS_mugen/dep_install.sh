@@ -19,7 +19,7 @@
 usage() {
     printf "Usage:  sh dep_install.sh [options]\n
     -e: install addtitional dependencies qemu for remote testing\n
-    -g shell_file: run shell file to set crocess compiliation, if have run srcipt must use source\n
+    -g shell_file: run shell file to set crocess compiliation, if have run script must use source\n
     -h: print this usage info\n
     \n"
 }
@@ -37,7 +37,7 @@ qemu_dep(){
     fi
     yum install qemu-system-aarch64 qemu-system-arm -y
     if [ $? -ne 0 ]; then
-        echo "ERROR: qemu not install, you need install it youself."
+        echo "ERROR: qemu not install, you need install it yourself."
         return 1
     fi
 }

@@ -94,7 +94,7 @@ class BasePage(object):
 
     def is_alert(self):
         """
-        assert alert if exsit
+        assert alert if exist
         :return: alert obj
         """
         try:
