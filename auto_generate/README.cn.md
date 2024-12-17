@@ -1,0 +1,64 @@
+# AI自动生成测试用例使用说明
+
+## 1. 简介
+
+AI自动生成测试用例是一个基于Python的自动化测试工具，它可以根据用户提供的测试用例模板和测试框架命令自动生成软件包的测试脚本、测试用例md。
+
+## 2. 功能
+目录结构：
+```
+auto_gerenate
+├── README.cn.md        // 中文说明文档
+├── generate_test_cases // 存放生成的测试用例脚本、md、测试套
+├── script.py           // 生成测试用例脚本主函数
+├── config.py           // 配置文件
+├── llm.py              // 调用大模型接口
+├── prompt.py           // 大模型prompt
+├── requirements.txt    // 依赖库
+├── .env                // 配置文件
+├── tmp                 // 存放测试脚本执行时环境中已有的数据common通常是测试脚本需要的文件，note.md描述环境的信息
+│   ├── common          // 测试环境中已有的数据common通常是测试脚本需要的文件
+|   └── note.md         // 测试环境信息
+mugen                   // mugen框架必须跟auto_gerenate同级目录
+```
+## 2. 使用方法
+
+### 2.1 配置.env
+
+在auto_gerenate目录下，配置.env文件，其中包括大模型地址：
+```
+LLM_URL=http://xxx.xxx.xxx.xxx:8008/v1
+LLM_KEY=none
+LLM_MODEL_NAME=Qwen2.5-14B-Instruct
+```
+
+### 2.2 配置tmp
+
+在auto_gerenate目录下，配置tmp目录，其中包括测试脚本执行时环境中已有的数据，common通常是测试脚本需要的文件，note.md是对环境信息的描述，可以改善生成脚本的准确度
+例如：
+tmp
+├── common 
+│   └── test.tar.gz //例如测试需要的测试文件
+└── note.md
+
+### 2.3 生成测试用例脚本
+### 2.3 命令
+
+```
+python auto_generate/script.py -m=[mode] -n=[package_name]
+```
+
+参数说明：
+- mode：模式，shell、md
+shell生成测试脚本
+md会根据generate_test_cases目录下的测试用例脚本转换成md文档，需要将脚本放在generate_test_cases/{package_name}下
+- package_name：需要生成的软件包名
+
+生成脚本：
+python auto_generate/script.py -m=shell -n=attr
+会在generate_test_cases目录下生成attr目录，attr目录下有attr.sh、attr.json文件
+
+生成md：
+在generate_test_cases目录下放好attr目录，attr目录下有attr.sh、attr.json文件
+python auto_generate/script.py -m=md -n=attr
+会在generate_test_cases目录下生成attr的各个测试脚本的md
