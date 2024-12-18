@@ -7,19 +7,19 @@ AI自动生成测试用例是一个基于Python的自动化测试工具，它可
 ## 2. 功能
 目录结构：
 ```
-auto_gerenate
-├── README.cn.md        // 中文说明文档
-├── generate_test_cases // 存放生成的测试用例脚本、md、测试套
-├── script.py           // 生成测试用例脚本主函数
-├── config.py           // 配置文件
-├── llm.py              // 调用大模型接口
-├── prompt.py           // 大模型prompt
-├── requirements.txt    // 依赖库
-├── .env                // 配置文件
-├── tmp                 // 存放测试脚本执行时环境中已有的数据common通常是测试脚本需要的文件，note.md描述环境的信息
-│   ├── common          // 测试环境中已有的数据common通常是测试脚本需要的文件
-|   └── note.md         // 测试环境信息
-mugen                   // mugen框架必须跟auto_gerenate同级目录
+mugen
+├── auto_generate       # auto_generate必须放在mugen框架下使用
+    ├── README.cn.md    # 中文说明文档
+    ├── generate_test_cases  # 存放生成的测试用例脚本、md、测试套
+    ├── script.py       # 生成测试用例脚本主函数
+    ├── config.py       # 配置文件
+    ├── llm.py          # 调用大模型接口
+    ├── prompt.py       # 大模型prompt
+    ├── requirements.txt # 依赖库
+    ├── .env            # 配置文件
+    ├── tmp             # 存放测试脚本执行时环境中已有的数据
+        ├── common      # 测试环境中已有的数据，通常是测试脚本需要的文件
+        └── note.md     # 描述环境的信息
 ```
 ## 2. 使用方法
 
