@@ -145,8 +145,11 @@ class BasePage(object):
 
     def load_url(self, url):
         """加载url"""
-        print('info: string upload url "{}"'.format(url))
-        self.driver.get(url)
+        try:
+            print('info: string upload url "{}"'.format(url))
+            self.driver.get(url)
+        except Exception as e:
+            print(e)
 
     def get_source(self):
         """获取页面源码"""
