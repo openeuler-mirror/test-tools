@@ -47,7 +47,7 @@ main() {
                 echo "Check EPOL_update_list packages number fail" >>check.log
             fi
         else
-            echo "EPOL repo is not exit" >>check.log
+            echo "EPOL repo is not exist" >>check.log
         fi
     else
         if [ -s EPOL_update_list ]; then
@@ -60,7 +60,7 @@ main() {
                 echo "Check EPOL_update_list packages number fail" >>check.log
             fi
         else
-            echo "EPOL repo is not exit" >>check.log
+            echo "EPOL repo is not exist" >>check.log
         fi
     fi
 
