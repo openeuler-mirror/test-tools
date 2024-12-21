@@ -42,7 +42,7 @@ function usage() {
     -r: designated test case\n
     -x: the shell script is executed in debug mode\n
     -b: do make for test suite if test suite path have makefile or Makefile file\n
-    -s: runing test case at remote NODE1
+    -s: running test case at remote NODE1
     \n
     Example: 
         run all cases:

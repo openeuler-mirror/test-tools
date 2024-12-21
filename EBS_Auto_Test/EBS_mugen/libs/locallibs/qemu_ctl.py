@@ -544,8 +544,8 @@ if __name__ == "__main__":
     parser.add_argument('--br_name', type=str, help = "config qemu use br name", default="testbr0")
     parser.add_argument('--login_wait_str', type=str, help = "start qemu wait this string to input user name ", default="login:")
     parser.add_argument('--option_wait_time', type=int, help = "start qemu every option wait time (s)", default=60)
-    parser.add_argument('--start_sshd_cmd', type=str, help = "start sshd commond, if set will run after ip setted")
-    parser.add_argument('--check_sshd_start_cmd', type=str, help = "check start sshd commond, if set will run after ip setted")
+    parser.add_argument('--start_sshd_cmd', type=str, help = "start sshd command, if set will run after ip setted")
+    parser.add_argument('--check_sshd_start_cmd', type=str, help = "check start sshd command, if set will run after ip setted")
 
     config_file_group = parser.add_argument_group("config_file_group")
     config_file_group.add_argument('--config_file', type=str, help = "start qemu config json file", default=None)

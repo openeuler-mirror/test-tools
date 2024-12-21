@@ -337,7 +337,7 @@ def generate_one_combination(combination:str, prefix:str):
     if do_execute:
         for one_execute in json_info["execute"]:
             if "env" not in one_execute or "combination" not in one_execute:
-                mugen_log.logging("WARN", "execute define faile ignore it")
+                mugen_log.logging("WARN", "execute define failed ignore it")
                 continue
             exec_list.append(one_execute)
     run_script, all_script_ok = generate_execute_script(env_dict, combination_dict, exec_list)
