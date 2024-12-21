@@ -21,7 +21,7 @@
 3.使用上述提示页面的url，在web页面查看log等信息，正常显示表示虚拟机安装成功<br/>
 
 ## 如下步骤可以单步骤调整环境所用：<br/>
-1.sh sysdelop.sh startvm；手工启动虚拟机<br/>
+1.sh syzdelop.sh startvm；手工启动虚拟机<br/>
 2.sh syzdelop.sh uninstall；手工卸载<br/>
 3.sh syzdelop.sh h；查看帮助信息<br/>
 
