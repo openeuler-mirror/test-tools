@@ -71,7 +71,7 @@ function check_process() {
         do
             result=$(ssh "${agent}" "${command}")
             if [ "${result}" -lt 1 ];then
-                echo "hadoop ${PROCESS_NAME} alive less then 1 on ${agent}"
+                echo "hadoop ${PROCESS_NAME} alive less than 1 on ${agent}"
                 exit 1
             fi
         done

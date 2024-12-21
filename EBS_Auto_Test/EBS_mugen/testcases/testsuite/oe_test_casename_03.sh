@@ -16,4 +16,4 @@
 # @Desc      	:   Take the test ls command as an example
 ####################################
 
-test "$(ls / | grep -cE 'proc|usr|roor|var|sys|etc|boot|dev')" -eq 7
+test "$(ls / | grep -cE 'proc|usr|root|var|sys|etc|boot|dev')" -eq 7

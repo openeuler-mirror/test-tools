@@ -31,9 +31,9 @@ network_t net;
 node_p node;
 int res;
 
-void foo(node_p noed_ptr)
+void foo(node_p node_ptr)
 {
-    if (sizeof(noed_ptr) != 8)
+    if (sizeof(node_ptr) != 8)
         abort ();
 }
 

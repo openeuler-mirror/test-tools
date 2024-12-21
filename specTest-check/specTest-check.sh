@@ -44,7 +44,7 @@ function clean_downfile() {
 function check_test() {
     rpm_path=$1
     test -d "$rpm_path" || {
-        logger "ERROR" "cat not find the dir:${rpm_path}."
+        logger "ERROR" "can not find the dir:${rpm_path}."
         exit 1
     }
     rpm=$2
@@ -77,7 +77,7 @@ function check_test() {
 function diff_check() {
     rpm_path=$1
     test -d "$rpm_path" || {
-        logger "ERROR" "cat not find the dir:${rpm_path}."
+        logger "ERROR" "can not find the dir:${rpm_path}."
         exit 1
     }
 
