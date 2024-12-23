@@ -63,26 +63,11 @@ python auto_generate/script.py -m=[mode] -n=[package_name]
 参数说明：
 
 - mode：模式，shell、md
-  1.shell,根据输入package_name的生成测试脚本
-  2.md,根据generate_test_cases目录下的测试用例脚本转换成md文档，需要将脚本放在generate_test_cases/{package_name}下
+  1. shell模式：根据{package_name}生成测试脚本和测试套到generate_test_cases目录下
+  2. md模式：根据generate_test_cases目录下的测试用例脚本转换成md文档，需要将脚本放在generate_test_cases/{package_name}下
 - package_name：需要生成的软件包名
 
-生成脚本：
-python auto_generate/script.py -m=shell -n=attr
-
-### 2.3 命令
-
-```
-python auto_generate/script.py -m=[mode] -n=[package_name]
-```
-
-参数说明：
-
-- mode：模式，shell、md
-  shell生成测试脚本
-  md会根据generate_test_cases目录下的测试用例脚本转换成md文档，需要将脚本放在generate_test_cases/{package_name}下
-- package_name：需要生成的软件包名
-
+示例：
 生成脚本：
 python auto_generate/script.py -m=shell -n=attr
 会在generate_test_cases目录下生成attr目录，attr目录下有attr.sh、attr.json文件
