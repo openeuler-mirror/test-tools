@@ -223,6 +223,8 @@ def get_test_script(package_name):
     if result.returncode != 0:
         # 从错误输出中提取依赖列表
         dependencies = re.findall(r'(\w+) is needed', result.stderr)
+        if not dependencies:
+            dependencies = re.findall(r'(\w+) 被', result.stderr)
         if dependencies:
             print("需要安装的依赖软件包列表:")
             for dep in dependencies:
