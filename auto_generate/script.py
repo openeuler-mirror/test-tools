@@ -184,6 +184,12 @@ def get_test_script(package_name):
     if result.returncode != 0:
         print(f"安装rpm失败：{result.stderr}")
         return
+    # 安装rpmdevtools
+    print("正在安装rpmdevtools...")
+    result = subprocess.run(['dnf', 'install', '-y', 'rpmdevtools'], capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"安装rpmdevtools失败：{result.stderr}")
+        return
     # 获取软件源码包
     print("正在获取软件源码包...")
     result = subprocess.run(['yumdownloader', '--source', package_name], capture_output=True, text=True)
