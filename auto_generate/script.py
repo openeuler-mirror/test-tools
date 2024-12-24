@@ -194,9 +194,9 @@ def get_test_script(package_name):
     src_rpm_package_name = ""
     for line in lines:
         # 检查行中是否包含krb5的源代码包
-        if 'krb5' in line and '.src.rpm' in line:
+        if package_name in line and '.src.rpm' in line:
             # 获取line中krb5到.src.rpm的字符串内容
-            src_rpm_package_name = re.search(r'krb5.*\.src\.rpm', line).group(0)
+            src_rpm_package_name = re.search(rf'{package_name}.*\.src\.rpm', line).group(0)
 
     if not src_rpm_package_name:
         print("未找到软件源码包")
