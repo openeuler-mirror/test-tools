@@ -102,13 +102,24 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
     package_info = ""
     # 获取软件包help信息
     print(f"获取二进制软件包{rpm_package_name}的help信息：")
-    result = subprocess.run([rpm_package_name, 'help'], capture_output=True, text=True)
-    if result.returncode != 0:
+    try:
+        result = subprocess.run([rpm_package_name, 'help'], capture_output=True, text=True)
+        if result.stdout:
+            package_info = result.stdout
+        else:
+            package_info = result.stderr
+    except Exception as e:
+        print(f"获取软件包{rpm_package_name}的help信息失败：{e}")
+    
+    try:
         result = subprocess.run([rpm_package_name, '--help'], capture_output=True, text=True)
-    if result.stdout:
-        package_info = result.stdout
-    else:
-        package_info = result.stderr
+        if result.stdout:
+            package_info = result.stdout
+        else:
+            package_info = result.stderr
+    except Exception as e:
+        print(f"获取软件包{rpm_package_name}的--help信息失败：{e}")
+
     if 'usage' in package_info or 'Usage' in package_info:
         print(package_info)  # 打印软件包的帮助信息
     else:
@@ -221,10 +232,13 @@ def get_test_script(package_name):
         capture_output=True, text=True)
     # 检查命令是否成功执行
     if result.returncode != 0:
-        # 从错误输出中提取依赖列表
-        dependencies = re.findall(r'(\w+) is needed', result.stderr)
-        if not dependencies:
-            dependencies = re.findall(r'(\w+) 被', result.stderr)
+        stderr_line = result.stderr.splitlines()
+        for line in stderr_line:
+            # 从错误输出中提取依赖列表
+            dependencies = re.findall(r'([\w_-]+) is needed', result.stderr)
+            if not dependencies:
+                dependencies = re.findall(r'([\w_-]+) 被', result.stderr)
+        print(dependencies)
         if dependencies:
             print("需要安装的依赖软件包列表:")
             for dep in dependencies:
