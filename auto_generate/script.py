@@ -6,7 +6,7 @@ import argparse
 import subprocess
 
 from llm import generate_script, check_package_command, generate_markdown
-MAX_TIMES = 3
+MAX_TIMES = 2
 TEST_CASE_DIR = "generate_test_cases"
 TMP_DIR = "tmp"
 NOTE_DIR = "note.md"
@@ -48,18 +48,32 @@ def get_test_case(md_file):
     return dicts
 
 
-def get_command_info(package_name, command):
-    if command == package_name:
+def get_command_info(rpm_package_name, command):
+    if command == rpm_package_name:
         command = ""
     command_info = ""
     # 获取命令--help信息
-    result = subprocess.run([package_name, command, 'help'], capture_output=True, text=True)
-    if result.returncode != 0:
-        result = subprocess.run([package_name, command, '--help'], capture_output=True, text=True)
-    if result.stdout:
-        command_info = result.stdout
-    else:
-        command_info = result.stderr
+    rpm_package_command = [rpm_package_name]
+    if command:
+        rpm_package_command.append(command)
+    if '.sh' in rpm_package_name:
+        rpm_package_command.insert(0, 'sh')
+    try:
+        tmp_command = list(rpm_package_command)
+        tmp_command.append('help')
+        result = subprocess.run(tmp_command, capture_output=True, text=True, timeout=5)
+        if not result.stdout:
+            tmp_command = list(rpm_package_command)
+            tmp_command.append('--help')
+            result = subprocess.run(tmp_command, capture_output=True, text=True, timeout=5)
+            if not result.stdout:
+                print(f"获取软件包{rpm_package_name} {command}的help信息失败")
+            else:
+                command_info = result.stdout
+        else:
+            command_info = result.stdout
+    except Exception as e:
+        print(f"获取软件包{rpm_package_name} {command}的help信息失败：{e}")
     return command, command_info
 
 
@@ -73,6 +87,8 @@ def get_note(note_dir):
 
 
 def execute_script(package_name, rpm_package_name, command, script):
+    script_exec_result = False
+    script_exec_log = ""
     # 在./suite2cases目录下创建一个{package_name}_{command}.json的文件,作为套件
     with open(os.path.join(current_directory, SUITE_DIR, f'{package_name}_{rpm_package_name}_{command}.json'), 'w') as f:
         suite_json_template = {"path": f"$OET_PATH/{TESTCASE_DIR}/{package_name}", "cases": [{"name": f"{rpm_package_name}_{command}"}]}
@@ -80,21 +96,24 @@ def execute_script(package_name, rpm_package_name, command, script):
     # 在./testcases/package_name目录下创建一个command.sh的文件,作为测试用例
     with open(os.path.join(current_directory, TESTCASE_DIR, package_name, f'{rpm_package_name}_{command}.sh'), 'w') as f:
         f.write(script)
-    # 执行脚本
-    result = subprocess.run(
-        ['bash', 'mugen.sh', '-f', f'{package_name}_{rpm_package_name}_{command}', '-x'],
-        capture_output=True, text=True)
-    script_exec_result = True if result.returncode == 0 else False
-    script_exec_log = ""
-    # 获取logs/package_name/command下最新的日志
-    log_dir = os.path.join(current_directory, LOGS_DIR, f'{package_name}_{rpm_package_name}_{command}', f"{rpm_package_name}_{command}")
-    if os.path.exists(log_dir):
-        logs = os.listdir(log_dir)
-        if logs:
-            latest_log = max(logs, key=lambda x: os.path.getctime(os.path.join(log_dir, x)))
-            # 读取日志文件内容
-            with open(os.path.join(log_dir, latest_log), 'r') as f:
-                script_exec_log = f.read()
+    try:
+        # 执行脚本
+        result = subprocess.run(
+            ['bash', 'mugen.sh', '-f', f'{package_name}_{rpm_package_name}_{command}', '-x'],
+            capture_output=True, text=True, timeout=10)
+        print("执行测试脚本完成")
+        script_exec_result = True if result.returncode == 0 else False
+        # 获取logs/package_name/command下最新的日志
+        log_dir = os.path.join(current_directory, LOGS_DIR, f'{package_name}_{rpm_package_name}_{command}', f"{rpm_package_name}_{command}")
+        if os.path.exists(log_dir):
+            logs = os.listdir(log_dir)
+            if logs:
+                latest_log = max(logs, key=lambda x: os.path.getctime(os.path.join(log_dir, x)))
+                # 读取日志文件内容
+                with open(os.path.join(log_dir, latest_log), 'r') as f:
+                    script_exec_log = f.read()
+    except Exception as e:
+        print(f"执行测试脚本失败：{e}")
     return script_exec_result, script_exec_log
 
 
@@ -102,28 +121,35 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
     package_info = ""
     # 获取软件包help信息
     print(f"获取二进制软件包{rpm_package_name}的help信息：")
+    rpm_package_command = [rpm_package_name]
+    if '.sh' in rpm_package_name:
+        rpm_package_command = ['sh', rpm_package_name]
     try:
-        result = subprocess.run([rpm_package_name, 'help'], capture_output=True, text=True)
+        tmp_command = list(rpm_package_command)
+        tmp_command.append('help')
+        result = subprocess.run(tmp_command, capture_output=True, text=True, timeout=5)
         if result.stdout:
             package_info = result.stdout
         else:
             package_info = result.stderr
     except Exception as e:
         print(f"获取软件包{rpm_package_name}的help信息失败：{e}")
-    
-    try:
-        result = subprocess.run([rpm_package_name, '--help'], capture_output=True, text=True)
-        if result.stdout:
-            package_info = result.stdout
-        else:
-            package_info = result.stderr
-    except Exception as e:
-        print(f"获取软件包{rpm_package_name}的--help信息失败：{e}")
+    if 'usage' not in package_info or 'Usage' not in package_info:
+        try:
+            tmp_command = list(rpm_package_command)
+            tmp_command.append('--help')
+            result = subprocess.run(tmp_command, capture_output=True, text=True, timeout=5)
+            if result.stdout:
+                package_info = result.stdout
+            else:
+                package_info = result.stderr
+        except Exception as e:
+            print(f"获取软件包{rpm_package_name}的--help信息失败：{e}")
 
     if 'usage' in package_info or 'Usage' in package_info:
         print(package_info)  # 打印软件包的帮助信息
     else:
-        print(f"获取二进制软件包{rpm_package_name}的help信息失败")
+        print(f"获取二进制软件包{rpm_package_name}的信息失败")
         return []
 
     commands = check_package_command(rpm_package_name, package_info)
@@ -168,6 +194,7 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
             else:
                 history_script = script
             # 执行生成的脚本
+            print("正在执行测试脚本...")
             history_script_exec_result, history_script_exec_log = execute_script(package_name, rpm_package_name, command, script)
             print(f"第{times}次校验测试脚本{rpm_package_name}/{rpm_package_name}_{command}.sh,结果：{history_script_exec_result}")
 
