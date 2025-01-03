@@ -120,7 +120,7 @@ def execute_script(package_name, rpm_package_name, command, script):
 def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
     package_info = ""
     # 获取软件包help信息
-    print(f"获取二进制软件包{rpm_package_name}的help信息：")
+    print(f"获取二进制软件包{rpm_package_name}的信息...")
     rpm_package_command = [rpm_package_name]
     if '.sh' in rpm_package_name:
         rpm_package_command = ['sh', rpm_package_name]
@@ -133,7 +133,7 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
         else:
             package_info = result.stderr
     except Exception as e:
-        print(f"获取软件包{rpm_package_name}的help信息失败：{e}")
+        print(f"尝试获取软件包{rpm_package_name}的help信息失败：{e}")
     if 'usage' not in package_info or 'Usage' not in package_info:
         try:
             tmp_command = list(rpm_package_command)
@@ -144,9 +144,10 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
             else:
                 package_info = result.stderr
         except Exception as e:
-            print(f"获取软件包{rpm_package_name}的--help信息失败：{e}")
+            print(f"尝试获取软件包{rpm_package_name}的--help信息失败：{e}")
 
     if 'usage' in package_info or 'Usage' in package_info:
+        print(f"获取二进制软件包{rpm_package_name}的信息成功")
         print(package_info)  # 打印软件包的帮助信息
     else:
         print(f"获取二进制软件包{rpm_package_name}的信息失败")
@@ -209,94 +210,36 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
 
 
 def get_test_script(package_name):
+    print(f"开始生成测试脚本{package_name}")
     # 安装软件包
     print("正在安装软件包...")
     result = subprocess.run(['dnf', 'install', '-y', package_name], capture_output=True, text=True)
     if result.returncode != 0:
         print(f"安装软件包失败：{result.stderr}")
         return
-    # 通过软件包获取二进制包名
-    # 安装rpm
-    print("正在安装rpm包...")
-    result = subprocess.run(['dnf', 'install', '-y', 'rpm'], capture_output=True, text=True)
+    # 执行命令
+    result = subprocess.run(['rpm', '-qa'], stdout=subprocess.PIPE, text=True)
+    # 过滤结果
+    ccb_packages = [package for package in result.stdout.split('\n') if 'ccb' in package]
+    if ccb_packages:
+        print(f"已安装ccb包：{ccb_packages}")
+    else:
+        print("未安装ccb包，请参考README文档安装ccb")
+    # 使用ccb提取二进制包
+    print("正在使用ccb提取二进制包...")
+    result = subprocess.run(['ccb', 'select', 'rpms', f'repo_name={package_name}','--size=1', '-f rpms'], capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"安装rpm失败：{result.stderr}")
+        print(f"使用ccb提取二进制包失败：{result.stderr}")
         return
-    # 安装rpmdevtools
-    print("正在安装rpmdevtools...")
-    result = subprocess.run(['dnf', 'install', '-y', 'rpmdevtools'], capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"安装rpmdevtools失败：{result.stderr}")
+    ccb_json = json.loads(result.stdout)
+    if not ccb_json:
+        print(f"未找到软件包{package_name}的二进制包")
         return
-    # 获取软件源码包
-    print("正在获取软件源码包...")
-    result = subprocess.run(['yumdownloader', '--source', package_name], capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"获取软件源码包失败：{result.stderr}")
-        return
-    lines = result.stdout.splitlines()
-    src_rpm_package_name = ""
-    for line in lines:
-        # 检查行中是否包含krb5的源代码包
-        if package_name in line and '.src.rpm' in line:
-            # 获取line中krb5到.src.rpm的字符串内容
-            src_rpm_package_name = re.search(rf'{package_name}.*\.src\.rpm', line).group(0)
-
-    if not src_rpm_package_name:
-        print("未找到软件源码包")
-        return
-    print(f"找到软件源码包：{src_rpm_package_name}")
-    # 安装软件源码包
-    print("正在安装软件源码包...")
-    result = subprocess.run(['rpm', '-ivh', src_rpm_package_name], capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"安装软件源码包失败：{result.stderr}")
-        return
-    # 构建软件源码包
-    print("正在构建软件源码包...")
-    result = subprocess.run(
-        ['rpmbuild', '-ba', f"/root/rpmbuild/SPECS/{package_name}.spec"],
-        capture_output=True, text=True)
-    # 检查命令是否成功执行
-    if result.returncode != 0:
-        stderr_line = result.stderr.splitlines()
-        for line in stderr_line:
-            # 从错误输出中提取依赖列表
-            dependencies = re.findall(r'([\w_-]+) is needed', result.stderr)
-            if not dependencies:
-                dependencies = re.findall(r'([\w_-]+) 被', result.stderr)
-        print(dependencies)
-        if dependencies:
-            print("需要安装的依赖软件包列表:")
-            for dep in dependencies:
-                # 尝试安装依赖
-                dep_result = subprocess.run(['yum', 'install', '-y', dep], capture_output=True, text=True)
-                if dep_result.returncode == 0:
-                    print(f"安装依赖{dep}")
-                else:
-                    print(f"安装依赖{dep}失败：{dep_result.stderr}")
-                    return
-        # 重新构建软件源码包
-        print("重新构建软件源码包...")
-        result = subprocess.run(
-            ['rpmbuild', '-ba', f"/root/rpmbuild/SPECS/{package_name}.spec"],
-            capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"重新构建软件源码包失败：{result.stderr}")
-            return
-
-    print(f"软件源码包{package_name}构建成功")
-    # 遍历~/rpmbuild/RPMS下的架构文件夹,在遍历架构文件夹内除了debuginfo、debugsource、help之外的rpm包
     extracted_names = []
-    for arch in os.listdir("/root/rpmbuild/RPMS"):
-        for rpm in os.listdir(f"/root/rpmbuild/RPMS/{arch}"):
-            if package_name in rpm and 'debuginfo' not in rpm and 'debugsource' not in rpm and 'help' not in rpm:
-                print(f"找到软件包{package_name}的rpm包：{rpm}")
-                # 正则表达式，用于匹配文件名直到-数字之前
-                pattern = re.compile(r'(.+?)-\d+')
-                match = pattern.search(rpm)
-                if match:
-                    extracted_names.append(match.group(1))
+    for item in ccb_json[0]['_source']['rpms']:
+        if 'debugsource' not in item['name'] and 'debuginfo' not in item['name'] and 'help' not in item['name'] and item['name'] not in extracted_names:
+            extracted_names.append(item['name'])
+    print(f"提取到的二进制包名：{extracted_names}")
     # 遍历提取到的二进制包名,获取二进制命令名
     rpm_package_names = []
     # 正则表达式，用于匹配 /usr/bin/ 后面的文件名
@@ -314,6 +257,9 @@ def get_test_script(package_name):
                 if match:
                     # 将提取的文件名添加到列表中
                     rpm_package_names.append(match.group(1))
+    if not rpm_package_names:
+        print(f"未找到软件包{package_name}的二进制命令名")
+        return
     # 生成所有二进制包的测试脚本
     total_commands = []
     for rpm_package_name in rpm_package_names:
@@ -323,6 +269,9 @@ def get_test_script(package_name):
     # 在software_dir下保存{package_name}.json套件
     print("开始生成套件...")
     software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, package_name)
+    if not os.path.exists(software_dir):
+        print(f"{package_name}未生成脚本")
+        return
     with open(os.path.join(software_dir, f'{package_name}.json'), "w") as f:
         suite_json_template = {"path": f"$OET_PATH/{TESTCASE_DIR}/{package_name}", "cases": []}
         for index, command in enumerate(total_commands):
