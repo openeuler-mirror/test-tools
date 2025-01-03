@@ -16,7 +16,7 @@ class TestAddHostGroup:
         host_group.enter_host_group_magt_page()
         yield
         try:
-            group_name
+            global group_name
             host_group.delete_host_group(group_name)
             host_group.click_delete_button()
         except (NameError, TimeoutException):

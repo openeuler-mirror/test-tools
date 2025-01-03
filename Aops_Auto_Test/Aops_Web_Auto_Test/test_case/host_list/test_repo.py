@@ -11,7 +11,6 @@ class TestRepo:
     def test_set_repo(self, drivers):
         repo = WebPage(drivers)
         repo.click_element(asset['host_list'])
-        sleep(3)
         repo.click_element(asset['host_list'])
         repo_text = '''[aops-update]
     name=update
@@ -19,28 +18,8 @@ class TestRepo:
     enabled=1
     gpgcheck=1
     gpgkey=https:\/\/repo.openeuler.org\/openEuler-22.03-LTS\/OS/$basearch\/RPM-GPG-KEY-openEuler'''
-        sleep(3)
         repo.click_element(asset['add_repo'])
-        sleep(3)
         repo.input_text(asset['add_repo_name'], "20.03-LTS-SP1")
         data_input = repo.find_element(asset['add_repo_data'])
         repo.driver.execute_script("arguments[0].value='"+ repo_text +"';", data_input);
-        sleep(10)
         repo.click_element(asset['determine'])
-    #
-    # def add_repo(self, reponame, repodata):
-    #     """添加REPO"""
-    #     self.click_element(asset['add_repo'])
-    #     sleep(3)
-    #     self.input_text(asset['add_repo_name'], reponame)
-    #     self.input_text(asset['add_repo_data'], repodata)
-    #     sleep(10)
-    #     self.click_element(asset['determine'])
-    #
-    # def setup_repo_no_host(self, reponame):
-    #     """设置REPO"""
-    #     self.click_element(asset['setup_repo'])
-    #     sleep(3)
-    #     self.select_value_by_dropdown(reponame)
-    #     sleep(3)
-    #     self.click_element(asset['create_repo'])

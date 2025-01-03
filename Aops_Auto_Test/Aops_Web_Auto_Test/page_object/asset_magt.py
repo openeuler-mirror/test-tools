@@ -3,7 +3,6 @@ import math
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.page_object.base_page import WebPage
 from Aops_Web_Auto_Test.common.readelement import Element
-from Aops_Web_Auto_Test.utils.times import *
 
 asset = Element('asset_magt')
 
@@ -13,21 +12,17 @@ class AssetMagtPage(WebPage):
 
     def enter_host_magt_page(self):
         """进入主机管理菜单"""
-        if self.element_displayed(asset['host_magt_menu']):
-            sleep(5)
-            self.click_element(asset['host_magt_menu'])
-        else:
+        expanded = self.get_element_attr(asset['asset_magt_menu'], 'aria-expanded')
+        if expanded == "false":
             self.click_element(asset['asset_magt_menu'])
-            self.click_element(asset['host_magt_menu'])
+        self.click_element(asset['host_magt_menu'])
 
     def enter_host_group_magt_page(self):
         """进入主机组管理菜单"""
-        if self.element_displayed(asset['host_group_magt_menu']):
-            sleep(5)
-            self.click_element(asset['host_group_magt_menu'])
-        else:
+        expanded = self.get_element_attr(asset['asset_magt_menu'], 'aria-expanded')
+        if expanded == "false":
             self.click_element(asset['asset_magt_menu'])
-            self.click_element(asset['host_group_magt_menu'])
+        self.click_element(asset['host_group_magt_menu'])
 
     def select_cluster(self, cluster_name):
         """选择集群"""
@@ -54,17 +49,14 @@ class AssetMagtPage(WebPage):
         """批量添加主机"""
         self.click_element(asset['batch_add_host_button'])
         self.select_cluster(cluster)
-        sleep(5)
         self.upload_file(file_name)
-        sleep(10)
         self.click_element(asset['upload_file_submit'])
         self.click_element(asset['pop-up_close_button'])
-        sleep(1)
-        self.click_refresh_button()
 
     def delete_host(self, hostip):
         """删除单个主机"""
         new_loc = self.replace_locator_text(asset['delete_host'], hostip)
+        print("new_loc: ", new_loc)
         self.click_element(new_loc)
         self.find_element(asset['confirm_page'])
         self.click_delete_button()
@@ -72,7 +64,7 @@ class AssetMagtPage(WebPage):
     def get_host_info_from_table(self, hostname):
         """从列表获取host基本信息"""
         host_info = []
-        new_loc = self.replace_locator_text(asset['host_list_column'],hostname)
+        new_loc = self.replace_locator_text(asset['host_list_column'], hostname)
         loc_num = self.elements_num(new_loc)
         for i in range(2,loc_num):
             lst = list(new_loc)
@@ -85,7 +77,7 @@ class AssetMagtPage(WebPage):
     def get_host_ip_from_table(self):
         """从列表获取所有的host ip"""
         total_num_text = self.element_text(asset['total_host'])
-        total_num = int(total_num_text[3:-1])
+        total_num = int(total_num_text[2:-1])
         host_ip_list = []
         if total_num == 0:
             host_ip_list = []
@@ -122,7 +114,8 @@ class AssetMagtPage(WebPage):
         """删除主机组"""
         new_loc = self.replace_locator_text(asset['host_group_delete'], groupname)
         self.click_element(new_loc)
-
+        self.find_element(asset['confirm_page'])
+        self.click_delete_button()
 
     def view_host_in_group(self, groupname):
         """查看组内主机"""
