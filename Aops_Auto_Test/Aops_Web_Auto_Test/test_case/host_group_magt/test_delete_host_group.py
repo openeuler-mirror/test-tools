@@ -3,7 +3,6 @@ import pytest
 from Aops_Web_Auto_Test.common import createtestdata
 from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
-from Aops_Web_Auto_Test.utils.times import sleep
 
 asset = Element('asset_magt')
 
@@ -40,7 +39,6 @@ class TestDeleteHostGroup:
         group.enter_host_group_magt_page()
         group.delete_host_group(group_name)
         group.click_delete_button()
-        sleep(5)
         group_locator = group.replace_locator_text(Element('asset_magt')['group_name_column'], group_name)
         assert not group.element_displayed(group_locator)
 

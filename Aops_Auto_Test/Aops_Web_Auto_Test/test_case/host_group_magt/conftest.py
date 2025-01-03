@@ -22,7 +22,6 @@ def create_data(drivers):
     user = UserMagtPage(drivers)
     user.get_url(ini.url)
     user.user_login(ini.user, ini.password)
-    sleep(5)
     group = AssetMagtPage(drivers)
     group.enter_host_group_magt_page()
     group_list = []

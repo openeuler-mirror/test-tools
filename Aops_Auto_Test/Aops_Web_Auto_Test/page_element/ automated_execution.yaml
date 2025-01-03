@@ -1,0 +1,17 @@
+automated_execution_menu: 'xpath==//span[text()="自动化批量执行" or text()="Automated execution"]/parent::div'
+command_magt_menu: 'xpath==//span[text()="命令管理" or text()="Command Management"]/parent::li'
+script_magt_menu: 'xpath==//span[text()="脚本管理" or text()="Script Management"]/parent::li'
+new_commond: 'xpath==//span[text()="新建命令" or text()="New Command"]/ancestor::button'
+new_task: 'xpath==//span[text()="新建任务" or text()="New Task"]/ancestor::button'
+commond_name: 'id==form_item_command_name'
+timeout: 'id==form_item_timeout'
+content: 'id==form_item_content'
+task_name: 'id==form_item_task_name'
+host_group: 'id==form_item_host_group'
+batch_import_host_button: 'xpath==//span[text()="批量导入主机" or text()="Batch Import Host"]/ancestor::button'
+cancel_batch_import_host_button: 'xpath==//span[text()="取消批量导入" or text()="Cancel Batch Import"]/ancestor::button'
+
+
+
+
+

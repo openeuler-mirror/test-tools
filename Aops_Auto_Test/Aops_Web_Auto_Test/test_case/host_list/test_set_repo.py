@@ -1,7 +1,6 @@
 # -*-coding:utf-8-*-
 import pytest
 from Aops_Web_Auto_Test.page_object.cve_magt import HoleMagtPage
-from Aops_Web_Auto_Test.utils.times import *
 
 
 class TestSetRepo:
@@ -10,7 +9,6 @@ class TestSetRepo:
         hole = HoleMagtPage(drivers)
         hole.enter_host_list_page()
         hole.setup_repo_no_host('nohost', '22.03-LTS')
-        sleep(2)
         hole.view_task()
         assert "REPO设置任务nohost" in hole.get_source
         hole.delete_task()
@@ -20,7 +18,6 @@ class TestSetRepo:
         hole = HoleMagtPage(drivers)
         hole.enter_host_list_page()
         hole.setup_repo_one_host('onehost', '22.03-LTS')
-        sleep(6)
         hole.view_task()
         assert "REPO设置任务onehost" in hole.get_source
         assert "为以下1个主机设置Repo" in hole.get_source

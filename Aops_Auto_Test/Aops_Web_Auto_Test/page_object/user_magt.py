@@ -1,6 +1,5 @@
 # -*-coding:utf-8-*-
-import logging
-
+from selenium.common import TimeoutException
 from Aops_Web_Auto_Test.common.readconfig import ini
 from Aops_Web_Auto_Test.page_object.base_page import WebPage
 from Aops_Web_Auto_Test.common.readelement import Element
@@ -11,10 +10,26 @@ user = Element('user_magt')
 
 class UserMagtPage(WebPage):
 
+    def login_page(self):
+        """
+        登录页面
+        Returns:
+
+        """
+        return self.element_displayed(user['login'])
+
     def user_login(self, username, password):
-        """用户登录"""
-        sleep(2)
+        """
+        用户登录
+        Args:
+            username:
+            password:
+
+        Returns:
+
+        """
         try:
+            self.login_page()
             self.input_text(user['username'], username)
             self.input_text(user['password'], password)
             self.click_element(user['login'])
@@ -22,16 +37,32 @@ class UserMagtPage(WebPage):
             print('登录失败： ', e)
 
     def user_logout(self, username):
-        """退出登录"""
-        self.new_user = self.replace_locator_text(user['user'], username)
-        sleep(2)
-        self.click_element(self.new_user)
+        """
+        Logout
+        Args:
+            username:
+
+        Returns:
+
+        """
+        new_user = self.replace_locator_text(user['user'], username)
+        self.click_element(new_user)
         self.click_element(user['logout'])
         self.find_element(user['info_windows'])
         self.click_confirm_button()
 
     def user_register(self, username, password, confirm_password, email):
-        """注册用户"""
+        """
+        Register user
+        Args:
+            username:
+            password:
+            confirm_password:
+            email:
+
+        Returns:
+
+        """
         try:
             self.click_element_by_javascripts(user['register_now'])
         except:
@@ -45,23 +76,86 @@ class UserMagtPage(WebPage):
         self.click_element(user['register'])
         return self.globals_username, password
 
+    def get_user_element(self, username):
+        """
+        Get user name from board
+        Args:
+            username:
+
+        Returns:
+
+        """
+        return self.replace_locator_text(user['user'], username)
+
     def user_password_modify(self, username, current_password, new_password, confirm_password):
-        """修改用户密码"""
-        self.new_user = self.replace_locator_text(user['user'], username)
-        sleep(10)
-        self.click_element(self.new_user)
+        """
+        Modify user password
+        Args:
+            username:
+            current_password:
+            new_password:
+            confirm_password:
+
+        Returns:
+
+        """
+        new_user = self.replace_locator_text(user['user'], username)
+        self.click_element(new_user)
         self.click_element(user['modify_password'])
         self.input_text(user['current_password'], current_password)
         self.input_text(user['new_password'], new_password)
         self.input_text(user['confirm_password'], confirm_password)
 
     def close_welcome_tips(self):
-        """关闭提醒窗口"""
+        """
+        Close notice
+        Returns:
+
+        """
         self.click_element(user['notice_close'])
 
     def get_notification_text(self):
-        text = self.element_text(user['notification_content'])
-        logging.info("获取notice的文本：{}".format(text))
-        return text
+        """
+        Get notice text
+        Returns:
+
+        """
+        try:
+            return self.element_text(user['notification_content'])
+        except TimeoutException as e:
+            print("获取文本超时： ", e)
+
+    def get_username_error_message(self):
+        """
+        注册用户页面，获取用户字段的错误信息
+        Returns:
+
+        """
+        return self.element_text(user['username_error_message'])
+
+    def get_psd_error_message(self):
+        """
+        注册用户页面，获取密码的错误信息
+        Returns:
+
+        """
+        return self.element_text(user['psd_error_message'])
+
+    def get_confirm_psd_error_message(self):
+        """
+        注册用户页面，获取确认密码的错误信息
+        Returns:
+
+        """
+        return self.element_text(user['confirm_psd_error_message'])
+
+    def get_email_error_message(self):
+        """
+        注册用户页面，获取邮箱的错误信息
+        Returns:
+
+        """
+        return self.element_text(user['email_error_message'])
+
 
 

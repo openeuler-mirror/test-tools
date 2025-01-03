@@ -20,8 +20,8 @@ class WebPage(object):
     def __init__(self, driver):
         self.driver = driver
         self.log = my_log()
-        self.timeout = 20
-        self.wait = WebDriverWait(self.driver, self.timeout)
+        self.timeout = 30
+        self.wait = WebDriverWait(self.driver, self.timeout, 0.1)
 
     def get_url(self, url):
         """打开网址并验证"""
@@ -44,14 +44,18 @@ class WebPage(object):
     def replace_locator_text(locator,value):
         """替换元素值"""
         lst = list(locator)
-        lst[1] = lst[1].replace('****',value)
+        lst[1] = lst[1].replace('****', value)
         locator = tuple(lst)
         return locator
 
     def find_element(self, locator):
         """寻找单个元素"""
-        return WebPage.element_locator(lambda *args: self.wait.until(
-            EC.presence_of_element_located(args)), locator)
+        try:
+            return WebPage.element_locator(lambda *args: self.wait.until(
+                EC.presence_of_element_located(args)), locator)
+        except TimeoutException:
+            print("元素未找到！")
+            return None
 
     def find_elements(self, locator):
         """查找多个相同的元素"""
@@ -61,11 +65,11 @@ class WebPage(object):
     def element_displayed(self, locator):
         """元素是否可见"""
         try:
-            WebPage.element_locator(lambda *args: self.wait.until(
+            return WebPage.element_locator(lambda *args: self.wait.until(
                 EC.visibility_of_element_located(args)), locator)
-            return True
         except TimeoutException:
-            return False
+            print("元素不可见！")
+            return None
 
     def elements_num(self, locator):
         """获取相同元素的个数"""
@@ -76,6 +80,7 @@ class WebPage(object):
     def input_text(self, locator, txt):
         """输入(输入前先清空)"""
         ele = self.find_element(locator)
+        # ele.clear()
         ele.send_keys(txt)
         self.log.info("输入文本：{}".format(txt))
 
@@ -92,9 +97,12 @@ class WebPage(object):
 
     def element_text(self, locator):
         """获取元素text"""
-        _text = self.find_element(locator).text
-        self.log.info("获取文本：{}".format(_text))
-        return _text
+        try:
+            _text = self.element_displayed(locator).text
+            self.log.info("获取文本：{}".format(_text))
+            return _text
+        except TimeoutException:
+            print("文本获取失败")
 
     def get_notice_text(self):
         """获取当前notice的text"""
@@ -104,7 +112,6 @@ class WebPage(object):
 
     def get_top_right_notice_text(self):
         """获取系统右上角弹出notice的text"""
-        sleep(3)
         _text = self.element_text(base_page['top_right_notice'])
         self.log.info("获取系统notice的文本：{}".format(_text))
         return _text
@@ -154,6 +161,7 @@ class WebPage(object):
                 df = pd.read_csv(file_path)
             else:
                 raise ValueError(f"不支持的文件类型: {file_path}")
+            print("df: ", df)
             return df
         except FileNotFoundError:
             raise FileNotFoundError(f"文件未找到: {file_path}")
@@ -162,7 +170,7 @@ class WebPage(object):
 
     def get_element_attr(self, locator, attr):
         """获取元素属性值"""
-        return self.find_element(locator).get_attribute(attr)
+        return self.element_displayed(locator).get_attribute(attr)
 
     def click_cancel_button(self):
         """点击取消按钮"""
@@ -192,6 +200,13 @@ class WebPage(object):
             self.select_checkbox_from_table(value)
         self.click_element(base_page['batch_delete'])
         self.click_element(base_page['delete_confirm'])
+
+    def page_resoure_load_complete(self):
+        finished_loading = self.driver.execute_script("return document.readyState == 'complete'")
+        if finished_loading:
+            print("页面资源加载完成")
+        else:
+            print("页面资源可能还在加载中")
 
 
 

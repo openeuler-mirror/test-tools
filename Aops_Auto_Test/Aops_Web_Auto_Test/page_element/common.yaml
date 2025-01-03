@@ -3,7 +3,7 @@ dropdown_value: 'xpath==//div[@class="ant-select-item-option-content" and text()
 notice: 'xpath==//div[@class="ant-message-notice-content"]//span[2]'
 notice_close: 'class==ant-notification-notice-close'
 top_right_notice: 'xpath==//div[@class="ant-notification-notice-description"]'
-redio_button: 'xpath==//span[text()=" **** "]'
+redio_button: 'xpath==//span[text()="****"]'
 select_file_button: 'xpath==//input[@type="file"]'
 cancel: 'xpath==//div[contains(@class,"ant-modal")  and not(contains(@style,"display: none")) and contains(@role,"document")]//span[text()="取 消"]/parent::button'
 delete: 'xpath==//span[text()="删 除"]/parent::button'
