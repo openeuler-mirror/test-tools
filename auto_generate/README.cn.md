@@ -35,8 +35,24 @@ LLM_URL=http://xxx.xxx.xxx.xxx:8008/v1
 LLM_KEY=none
 LLM_MODEL_NAME=Qwen2.5-14B-Instruct
 ```
+### 2.2 安装ccb
+参考以下链接，安装ccb，ccb可以帮助检索软件包的二进制包
+https://gitee.com/openeuler/docs/blob/stable2-22.03_LTS_SP2/docs/zh/docs/EulerMaker/EulerMaker%E7%94%A8%E6%88%B7%E6%8C%87%E5%8D%97.md#5%E5%9F%BA%E4%BA%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BF%9B%E8%A1%8C%E6%9E%84%E5%BB%BA
 
-### 2.2 配置tmp
+安装ccb过程中，可能出现的问题：
+报错1：
+<internal:/usr/share/rubygems/rubygems/core_ext/kernel_require.rb>:85:in `require': cannot load such file -- rest-client (LoadError)
+解决方法1：
+gem uninstall securerandom 卸载掉0.4.*版本的securerandom
+gem install -f securerandom:0.3.2 安装0.3.2版本的securerandom
+
+报错2：
+/usr/libexec/ccb-1.0/sbin/cli/ccb_common.rb:147:in `load_jwt?': undefined method `strip' for nil:NilClass (NoMethodError)
+解决方法2：
+vi ~/.config/cli/defaults/config.yaml 在以下两个配置随便填写一个账号密码，保证不为空即可
+ACCOUNT: 
+PASSWORD:
+### 2.3 配置tmp
 
 在auto_gerenate目录下，配置tmp目录，其中包括测试脚本执行时环境中已有的数据，common下通常是软件包测试脚本需要的文件，note.md是对环境信息的描述，可以让大模型知道环境中有哪些已准备好的文件，可以改善生成脚本的准确度
 例如assimp测试时：
@@ -54,7 +70,7 @@ note.md
 环境中已存在common/test.obj.tar,解压后是一个test/1.obj的文件
 ```
 
-### 2.3 命令
+### 2.4 命令
 
 ```
 python auto_generate/script.py -m=[mode] -n=[package_name]
