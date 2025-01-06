@@ -91,7 +91,8 @@ def execute_script(package_name, rpm_package_name, command, script):
     script_exec_log = ""
     # 在./suite2cases目录下创建一个{package_name}_{command}.json的文件,作为套件
     with open(os.path.join(current_directory, SUITE_DIR, f'{package_name}_{rpm_package_name}_{command}.json'), 'w') as f:
-        suite_json_template = {"path": f"$OET_PATH/{TESTCASE_DIR}/{package_name}", "cases": [{"name": f"{rpm_package_name}_{command}"}]}
+        suite_json_template = {"path": f"$OET_PATH/{TESTCASE_DIR}/{package_name}",
+                               "cases": [{"name": f"{rpm_package_name}_{command}"}]}
         f.write(json.dumps(suite_json_template, indent=4))
     # 在./testcases/package_name目录下创建一个command.sh的文件,作为测试用例
     with open(os.path.join(current_directory, TESTCASE_DIR, package_name, f'{rpm_package_name}_{command}.sh'), 'w') as f:
@@ -104,7 +105,9 @@ def execute_script(package_name, rpm_package_name, command, script):
         print("执行测试脚本完成")
         script_exec_result = True if result.returncode == 0 else False
         # 获取logs/package_name/command下最新的日志
-        log_dir = os.path.join(current_directory, LOGS_DIR, f'{package_name}_{rpm_package_name}_{command}', f"{rpm_package_name}_{command}")
+        log_dir = os.path.join(
+            current_directory, LOGS_DIR, f'{package_name}_{rpm_package_name}_{command}',
+            f"{rpm_package_name}_{command}")
         if os.path.exists(log_dir):
             logs = os.listdir(log_dir)
             if logs:
@@ -196,7 +199,8 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
                 history_script = script
             # 执行生成的脚本
             print("正在执行测试脚本...")
-            history_script_exec_result, history_script_exec_log = execute_script(package_name, rpm_package_name, command, script)
+            history_script_exec_result, history_script_exec_log = execute_script(
+                package_name, rpm_package_name, command, script)
             print(f"第{times}次校验测试脚本{rpm_package_name}/{rpm_package_name}_{command}.sh,结果：{history_script_exec_result}")
 
         # 在software_dir下保存{command}.sh
@@ -208,6 +212,14 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
     return result_commands
 
 
+def uninstall_package(package_name):
+    print(f"开始卸载软件包{package_name}")
+    result = subprocess.run(['dnf', 'remove', '-y', package_name], capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"卸载软件包失败：{result.stderr}")
+        return
+    print(f"卸载软件包{package_name}成功")
+
 
 def get_test_script(package_name):
     print(f"开始生成测试脚本{package_name}")
@@ -216,6 +228,7 @@ def get_test_script(package_name):
     result = subprocess.run(['dnf', 'install', '-y', package_name], capture_output=True, text=True)
     if result.returncode != 0:
         print(f"安装软件包失败：{result.stderr}")
+        uninstall_package(package_name)
         return
     # 执行命令
     result = subprocess.run(['rpm', '-qa'], stdout=subprocess.PIPE, text=True)
@@ -227,13 +240,17 @@ def get_test_script(package_name):
         print("未安装ccb包，请参考README文档安装ccb")
     # 使用ccb提取二进制包
     print("正在使用ccb提取二进制包...")
-    result = subprocess.run(['ccb', 'select', 'rpms', f'repo_name={package_name}','--size=1', '-f rpms'], capture_output=True, text=True)
+    result = subprocess.run(
+        ['ccb', 'select', 'rpms', f'repo_name={package_name}', '--size=1', '-f rpms'],
+        capture_output=True, text=True)
     if result.returncode != 0:
         print(f"使用ccb提取二进制包失败：{result.stderr}")
+        uninstall_package(package_name)
         return
     ccb_json = json.loads(result.stdout)
     if not ccb_json:
         print(f"未找到软件包{package_name}的二进制包")
+        uninstall_package(package_name)
         return
     extracted_names = []
     for item in ccb_json[0]['_source']['rpms']:
@@ -259,6 +276,7 @@ def get_test_script(package_name):
                     rpm_package_names.append(match.group(1))
     if not rpm_package_names:
         print(f"未找到软件包{package_name}的二进制命令名")
+        uninstall_package(package_name)
         return
     # 生成所有二进制包的测试脚本
     total_commands = []
@@ -271,6 +289,7 @@ def get_test_script(package_name):
     software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, package_name)
     if not os.path.exists(software_dir):
         print(f"{package_name}未生成脚本")
+        uninstall_package(package_name)
         return
     with open(os.path.join(software_dir, f'{package_name}.json'), "w") as f:
         suite_json_template = {"path": f"$OET_PATH/{TESTCASE_DIR}/{package_name}", "cases": []}
@@ -280,6 +299,8 @@ def get_test_script(package_name):
             suite_json_template["cases"].append({"name": f"{command}"})
         json.dump(suite_json_template, f, indent=4)
         print(f"生成{package_name}.json套件")
+    uninstall_package(package_name)
+
 
 def get_test_script_md(package_name):
     # 读取software_dir下的.sh文件
