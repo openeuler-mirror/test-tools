@@ -10,11 +10,26 @@ user = Element('user_magt')
 
 
 class UserMagtPage(WebPage):
+    def login_page(self):
+        """
+        登录页面
+        Returns:
+
+        """
+        return self.element_displayed(user['login'])
 
     def user_login(self, username, password):
-        """用户登录"""
-        sleep(2)
+        """
+        用户登录
+        Args:
+            username:
+            password:
+
+        Returns:
+
+        """
         try:
+            self.login_page()
             self.input_text(user['username'], username)
             self.input_text(user['password'], password)
             self.click_element(user['login'])
