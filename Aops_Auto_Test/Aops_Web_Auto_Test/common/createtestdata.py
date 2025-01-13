@@ -34,3 +34,9 @@ def host_port():
     """随机生成一个0~65535 内正整数"""
     port = random.randint(0, 65535)
     return port
+
+
+def create_new_name(src_name):
+    """生成任意名称+时间戳"""
+    new_name = src_name + str(dt_strftime('%H%M%S'))
+    return new_name
