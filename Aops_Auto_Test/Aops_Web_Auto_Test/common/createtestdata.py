@@ -40,3 +40,21 @@ def create_new_name(src_name):
     """生成任意名称+时间戳"""
     new_name = src_name + str(dt_strftime('%H%M%S'))
     return new_name
+
+
+def command_name():
+    """生成命令名称，command+时间戳"""
+    commandname = 'command' + str(dt_strftime('%H%M%S'))
+    return commandname
+
+def command_timeout():
+    """随机生成一个 1~86400 内正整数"""
+    timeout = random.randint(1, 86400)
+    return timeout
+
+def command_content():
+    """生成命令内容，由 65535个以内 的任意字符和数字组成"""
+    length = random.randint(1, 999)
+    characters = string.ascii_letters + string.digits + ''.join(set(string.punctuation) - set("><"))
+    commandcontent = ''.join(random.choices(characters, k=length))
+    return commandcontent
