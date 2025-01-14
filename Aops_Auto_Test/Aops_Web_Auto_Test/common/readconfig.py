@@ -1,9 +1,12 @@
 import configparser
+from configparser import NoSectionError, NoOptionError
+
 from Aops_Web_Auto_Test.config.conf import cm
 
 HOST = 'HOST'
 USER = 'USER'
 PASSWORD = 'PASSWORD'
+CHROME_DRIVER = 'CHROME_DRIVER'
 
 
 class ReadConfig(object):
@@ -34,6 +37,13 @@ class ReadConfig(object):
     @property
     def password(self):
         return self._get(PASSWORD, PASSWORD)
+
+    @property
+    def chrome_driver(self):
+        try:
+            return self._get(CHROME_DRIVER, CHROME_DRIVER)
+        except (NoSectionError, NoOptionError):
+            return None
 
 
 ini = ReadConfig()

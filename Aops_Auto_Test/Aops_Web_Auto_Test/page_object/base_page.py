@@ -53,7 +53,7 @@ class WebPage(object):
             return WebPage.element_locator(lambda *args: self.wait.until(
                 EC.presence_of_element_located(args)), locator)
         except TimeoutException:
-            print("元素未找到！")
+            print(f"元素未找到！{locator}")
             return None
 
     def find_elements(self, locator):

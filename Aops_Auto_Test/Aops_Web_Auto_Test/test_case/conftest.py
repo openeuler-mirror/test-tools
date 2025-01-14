@@ -1,5 +1,9 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+
+from Aops_Web_Auto_Test.common.readconfig import ini
+
 driver = None
 
 
@@ -10,7 +14,11 @@ def drivers(request):
     if driver is None:
         option = webdriver.ChromeOptions()
         option.add_argument('no-sandbox')
-        driver = webdriver.Chrome(options=option)
+        if ini.chrome_driver:
+            service = Service(executable_path=ini.chrome_driver)
+            driver = webdriver.Chrome(service=service, options=option)
+        else:
+            driver = webdriver.Chrome(options=option)
         driver.maximize_window()
 
     def fn():
@@ -18,4 +26,3 @@ def drivers(request):
 
     request.addfinalizer(fn)
     return driver
-
