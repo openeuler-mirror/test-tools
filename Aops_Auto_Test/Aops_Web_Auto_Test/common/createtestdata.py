@@ -58,3 +58,8 @@ def command_content():
     characters = string.ascii_letters + string.digits + ''.join(set(string.punctuation) - set("><"))
     commandcontent = ''.join(random.choices(characters, k=length))
     return commandcontent
+
+
+def correct_operation_name(min_len=5, max_len=60) -> str:
+    cs = string.ascii_letters + string.digits + '_'
+    return ''.join(random.choices(cs, k=random.randint(min_len, max_len)))
