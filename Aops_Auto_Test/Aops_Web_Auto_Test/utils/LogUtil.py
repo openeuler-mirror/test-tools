@@ -36,6 +36,7 @@ class Logger:
 
 
 log_path = cm.LOG_PATH
+if not os.path.exists(log_path): os.mkdir(log_path)
 current_time = datetime.datetime.now().strftime("%Y-%m-%d")
 logname = os.path.join(log_path, '%s.log' % dt_strftime('%Y-%m-%d-%H-%M-%S'))
 
