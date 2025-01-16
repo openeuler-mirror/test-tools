@@ -95,3 +95,9 @@ def task_desc():
     random_string = ''.join(random.choices(characters, k=length))
     task_desc = 'desc' + random_string
     return task_desc
+
+
+def test_script_name(length=10):
+    characters = string.ascii_letters
+    data = ''.join(random.choice(characters) for _ in range(length))
+    return data
