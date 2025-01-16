@@ -6,15 +6,25 @@ from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 
 class TestDeleteHost:
 
-    @pytest.fixture(autouse=True)
-    def host(self, drivers, add_host_group):
+    @pytest.fixture(scope='class', autouse=True)
+    def add_host_group(self, drivers):
+        """添加主机组"""
         host = AssetMagtPage(drivers)
-        host.enter_host_magt_page()
+        global host_ip
+        global host_group
+        host_group = createtestdata.group()
         host_name = createtestdata.host_name()
         port = createtestdata.host_port()
-        global host_ip
         host_ip = createtestdata.host_ip()
-        host.add_host(host_name, 'local-cluster', add_host_group, host_ip, port, '监控节点', 'root', 'openEuler12#$')
+        host.enter_host_group_magt_page()
+        host.add_host_group('local-cluster', host_group, 'group description')
+        host.enter_host_magt_page()
+        host.add_host(host_name, 'local-cluster', host_group, host_ip, port, '监控节点', 'root', 'openEuler12#$')
+        assert host.get_host_info_from_table(host_ip)
+        yield host_group, host_ip
+        host.refresh()
+        host.enter_host_group_magt_page()
+        host.delete_host_group(host_group)
 
     def test_delete_host_001_valid_data(self, drivers):
         """删除存在的主机"""

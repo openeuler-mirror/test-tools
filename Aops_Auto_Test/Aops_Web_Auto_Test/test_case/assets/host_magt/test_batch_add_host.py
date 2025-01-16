@@ -1,27 +1,32 @@
 # -*-coding:utf-8-*-
 import pytest
-from Aops_Web_Auto_Test.utils.times import sleep
 from Aops_Web_Auto_Test.page_object.asset_magt import AssetMagtPage
 
 
 class TestBatchAddHost:
 
-    @pytest.fixture(autouse=True)
-    def delete_host(self, drivers):
+    @pytest.fixture(scope='class', autouse=True)
+    def setup_and_teardown(self, drivers):
+        """添加主机组"""
         host = AssetMagtPage(drivers)
+        host.enter_host_group_magt_page()
+        host.add_host_group('local-cluster', 'batch_group', 'group description')
         yield
         excel = host.get_host_ip_from_excel("template.csv")
         for host_ip in excel:
-            sleep(10)
+            host.refresh()
             host.delete_host(host_ip)
+        host.refresh()
+        host.enter_host_group_magt_page()
+        host.delete_host_group('batch_group')
 
     def test_batch_add_host_01_valid_data(self, drivers):
         """批量添加有效主机"""
         host = AssetMagtPage(drivers)
         host.enter_host_magt_page()
         host.batch_add_host("local-cluster", "template.csv")
-        sleep(2)
         excel = host.get_host_ip_from_excel("template.csv")
+        host.refresh()
         table_value = host.get_host_ip_from_table()
         for item in excel:
             assert item in table_value

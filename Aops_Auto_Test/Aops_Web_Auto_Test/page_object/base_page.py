@@ -1,12 +1,15 @@
 # -*-coding:utf-8-*-
 
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException, \
+    ElementNotInteractableException
 from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.utils.LogUtil import my_log
 import pandas as pd
+
 
 
 base_page = Element('common')
@@ -18,8 +21,8 @@ class WebPage(object):
 
     def __init__(self, driver):
         self.driver = driver
-        self.log = my_log()
-        self.timeout = 30
+        self.log= my_log()
+        self.timeout = 10
         self.wait = WebDriverWait(self.driver, self.timeout, 0.1)
 
     def get_url(self, url):
@@ -30,6 +33,7 @@ class WebPage(object):
             self.driver.get(url)
             self.driver.implicitly_wait(10)
             self.log.info("打开网页：%s" % url)
+            # self.log.info("打开网页：%s" % url)
         except TimeoutException:
             raise TimeoutException("打开%s失败" % url)
 
@@ -40,7 +44,7 @@ class WebPage(object):
         return func(cm.LOCATE_MODE[name], value)
 
     @staticmethod
-    def replace_locator_text(locator,value):
+    def replace_locator_text(locator, value):
         """替换元素值"""
         lst = list(locator)
         lst[1] = lst[1].replace('****', value)
@@ -53,7 +57,16 @@ class WebPage(object):
             return WebPage.element_locator(lambda *args: self.wait.until(
                 EC.presence_of_element_located(args)), locator)
         except TimeoutException:
-            print(f"元素未找到！{locator}")
+            print(f"{locator} 元素未找到！")
+            return None
+
+    def element_clickable(self, locator):
+        """元素可点击"""
+        try:
+            return WebPage.element_locator(lambda *args: self.wait.until(
+                EC.element_to_be_clickable(args)), locator)
+        except TimeoutException:
+            print(f"{locator} 元素不可点击！")
             return None
 
     def find_elements(self, locator):
@@ -62,12 +75,21 @@ class WebPage(object):
             EC.presence_of_all_elements_located(args)), locator)
 
     def element_displayed(self, locator):
-        """元素是否可见"""
+        """元素可见"""
         try:
             return WebPage.element_locator(lambda *args: self.wait.until(
                 EC.visibility_of_element_located(args)), locator)
         except TimeoutException:
-            print("元素不可见！")
+            print(f"等待{locator} 元素变为可见超时")
+            return None
+
+    def element_invisibility(self, locator):
+        """元素不可见"""
+        try:
+            return WebPage.element_locator(lambda *args: self.wait.until(
+                EC.invisibility_of_element_located(args)), locator)
+        except TimeoutException:
+            print(f"等待{locator} 元素变为不可见超时")
             return None
 
     def elements_num(self, locator):
@@ -79,14 +101,37 @@ class WebPage(object):
     def input_text(self, locator, txt):
         """输入(输入前先清空)"""
         ele = self.find_element(locator)
-        # ele.clear()
+        #ele.clear()
         ele.send_keys(txt)
-        self.log.info("输入文本：{}".format(txt))
+        self.log.info("在{}中输入文本：{}".format(locator, txt))
 
     def click_element(self, locator):
         """点击元素"""
-        self.find_element(locator).click()
-        self.log.info("点击元素：{}".format(locator))
+
+        try:
+            element = self.find_element(locator)
+            element.click()
+            return True
+        except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
+            pass
+
+        try:
+            element = self.element_clickable(locator)
+            self.driver.execute_script("arguments[0].click();", element)
+            return True
+        except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
+            pass
+
+        try:
+            element = self.element_clickable(locator)
+            actions = ActionChains()
+            actions.move_to_element(element).click().perform()
+            return True
+        except (
+        NoSuchElementException, StaleElementReferenceException, ElementNotInteractableException, TimeoutException):
+            pass
+
+        raise ElementNotInteractableException(f"无法点击元素：{locator}")
 
     def click_element_by_javascripts(self, locator):
         """通过java_scripts点击元素"""
@@ -160,7 +205,6 @@ class WebPage(object):
                 df = pd.read_csv(file_path)
             else:
                 raise ValueError(f"不支持的文件类型: {file_path}")
-            print("df: ", df)
             return df
         except FileNotFoundError:
             raise FileNotFoundError(f"文件未找到: {file_path}")
@@ -184,7 +228,7 @@ class WebPage(object):
         self.click_element(base_page['refresh'])
 
     def click_confirm_button(self):
-        """点击确认按钮"""
+        """点击确定按钮"""
         self.click_element(base_page['confirm'])
         self.log.info("点击确定按钮： {}".format(base_page['confirm']))
 
@@ -207,12 +251,53 @@ class WebPage(object):
         else:
             print("页面资源可能还在加载中")
 
-    def element_invisibility(self, locator):
-        """元素不可见"""
+    def count_table_rows(self):
+        """计算表格的行数"""
+        return self.elements_num(base_page["tr"])
+
+    def has_next_page(self):
+        """检查是否还有下一页"""
         try:
-            return WebPage.element_locator(lambda *args: self.wait.until(
-                EC.invisibility_of_element_located(args)), locator)
+            return self.find_element(base_page["next_page"])
         except TimeoutException:
-            print(f"等待{locator} 元素变为不可见超时")
-            return None
+            return False
+
+    def get_total_table_rows(self):
+        """获取分页表格的总行数"""
+        total_rows = 0
+        total_rows += self.count_table_rows()
+        while self.has_next_page():
+            self.click_element(base_page["next_page"])
+            self.find_element(base_page["table"])
+            total_rows += self.count_table_rows()
+        print("列表总计： ", total_rows)
+        return total_rows
+
+    def click_close_button(self):
+        """
+        Click "X" button in page
+        Returns:
+
+        """
+        self.click_element(base_page["close_button"])
+
+    def select_cluster(self, cluster_name):
+        """选择集群"""
+        self.select_value_by_dropdown(base_page["cluster"], cluster_name)
+
+    def get_item_explain_error(self, item):
+        """
+        获取字段校验结果
+        Args:
+            item:
+
+        Returns:
+
+        """
+
+        new_loc = self.replace_locator_text(base_page['error_info'], item)
+        return self.element_text(new_loc)
+
+
+
 

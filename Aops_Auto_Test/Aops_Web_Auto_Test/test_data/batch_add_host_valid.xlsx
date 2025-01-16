@@ -1,3 +1,0 @@
-host_ip	ssh_port	ssh_user	password	ssh_pkey	host_name	host_group_name	management
-127.0.0.2	22	root	openEuler12#$		batch_host1	batch_group	FALSE
-127.0.0.3	23	root	openEuler12#$		batch_host2	batch_group	FALSE

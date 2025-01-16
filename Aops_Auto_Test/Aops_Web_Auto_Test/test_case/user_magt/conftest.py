@@ -2,12 +2,11 @@ import pytest
 from Aops_Web_Auto_Test.common.readconfig import ini
 from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.page_object.user_magt import UserMagtPage
-from Aops_Web_Auto_Test.utils.times import sleep
 
 login = Element('common')
 
 
-@pytest.fixture(scope='class', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def open_aops(drivers):
     """访问A-Ops网址"""
     user = UserMagtPage(drivers)
@@ -19,8 +18,6 @@ def register_user(drivers):
     """注册用户"""
     user = UserMagtPage(drivers)
     return user.user_register('test', '123456', '123456', 'test@163.com')
-    # assert '欢迎来到A-Ops系统' in user.get_source
-
 
 
 @pytest.fixture(scope='function', autouse=False)
@@ -28,28 +25,25 @@ def login_aops(drivers):
     """登录"""
     user = UserMagtPage(drivers)
     user.user_login(ini.user, ini.password)
-    sleep(5)
-    assert ini.user in user.get_source
+    assert user.get_user_element(ini.user)
 
 
 @pytest.fixture(scope='function', autouse=False)
-def logout(drivers, register_user):
-    yield
-    sleep(5)
+def logout(drivers,register_user):
     user = UserMagtPage(drivers)
-    user.user_logout(register_user[0])
+    username = register_user[0]
+    yield username
+    user.user_logout(username)
 
 
-# @pytest.fixture(scope='class', autouse=False)
-# def create_user(drivers):
-#     """注册用户"""
-#     user = UserMagtPage(drivers)
-#     user.user_register('test', ini.password, ini.password, 'test@163.com')
-#     sleep(5)
-#     user.user_login(globals_username, ini.password)
-#     sleep(5)
-#     print("---user.globals_username---: ", globals_username)
-#     assert globals_username in user.get_source
+
+@pytest.fixture(scope='function', autouse=False)
+def default_logout(drivers):
+    user = UserMagtPage(drivers)
+    yield
+    user.user_logout(ini.user)
+
+
 
 @pytest.fixture(scope='function', autouse=False)
 def close_change_psd_page(drivers):
@@ -57,6 +51,14 @@ def close_change_psd_page(drivers):
     yield
     user = UserMagtPage(drivers)
     user.click_element(login["cancel"])
+
+
+@pytest.fixture(scope='function', autouse=False)
+def reload_page(drivers):
+    """刷新页面"""
+    yield
+    user = UserMagtPage(drivers)
+    user.refresh()
 
 
 

@@ -7,7 +7,7 @@ from Aops_Web_Auto_Test.common.readconfig import ini
 driver = None
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope='session', autouse=True)
 def drivers(request):
 
     global driver
