@@ -298,6 +298,18 @@ class WebPage(object):
         new_loc = self.replace_locator_text(base_page['error_info'], item)
         return self.element_text(new_loc)
 
+    def element_is_editable(self, locator):
+        """元素是否可点击"""
+        try:
+            return WebPage.element_locator(lambda *args: self.wait.until(
+                EC.element_to_be_clickable(args)), locator)
+        except TimeoutException:
+            print(f"等待{locator} 元素不可点击")
+            return None
 
-
-
+    def clear_before_input_text(self, locator, txt):
+        """输入(输入前先清空)"""
+        ele = self.find_element(locator)
+        ele.clear()
+        ele.send_keys(txt)
+        self.log.info("输入文本：{}".format(txt))
