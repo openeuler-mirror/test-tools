@@ -42,22 +42,18 @@ def create_new_name(src_name):
     return new_name
 
 
-def command_name():
-    """生成命令名称，command+时间戳"""
-    commandname = 'command' + str(dt_strftime('%H%M%S'))
-    return commandname
+def generate_random_number(m, n):
+    """随机生成一个m~n之间的正整数"""
+    random_number = random.randint(m, n)
+    return random_number
 
-def command_timeout():
-    """随机生成一个 1~86400 内正整数"""
-    timeout = random.randint(1, 86400)
-    return timeout
 
-def command_content():
-    """生成命令内容，由 65535个以内 的任意字符和数字组成"""
-    length = random.randint(1, 999)
+def generate_content(n):
+    """随机生成内容，由1-n之间(n默认为65535)任意个字符和数字组成"""
+    length = random.randint(1, n)
     characters = string.ascii_letters + string.digits + ''.join(set(string.punctuation) - set("><"))
-    commandcontent = ''.join(random.choices(characters, k=length))
-    return commandcontent
+    content = ''.join(random.choices(characters, k=length))
+    return content
 
 
 def correct_operation_name(min_len=5, max_len=60) -> str:
