@@ -1,8 +1,15 @@
+"""
+operation management page objects
+"""
+from typing import List, Tuple, Union
+
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import ElementClickInterceptedException
 
+from Aops_Web_Auto_Test.common.createtestdata import correct_operation_name
 from Aops_Web_Auto_Test.common.readelement import Element
-from Aops_Web_Auto_Test.page_object.base_page import WebPage
+from Aops_Web_Auto_Test.page_object.base_page import CommonPagingWebPage
+from Aops_Web_Auto_Test.page_object.script_magt import ScriptManagementPage
 from Aops_Web_Auto_Test.utils.LogUtil import my_log
 
 
@@ -14,7 +21,7 @@ class ElementNotFoundError(Exception):
     pass
 
 
-class OptMagtPage(WebPage):
+class OptMagtPage(CommonPagingWebPage):
     @property
     def automated_execution_tag(self) -> WebElement:
         e = self.find_element(opt_page['automated_execution'])
@@ -62,6 +69,10 @@ class OptMagtPage(WebPage):
         return onf
 
     def delete_operation(self, operation_name: str):
+        self.operation_management_tag.click()
+        operation = self.search_in_column(operation_name)
+        if not operation:
+            return
         del_button = self.find_element(self.replace_locator_text(opt_page['delete_operation'], operation_name))
         del_button.click()
         try:
@@ -72,12 +83,46 @@ class OptMagtPage(WebPage):
     def search_name_tabledata(self, name) -> WebElement:
         return self.find_element(self.replace_locator_text(opt_page['operation_name_td'], name))
 
-    def get_notification_text(self):
-        text = self.element_text(opt_page['notification_content'])
-        log.info("获取notice的文本：{}".format(text))
-        return text
-
-    def add_new_operation(self, test_data):
+    def add_new_operation(self, test_data, return_operation=True) -> Union[WebElement, None]:
+        self.script_management_tag.click()
+        self.refresh()
         self.new_operation_tag.click()
         self.operate_name_form_input_tag.send_keys(test_data)
         self.click_confirm_button()
+        if not return_operation:
+            return None
+        return self.search_in_column(test_data)
+
+    def get_used_operation_list(self, script_page: ScriptManagementPage) -> List[str]:
+
+        script_page.enter_script_mgmt_page()
+        script_page.refresh()
+        used_ops = self.get_table_column_data(2)
+        if used_ops:
+            return list(map(lambda d: d.text, used_ops))
+        return []
+
+    def get_unused_operation_name(self, script_page) -> str:
+        self.script_management_tag.click()
+        used_operation_names = self.get_used_operation_list(script_page)
+
+        operation_name = correct_operation_name(5, 10)
+        for _ in range(15):
+            if operation_name not in used_operation_names:
+                break
+            operation_name = correct_operation_name(5, 10)
+        return operation_name
+
+    def rename_operation(self, old_name: str, new_name: str) -> WebElement:
+        self.operation_management_tag.click()
+        edit_button = self.find_element(self.replace_locator_text(opt_page['edit_operation'], old_name))
+        edit_button.click()
+        self.clear_before_input_text(opt_page['operate_name_form'], new_name)
+        self.click_confirm_button()
+        new_element = self.search_name_tabledata(new_name)
+        return new_element
+
+    def add_unused_operation(self, script_page) -> Tuple[WebElement, str]:
+        operation_name = self.get_unused_operation_name(script_page)
+        new_operation = self.add_new_operation(operation_name)
+        return new_operation, operation_name
