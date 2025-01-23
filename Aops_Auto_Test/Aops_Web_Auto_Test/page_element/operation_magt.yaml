@@ -6,4 +6,5 @@ new_operation: 'xpath==//span[text()="新建操作" or text()="New Operation"]/p
 operate_name_form: 'id==form_item_operate_name'
 operation_name_td: 'xpath==//div[text()="****" and parent::td[contains(@class, "ant-table-cell")]]'
 notification_content: 'class==ant-form-item-explain-error'
+edit_operation: 'xpath==//div[contains(@class,"truncate") and text()="****"]/parent::td/following-sibling::td[2]//a[text()="编辑"]'
 delete_operation: 'xpath==//div[contains(@class,"truncate") and text()="****"]/parent::td/following-sibling::td[2]//a[text()="删除"]'

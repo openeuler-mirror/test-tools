@@ -1,5 +1,8 @@
 # -*-coding:utf-8-*-
+import time
+from typing import List, Union, Tuple
 
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,7 +14,6 @@ from Aops_Web_Auto_Test.utils.LogUtil import my_log
 import pandas as pd
 
 
-
 base_page = Element('common')
 driver = None
 
@@ -21,7 +23,7 @@ class WebPage(object):
 
     def __init__(self, driver):
         self.driver = driver
-        self.log= my_log()
+        self.log = my_log()
         self.timeout = 10
         self.wait = WebDriverWait(self.driver, self.timeout, 0.1)
 
@@ -99,11 +101,19 @@ class WebPage(object):
         return number
 
     def input_text(self, locator, txt):
+        """
+        表单输入，不清理表单，如需要清理请调用 clear_before_input_text
+        """
+        ele = self.find_element(locator)
+        ele.send_keys(txt)
+        self.log.info("在{}中输入文本：{}".format(locator, txt))
+
+    def clear_before_input_text(self, locator, txt):
         """输入(输入前先清空)"""
         ele = self.find_element(locator)
         ele.clear()
         ele.send_keys(txt)
-        self.log.info("在{}中输入文本：{}".format(locator, txt))
+        self.log.info("输入文本：{}".format(txt))
 
     def click_element(self, locator):
         """点击元素"""
@@ -124,11 +134,11 @@ class WebPage(object):
 
         try:
             element = self.element_clickable(locator)
-            actions = ActionChains()
+            actions = ActionChains(self.driver)
             actions.move_to_element(element).click().perform()
             return True
-        except (
-        NoSuchElementException, StaleElementReferenceException, ElementNotInteractableException, TimeoutException):
+        except (NoSuchElementException, StaleElementReferenceException,
+                ElementNotInteractableException, TimeoutException):
             pass
 
         raise ElementNotInteractableException(f"无法点击元素：{locator}")
@@ -307,9 +317,112 @@ class WebPage(object):
             print(f"等待{locator} 元素不可点击")
             return None
 
-    def clear_before_input_text(self, locator, txt):
-        """输入(输入前先清空)"""
-        ele = self.find_element(locator)
-        ele.clear()
-        ele.send_keys(txt)
-        self.log.info("输入文本：{}".format(txt))
+
+class CommonPagingWebPage(WebPage):
+    def get_table_column_data(self, column_index=1) -> List[WebElement]:
+        return self.find_elements(self.replace_locator_text(base_page['tbody_tds'], str(column_index)))
+
+    @property
+    def first_page(self) -> Union[WebElement, None]:
+        first_page = self.find_element(base_page['first_page'])
+        if not isinstance(first_page, WebElement):
+            return None
+        return first_page
+
+    @property
+    def last_page(self) -> Union[WebElement, None]:
+        last_page = self.find_element(base_page['last_page'])
+        if not isinstance(last_page, WebElement):
+            return None
+        return last_page
+
+    @property
+    def previous_page_button(self) -> Union[WebElement, None]:
+        button = self.find_element(base_page['previous_page_common'])
+        if not isinstance(button, WebElement):
+            return None
+        return button
+
+    @property
+    def next_page_button(self) -> Union[WebElement, None]:
+        button = self.find_element(base_page['next_page_common'])
+        if not isinstance(button, WebElement):
+            return None
+        return button
+
+    def get_column_data_all_pages(self, column_index=1) -> Tuple[int, List]:
+        """
+
+        Args:
+            column_index: which column
+
+        Returns: status_code, data_list
+        status code: 0 ok. others error.
+        """
+        if not self.first_page:
+            print(f'not found first page button')
+            return 1, []
+
+        try:
+            self.first_page.click()
+        except Exception as e:
+            print(f'waring: first page click interrupted {e}')
+            self.first_page.click()
+
+        column_data = []
+        # 从第一页开始点下一页，直到点到下一页不能点
+        while True:
+            table_data = self.get_table_column_data(column_index)
+            if table_data:
+                column_data.extend(list(map(lambda d: d.text, table_data)))
+            next_button = self.next_page_button
+            if not next_button:
+                print(f'not found next page button @get_table_column_data_all_pages')
+                break
+            if next_button.get_attribute('aria-disabled') != 'false':
+                break
+            next_button.click()
+            # 数据加载时间
+            # TODO: 现在主流前端js框架<vue, react>， 对虚拟DOM的局部修改， 不会反应在document.readystate状态上。
+            #  目前python没有很好的办法监控dom局部变更状态。 暂定用sleep等table更新完成。
+            time.sleep(2)
+
+        return 0, column_data
+
+    def search_in_column(self, search_text, column_index=1) -> Union[WebElement, None]:
+        """
+
+        Args:
+            search_text: 查询的数据
+            column_index: 查询的字段序号
+
+        Returns: WebElement | None
+        """
+        if not self.first_page:
+            print(f'not found first page button')
+            return None
+        try:
+            self.first_page.click()
+        except Exception as e:
+            print(f'waring: first page click interrupted {e}')
+            self.first_page.click()
+
+        while True:
+            table_data = self.get_table_column_data(column_index)
+            if table_data:
+                for td in table_data:
+                    if td.text == search_text:
+                        return td
+
+            next_button = self.next_page_button
+            if not next_button:
+                print(f'not found next page button @get_table_column_data_all_pages')
+                break
+            if next_button.get_attribute('aria-disabled') != 'false':
+                break
+            next_button.click()
+            # 数据加载时间
+            # TODO: 现在主流前端js框架<vue, react>， 对虚拟DOM的局部修改， 不会反应在document.readystate状态上。
+            #  目前python没有很好的办法监控dom局部变更状态。 暂定用sleep等table更新完成。
+            time.sleep(2)
+        return None
