@@ -8,6 +8,7 @@ from Aops_Web_Auto_Test.common.createtestdata import *
 from Aops_Web_Auto_Test.config.conf import cm
 from selenium.common.exceptions import ElementClickInterceptedException
 from Aops_Web_Auto_Test.utils.LogUtil import my_log
+from Aops_Web_Auto_Test.common.readconfig import ini
 
 log = my_log()
 script_elem = Element('script_magt')
@@ -34,6 +35,8 @@ class TestCreateNewScript:
         self.task_name_pre = None
         self.need_cancel = 0
         self.need_delete_files = []
+        self.host1 = ini._get("CLUSTER.GROUP1.HOST", "CLUSTER_NAME1.GROUP1.HOSTNAME1")
+        self.group1 = ini._get("CLUSTER.GROUP1", "CLUSTER_NAME1.GROUP1")
         yield
         if self.need_cancel:
             try:
@@ -88,8 +91,10 @@ class TestCreateNewScript:
         self.need_cancel = 1
         assert "data has existed" in log_info
 
-    def test_create_new_script_004_create_operate_cancel(self, script_mgmt):
+    def test_create_new_script_004_create_operate_cancel(self, script_mgmt, operate_mgmt):
         """新建脚本-创建操作过程中取消"""
+        self.operate_name_pre = create_new_name("operate_name_pre")
+        operate_mgmt.add_new_operation(self.operate_name_pre)
         operate_name = create_new_name("operate_name")
         script_mgmt.create_script_operate(operate_name, "cancel")
         operate_text = script_mgmt.get_operate_list()
@@ -237,7 +242,7 @@ class TestCreateNewScript:
         self.script_name_pre = create_new_name("script_name_pre")
         self.task_name_pre = create_new_name("task_name_pre")
         script_mgmt.create_script_task(self.operate_name_pre, self.script_name_pre, "x86_64", "CentOS", "3", "uname -a")
-        script_mgmt.create_script_exec_task(self.task_name_pre, "group1", "host1", self.operate_name_pre)
+        script_mgmt.create_script_exec_task(self.task_name_pre, self.group1, self.host1, self.operate_name_pre)
         new_loc = script_mgmt.replace_locator_text(script_elem['task_exec_button'], self.task_name_pre)
         script_mgmt.click_element(new_loc)
         log_info = script_mgmt.get_top_right_notice_text()

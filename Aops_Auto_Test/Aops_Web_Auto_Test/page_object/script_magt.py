@@ -1,5 +1,6 @@
 # -*-coding:utf-8-*-
 import os
+import time
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.page_object.base_page import WebPage
 from Aops_Web_Auto_Test.common.readelement import Element
@@ -29,6 +30,7 @@ class ScriptManagementPage(WebPage):
             self.click_element(new_loc)
             if action == "confirm":
                 self.click_confirm_button()
+                self.element_invisibility(new_loc)
             elif action == "cancel":
                 self.click_cancel_button()
             else:
@@ -182,18 +184,28 @@ class ScriptManagementPage(WebPage):
         self.click_element(script_elem['script_exec'])
         self.click_element(script_elem['open_new_task'])
 
-    def create_script_exec_task(self, script_task_name, host_group_name, script_host_name, operate_name, action='confirm'):
+    def create_script_exec_task(self, script_task_name, host_group, script_host_name,
+                                operate_name, action='confirm', host_num='single'):
         """创建脚本执行任务"""
         self.create_script_exec_task_name(script_task_name)
         self.click_element(script_elem['enter_host_group_name'])
-        new_loc = self.replace_locator_text(script_elem['select_host_group'], host_group_name)
+        new_loc = self.replace_locator_text(script_elem['select_host_group'], host_group)
         self.click_element(new_loc)
-        self.click_element(script_elem['enter_host_name'])
-        new_loc = self.replace_locator_text(script_elem['select_host'], script_host_name)
-        self.click_element(new_loc)
-        self.click_element(script_elem['enter_task_operate_name'])
-        new_loc = self.replace_locator_text(script_elem['select_task_operate'], operate_name)
-        self.click_element(new_loc)
+        try:
+            if host_num == "single":
+                self.select_value_by_dropdown(script_elem['enter_host_name'], script_host_name)
+            elif host_num == "mul":
+                for host_line in script_host_name:
+                    self.select_value_by_dropdown(script_elem['enter_host_name'], host_line)
+                    self.click_element(script_elem['enter_host_name'])
+            else:
+                raise ValueError("host_num 参数必须是single或mul")
+        except Exception as e:
+            self.click_confirm_button()
+            print(f"处理按钮时发生错误1：{e}")
+            pass
+        self.select_value_by_dropdown(script_elem['enter_task_operate_name'], operate_name)
+        task_page_text = self.element_text(script_elem['new_task_page'])
         try:
             if action == "confirm":
                 self.click_confirm_button()
@@ -202,7 +214,8 @@ class ScriptManagementPage(WebPage):
             else:
                 raise ValueError("action 参数必须是confirm或cancel")
         except Exception as e:
-            print(f"处理按钮时发生错误：{e}")
+            print(f"处理按钮时发生错误2：{e}")
+        return task_page_text
 
     def create_script_exec_task_name(self, script_task_name, action='continue'):
         """创建脚本执行任务名称"""
@@ -243,3 +256,60 @@ class ScriptManagementPage(WebPage):
         self.page_resoure_load_complete()
         script_exec_text = self.element_text(script_elem['script_exec_table'])
         return script_exec_text
+
+    def get_script_exec_group_list(self):
+        """获取脚本执行主机组列表"""
+        self.enter_create_new_task_page()
+        self.click_element(script_elem['enter_host_group_name'])
+        script_group_text = self.element_text(script_elem['script_exec_group_list'])
+        self.click_cancel_button()
+        script_group_list = script_group_text.split("\n")
+        return script_group_list
+
+    def script_exec_batch_import_host(self, host_ip, input_model='input'):
+        """批量导入主机"""
+        try:
+            if input_model == "input":
+                self.clear_before_input_text(script_elem['enter_host_ip'], host_ip)
+            elif input_model == "paste":
+                self.copy_and_paste(script_elem['enter_task_name'], script_elem['enter_host_ip'], host_ip)
+            else:
+                raise ValueError("input_model 参数必须是input或paste")
+        except Exception as e:
+            print(f"处理按钮时发生错误：{e}")
+        self.click_return(script_elem['enter_host_ip'])
+
+    def script_exec_timed_task(self, date, timed_model='single', seconds_model='指定', minute_model='指定',
+                               hour_model='指定', day_model='每日', month_model='每月',
+                               week_model='不指定', year_model='每年'):
+        """设置定时任务"""
+        self.click_element(script_elem['enter_timed_task'])
+        try:
+            if timed_model == "single":
+                self.click_element(script_elem['single_exec'])
+                self.click_element(script_elem['enter_exec_time'])
+                new_loc = self.replace_locator_text(script_elem['calendar_date'], date)
+                self.click_element(new_loc)
+                self.click_element(script_elem['calendar_determine'])
+                self.click_confirm_button()
+            elif timed_model == "cycle":
+                self.click_element(script_elem['cycle_exec'])
+                self.click_element(script_elem['cycle_exec_select'])
+                self.click_element(script_elem['enter_seconds'])
+                self.select_value_by_radio_button(seconds_model)
+                self.click_element(script_elem['enter_minute'])
+                self.select_value_by_radio_button(minute_model)
+                self.click_element(script_elem['enter_hour'])
+                self.select_value_by_radio_button(hour_model)
+                self.click_element(script_elem['enter_day'])
+                self.select_value_by_radio_button(day_model)
+                self.click_element(script_elem['enter_month'])
+                self.select_value_by_radio_button(month_model)
+                self.click_element(script_elem['enter_week'])
+                self.select_value_by_radio_button(week_model)
+                self.click_element(script_elem['enter_year'])
+                self.select_value_by_radio_button(year_model)
+            else:
+                raise ValueError("timed_model 参数必须是single或cycle")
+        except Exception as e:
+            print(f"处理按钮时发生错误：{e}")
