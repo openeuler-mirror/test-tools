@@ -1,0 +1,87 @@
+host:
+  # 宿主机信息
+  host_name: 172.168.9.155
+  port: 22
+  user_name: root
+  password: openEuler-2022
+  oe_qcow2: /home/data/kvm/oe_qcow2
+  qcow2: /home/data/kvm/qcow2
+
+web:
+  # x2 web登录界面url
+  url: https://172.168.9.155:22901/x2openEuler/#/login
+  username: yangsc
+  password: openEuler-2022
+
+web_real_host:
+  # x2 web主机信息
+  host_name: 192.168.122.210
+  port: 22
+  user_name: root
+  password: openEuler-2022
+
+node_to_migrate:
+  # IPV4/IPV6
+  ipversion: IPv4
+  # 待升级节点ip
+  ip: 192.168.122.242
+  # 网卡名
+  NIC:
+  # 节点别名
+  nick_name: node_to_2403
+  # 节点ssh端口
+  port: 22
+  user_name: root
+  # ssh认证方式：密码认证/密钥认证
+  auth_type: 密码认证
+  # 用户密码
+  password: openEuler-2022
+  root_password: openEuler-2022
+  # 源操作系统版本：centos7.6
+  source_sys_version: centos7.6
+  # 升级目标操作系统版本
+  target_sys_version: openEuler24.03-LTS
+  # 使用的repo源需要提前在前端页面增加好
+  repo_name: migrate-oe2403arm.repo
+  # 增加业务标志位
+  add_service_flag: false
+  # 业务包，如xxx.x86，可以通过rpm -q 查询到
+  business_rpms:
+  # 业务目录 需要在系统中实际存在
+  business_dir:
+  # 保留包，如xxx.x86，可以通过rpm -q 查询到
+  persist_rpms:
+  # 升级后新安装软件
+  install_rpms:
+  # 升级方案：方案二
+  upgrade_plan: plan2
+  # 添加高级配置标志位
+  add_advance_setting_flag: false
+  # 需要备份的目录（默认备份目录不建议修改，填写目录为附加备份目录）： /xxx, /xxx
+  back_path:
+  # 备份文件存放位置
+  back_save_path:
+  # 排除目录
+  back_ignore_path:
+  # 冲突软件配置，多个配置用英文逗号分割
+  conflict_software_config:
+  # cmdline_config配置
+  cmdline_config:
+  # swap包配置: xxx->xxx
+  swap_software_config:
+  # 文件迁移
+  migrate_file:
+  # 权限继承
+  migrate_permission:
+  # 调加自定义脚本标志位
+  add_scripts_flag: false
+  # 自定义检查项: xxx.tar.gz
+  custom_script:
+  # 前置脚本：xxx.tar.gz
+  pre_upgrade_script:
+  # 后置脚本——重启前： xxx.tar.gz
+  post_upgrade_script_before_reboot:
+  # 后置脚本——重启后：xxx,tar.gz
+  post_upgrade_script_after_reboot:
+  # SMT自定义脚本： xxx.tar.gz
+  SMT_custom_script:
