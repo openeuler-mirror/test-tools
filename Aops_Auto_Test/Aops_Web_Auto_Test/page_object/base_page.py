@@ -295,6 +295,16 @@ class WebPage(object):
         """选择集群"""
         self.select_value_by_dropdown(base_page["cluster"], cluster_name)
 
+    def select_host_group(self, group_name):
+        """选择主机组"""
+        if group_name != '':
+            self.select_value_by_dropdown(base_page["host_group"], group_name)
+
+    def select_host(self, host_name):
+        """选择主机"""
+        if host_name != '':
+            self.select_value_by_dropdown(base_page["host_name"], host_name)
+
     def get_item_explain_error(self, item):
         """
         获取字段校验结果

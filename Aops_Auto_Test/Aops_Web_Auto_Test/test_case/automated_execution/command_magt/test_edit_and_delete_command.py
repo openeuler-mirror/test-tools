@@ -15,7 +15,7 @@ def command(drivers):
 
 class TestEditAndDeleteCommand:
     @pytest.fixture(scope='function', autouse=True)
-    def prepare_and_clean_data(self, drivers, command):
+    def prepare_and_clean_data(self, command):
         command.enter_command_magt_page()
         self.command_name = create_new_name("command")
         timeout = generate_random_number(1, 86400)
@@ -29,20 +29,43 @@ class TestEditAndDeleteCommand:
         except (NameError, TimeoutException):
             pass
 
-    def test_edit_command_001(self, drivers, command):
-        """编辑未在使用中的命令"""
-        command_name2 = create_new_name("command2")
-        timeout2 = generate_random_number(1, 86400)
-        command_content2 = generate_content(999)
-        command.edit_command(self.command_name, command_name2, timeout2, command_content2)
-        self.command_name = command_name2
-        assert "编辑成功" in command.get_notice_text()
+    def test_edit_unused_command_001_cancel(self, command):
+        """
+        编辑命令 - 取消编辑未在使用中的命令
+        """
+        command_name_new = self.command_name + '_new'
+        timeout = generate_random_number(1, 86400)
+        command_content = generate_content(999)
+        command.edit_command(self.command_name, command_name_new, timeout, command_content, action='cancel')
+        new_loc = command.replace_locator_text(command_elem['command_list'], command_name_new)
+        assert not command.find_element(new_loc)
 
-    def test_delete_command_001(self, drivers, command):
-        """删除不在执行中的命令"""
+    def test_edit_unused_command_002(self, command):
+        """
+        编辑命令 - 编辑未在使用中的命令
+        """
+        command_name_new = self.command_name + '_new'
+        timeout = generate_random_number(1, 86400)
+        command_content = generate_content(999)
+        command.edit_command(self.command_name, command_name_new, timeout, command_content)
+        self.command_name = command_name_new
+        assert command.get_notice_text() in ("编辑成功", "Update Succeed")
+
+    def test_delete_unused_command_001_cancel(self, command):
+        """
+        删除命令 - 取消删除不在执行中的命令
+        """
+        command.delete_command(self.command_name, action='cancel')
+        new_loc = command.replace_locator_text(command_elem['command_list'], self.command_name)
+        assert command.find_element(new_loc)
+
+    def test_delete_unused_command_002(self, command):
+        """
+        删除命令 - 删除不在执行中的命令
+        """
         command.delete_command(self.command_name)
         self.command_name = None
-        assert "删除成功" in command.get_notice_text()
+        assert command.get_notice_text() in ("删除成功", "Delete Succeed")
 
 
 if __name__ == '__main__':
