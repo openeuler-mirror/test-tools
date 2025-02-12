@@ -157,11 +157,11 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
         return []
 
     commands = check_package_command(rpm_package_name, package_info)
+    if rpm_package_name in commands:
+        commands.remove(rpm_package_name)
     if not commands:
         print(f"获取软件包{package_name}的子命令为空")
         commands = ['']
-    if rpm_package_name in commands:
-        commands.remove(rpm_package_name)
     print(f"获取软件包{rpm_package_name}的子命令：{commands}")
     software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, package_name)
     # 如果不存在在test_cases目录下package_name文件夹的话，则创建
@@ -278,6 +278,7 @@ def get_test_script(package_name):
         print(f"未找到软件包{package_name}的二进制命令名")
         uninstall_package(package_name)
         return
+    print(f"提取到的二进制命令名：{rpm_package_names}")
     # 生成所有二进制包的测试脚本
     total_commands = []
     for rpm_package_name in rpm_package_names:

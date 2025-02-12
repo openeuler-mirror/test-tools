@@ -15,7 +15,7 @@ def get_llm():
         model_name=config["LLM_MODEL_NAME"],
         tiktoken_model_name="cl100k_base",
         max_tokens=MAX_TOKENS,
-        streaming=True,
+        streaming=False,
         temperature=0.1,
         request_timeout=MAX_TIMEOUT,
     )
