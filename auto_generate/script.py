@@ -4,8 +4,10 @@ import json
 import shutil
 import argparse
 import subprocess
-
+import concurrent.futures
 from llm import generate_script, check_package_command, generate_markdown
+from logger import setup_logger
+
 MAX_TIMES = 2
 TEST_CASE_DIR = "generate_test_cases"
 TMP_DIR = "tmp"
@@ -20,6 +22,9 @@ current_file_path = os.path.abspath(__file__)
 current_dir_path = os.path.dirname(current_file_path)
 # 当前执行目录
 current_directory = os.getcwd()
+
+# 日志记录器
+logger = setup_logger()
 
 
 def parse_markdown_table(markdown_text):
@@ -67,13 +72,13 @@ def get_command_info(rpm_package_name, command):
             tmp_command.append('--help')
             result = subprocess.run(tmp_command, capture_output=True, text=True, timeout=5)
             if not result.stdout:
-                print(f"获取软件包{rpm_package_name} {command}的help信息失败")
+                logger.info(f"获取软件包{rpm_package_name} {command}的help信息失败")
             else:
                 command_info = result.stdout
         else:
             command_info = result.stdout
     except Exception as e:
-        print(f"获取软件包{rpm_package_name} {command}的help信息失败：{e}")
+        logger.info(f"获取软件包{rpm_package_name} {command}的help信息失败：{e}")
     return command, command_info
 
 
@@ -102,7 +107,7 @@ def execute_script(package_name, rpm_package_name, command, script):
         result = subprocess.run(
             ['bash', 'mugen.sh', '-f', f'{package_name}_{rpm_package_name}_{command}', '-x'],
             capture_output=True, text=True, timeout=10)
-        print("执行测试脚本完成")
+        logger.info("执行测试脚本完成")
         script_exec_result = True if result.returncode == 0 else False
         # 获取logs/package_name/command下最新的日志
         log_dir = os.path.join(
@@ -116,14 +121,14 @@ def execute_script(package_name, rpm_package_name, command, script):
                 with open(os.path.join(log_dir, latest_log), 'r') as f:
                     script_exec_log = f.read()
     except Exception as e:
-        print(f"执行测试脚本失败：{e}")
+        logger.info(f"执行测试脚本失败：{e}")
     return script_exec_result, script_exec_log
 
 
 def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
     package_info = ""
     # 获取软件包help信息
-    print(f"获取二进制软件包{rpm_package_name}的信息...")
+    logger.info(f"获取二进制命令{rpm_package_name}的信息...")
     rpm_package_command = [rpm_package_name]
     if '.sh' in rpm_package_name:
         rpm_package_command = ['sh', rpm_package_name]
@@ -136,7 +141,7 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
         else:
             package_info = result.stderr
     except Exception as e:
-        print(f"尝试获取软件包{rpm_package_name}的help信息失败：{e}")
+        logger.info(f"尝试获取二进制命令{rpm_package_name}的help信息失败：{e}")
     if 'usage' not in package_info or 'Usage' not in package_info:
         try:
             tmp_command = list(rpm_package_command)
@@ -147,22 +152,22 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
             else:
                 package_info = result.stderr
         except Exception as e:
-            print(f"尝试获取软件包{rpm_package_name}的--help信息失败：{e}")
+            logger.info(f"尝试获取二进制命令{rpm_package_name}的--help信息失败：{e}")
 
     if 'usage' in package_info or 'Usage' in package_info:
-        print(f"获取二进制软件包{rpm_package_name}的信息成功")
-        print(package_info)  # 打印软件包的帮助信息
+        logger.info(f"获取二进制命令{rpm_package_name}的信息成功")
+        logger.info(package_info)  # 打印软件包的帮助信息
     else:
-        print(f"获取二进制软件包{rpm_package_name}的信息失败")
+        logger.info(f"获取二进制命令{rpm_package_name}的信息失败")
         return []
 
     commands = check_package_command(rpm_package_name, package_info)
-    if not commands:
-        print(f"获取软件包{package_name}的子命令为空")
-        commands = ['']
     if rpm_package_name in commands:
         commands.remove(rpm_package_name)
-    print(f"获取软件包{rpm_package_name}的子命令：{commands}")
+    if not commands:
+        logger.info(f"获取软件包{package_name}的子命令为空")
+        commands = ['']
+    logger.info(f"获取软件包{rpm_package_name}的子命令：{commands}")
     software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, package_name)
     # 如果不存在在test_cases目录下package_name文件夹的话，则创建
     os.makedirs(software_dir, exist_ok=True)
@@ -198,36 +203,36 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
             else:
                 history_script = script
             # 执行生成的脚本
-            print("正在执行测试脚本...")
+            logger.info("正在执行测试脚本...")
             history_script_exec_result, history_script_exec_log = execute_script(
                 package_name, rpm_package_name, command, script)
-            print(f"第{times}次校验测试脚本{rpm_package_name}/{rpm_package_name}_{command}.sh,结果：{history_script_exec_result}")
+            logger.info(f"第{times}次校验测试脚本{rpm_package_name}/{rpm_package_name}_{command}.sh,结果：{history_script_exec_result}")
 
         # 在software_dir下保存{command}.sh
         with open(os.path.join(software_dir, f'{command}.sh'), "w") as f:
             f.write(script)
         result_commands.append(command)
-        print(f"生成测试脚本{software_dir}/{command}.sh")
+        logger.info(f"生成测试脚本{software_dir}/{command}.sh")
 
     return result_commands
 
 
 def uninstall_package(package_name):
-    print(f"开始卸载软件包{package_name}")
+    logger.info(f"开始卸载软件包{package_name}")
     result = subprocess.run(['dnf', 'remove', '-y', package_name], capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"卸载软件包失败：{result.stderr}")
+        logger.info(f"卸载软件包失败：{result.stderr}")
         return
-    print(f"卸载软件包{package_name}成功")
+    logger.info(f"卸载软件包{package_name}成功")
 
 
 def get_test_script(package_name):
-    print(f"开始生成测试脚本{package_name}")
+    logger.info(f"开始生成测试脚本{package_name}")
     # 安装软件包
-    print("正在安装软件包...")
+    logger.info("正在安装软件包...")
     result = subprocess.run(['dnf', 'install', '-y', package_name], capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"安装软件包失败：{result.stderr}")
+        logger.info(f"安装软件包失败：{result.stderr}")
         uninstall_package(package_name)
         return
     # 执行命令
@@ -235,28 +240,29 @@ def get_test_script(package_name):
     # 过滤结果
     ccb_packages = [package for package in result.stdout.split('\n') if 'ccb' in package]
     if ccb_packages:
-        print(f"已安装ccb包：{ccb_packages}")
+        logger.info(f"已安装ccb包：{ccb_packages}")
     else:
-        print("未安装ccb包，请参考README文档安装ccb")
+        logger.info("未安装ccb包，请参考README文档安装ccb")
+        return
     # 使用ccb提取二进制包
-    print("正在使用ccb提取二进制包...")
+    logger.info("正在使用ccb提取二进制包...")
     result = subprocess.run(
         ['ccb', 'select', 'rpms', f'repo_name={package_name}', '--size=1', '-f rpms'],
         capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"使用ccb提取二进制包失败：{result.stderr}")
+        logger.info(f"使用ccb提取二进制包失败：{result.stderr}")
         uninstall_package(package_name)
         return
     ccb_json = json.loads(result.stdout)
     if not ccb_json:
-        print(f"未找到软件包{package_name}的二进制包")
+        logger.info(f"未找到软件包{package_name}的二进制包")
         uninstall_package(package_name)
         return
     extracted_names = []
     for item in ccb_json[0]['_source']['rpms']:
         if 'debugsource' not in item['name'] and 'debuginfo' not in item['name'] and 'help' not in item['name'] and item['name'] not in extracted_names:
             extracted_names.append(item['name'])
-    print(f"提取到的二进制包名：{extracted_names}")
+    logger.info(f"提取到的二进制包名：{extracted_names}")
     # 遍历提取到的二进制包名,获取二进制命令名
     rpm_package_names = []
     # 正则表达式，用于匹配 /usr/bin/ 后面的文件名
@@ -275,20 +281,21 @@ def get_test_script(package_name):
                     # 将提取的文件名添加到列表中
                     rpm_package_names.append(match.group(1))
     if not rpm_package_names:
-        print(f"未找到软件包{package_name}的二进制命令名")
+        logger.info(f"未找到软件包{package_name}的二进制命令名")
         uninstall_package(package_name)
         return
-    # 生成所有二进制包的测试脚本
+    logger.info(f"提取到的二进制命令名：{rpm_package_names}")
+    # 生成所有二进制命令的测试脚本
     total_commands = []
     for rpm_package_name in rpm_package_names:
         commands = get_test_script_by_rpm_package_name(package_name, rpm_package_name)
         if commands:
             total_commands.extend(commands)
     # 在software_dir下保存{package_name}.json套件
-    print("开始生成套件...")
+    logger.info("开始生成套件...")
     software_dir = os.path.join(current_dir_path, TEST_CASE_DIR, package_name)
     if not os.path.exists(software_dir):
-        print(f"{package_name}未生成脚本")
+        logger.info(f"{package_name}未生成脚本")
         uninstall_package(package_name)
         return
     with open(os.path.join(software_dir, f'{package_name}.json'), "w") as f:
@@ -298,7 +305,7 @@ def get_test_script(package_name):
                 command = f"{package_name}_{index+1}"
             suite_json_template["cases"].append({"name": f"{command}"})
         json.dump(suite_json_template, f, indent=4)
-        print(f"生成{package_name}.json套件")
+        logger.info(f"生成{package_name}.json套件")
     uninstall_package(package_name)
 
 
@@ -316,27 +323,63 @@ def get_test_script_md(package_name):
             # 在software_dir下保存{file}.md
             with open(os.path.join(software_dir, f"{file}.md"), "w") as f:
                 f.write(md_file)
-            print(f"生成测试文档{software_dir}/{file}.md")
+            logger.info(f"生成测试文档{software_dir}/{file}.md")
+
+
+def get_test_script_by_file_path(file_path, timeout=600):
+    with open(file_path, 'r') as f:
+        packages = f.read().splitlines()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for package in packages:
+            future = executor.submit(get_test_script, package)
+            try:
+                future.result(timeout=timeout)  # 设置超时时间
+            except concurrent.futures.TimeoutError:
+                logger.info(f"Timeout: Generating script for package '{package}' took too long. Skipping...")
+            logger.info("\n")
+
+
+def get_test_script_md_by_file_path(file_path, timeout=600):
+    with open(file_path, 'r') as f:
+        packages = f.read().splitlines()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for package in packages:
+            future = executor.submit(get_test_script_md, package)
+            try:
+                future.result(timeout=timeout)  # 设置超时时间
+            except concurrent.futures.TimeoutError:
+                logger.info(f"Timeout: Generating script for package '{package}' took too long. Skipping...")
+            logger.info("\n")
 
 
 def main():
     # 创建 ArgumentParser 对象
     parser = argparse.ArgumentParser(description='根据软件包的help和测试文档生成测试脚本')
 
+    # 创建互斥参数组
+    group = parser.add_mutually_exclusive_group(required=True)
     # 添加参数
     # 模式
     parser.add_argument('-m', '--mode', help='模式，默认为shell，shell和md', default='shell')
     # 软件包名
-    parser.add_argument('-n', '--package-name', help='软件包名称')
+    group.add_argument('-n', '--package-name', help='软件包名称')
+    # 包含多个软件包名称的文件路径
+    group.add_argument('-f', '--file-path', help='包含多个软件包名称的文件路径')
 
     # 解析命令行参数
     args = parser.parse_args()
 
     # 根据参数执行操作
     if args.mode == 'shell':
-        get_test_script(args.package_name)
+        if args.package_name:
+            get_test_script(args.package_name)
+        elif args.file_path:
+            get_test_script_by_file_path(args.file_path)
     elif args.mode == 'md':
-        get_test_script_md(args.package_name)
+        if args.package_name:
+            get_test_script_md(args.package_name)
+        elif args.file_path:
+            get_test_script_md_by_file_path(args.file_path)
 
 
 if __name__ == "__main__":
