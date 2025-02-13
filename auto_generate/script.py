@@ -6,7 +6,7 @@ import argparse
 import subprocess
 import concurrent.futures
 from llm import generate_script, check_package_command, generate_markdown
-from logger import setup_logger
+from logger import logger
 
 MAX_TIMES = 2
 TEST_CASE_DIR = "generate_test_cases"
@@ -23,8 +23,6 @@ current_dir_path = os.path.dirname(current_file_path)
 # 当前执行目录
 current_directory = os.getcwd()
 
-# 日志记录器
-logger = setup_logger()
 
 
 def parse_markdown_table(markdown_text):
@@ -91,6 +89,19 @@ def get_note(note_dir):
     return note
 
 
+def check_exec_log(script_exec_log):
+    # 按行分割日志内容
+    lines = script_exec_log.splitlines()
+
+    # 提取不以 '+' 开头的行
+    filtered_lines = [line for line in lines if not line.startswith('+')]
+
+    # 将过滤后的行重新组合为一个字符串
+    filtered_script_exec_log = '\n'.join(filtered_lines)
+
+    # 打印结果或保存到文件
+    return filtered_script_exec_log
+
 def execute_script(package_name, rpm_package_name, command, script):
     script_exec_result = False
     script_exec_log = ""
@@ -106,7 +117,7 @@ def execute_script(package_name, rpm_package_name, command, script):
         # 执行脚本
         result = subprocess.run(
             ['bash', 'mugen.sh', '-f', f'{package_name}_{rpm_package_name}_{command}', '-x'],
-            capture_output=True, text=True, timeout=10)
+            capture_output=True, text=True, timeout=60)
         logger.info("执行测试脚本完成")
         script_exec_result = True if result.returncode == 0 else False
         # 获取logs/package_name/command下最新的日志
@@ -122,7 +133,13 @@ def execute_script(package_name, rpm_package_name, command, script):
                     script_exec_log = f.read()
     except Exception as e:
         logger.info(f"执行测试脚本失败：{e}")
-    return script_exec_result, script_exec_log
+    # 提取日志中不以 '+' 开头的行
+    filtered_script_exec_log = check_exec_log(script_exec_log)
+    if filtered_script_exec_log:
+        # 保存提取后的日志到./logs/package_name/command下
+        with open(os.path.join(log_dir, 'filter.log'), 'w') as f:
+            f.write(filtered_script_exec_log)
+    return script_exec_result, filtered_script_exec_log
 
 
 def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
