@@ -105,9 +105,9 @@ class TestAddCommand:
         # 命令内容长度等于1个字符
         command_content = ''.join(random.choices(characters, k=1))
         command.add_command(command_name, timeout, command_content)
-        command.refresh()
+        command.click_refresh_button()
         self.command_name = command_name
-        new_loc = command.replace_locator_text(command_elem['command_list'], command_name)
+        new_loc = command.replace_locator_text(command_elem['item_list'], command_name)
         assert command.find_element(new_loc)
 
     def test_add_command_005_maximum_value(self, command):
@@ -122,9 +122,9 @@ class TestAddCommand:
         # 命令内容长度等于65535个字符
         command_content = ''.join(random.choices(characters, k=9999))
         command.add_command(command_name, timeout, command_content)
-        command.refresh()
+        command.click_refresh_button()
         self.command_name = command_name
-        new_loc = command.replace_locator_text(command_elem['command_list'], command_name)
+        new_loc = command.replace_locator_text(command_elem['item_list'], command_name)
         assert command.find_element(new_loc)
 
     def test_add_command_006_exist_data(self, command):
@@ -136,9 +136,9 @@ class TestAddCommand:
         timeout = generate_random_number(1, 86400)
         command_content = generate_content(999)
         command.add_command(command_name, timeout, command_content)
-        command.refresh()
+        command.click_refresh_button()
         self.command_name = command_name
-        new_loc = command.replace_locator_text(command_elem['command_list'], command_name)
+        new_loc = command.replace_locator_text(command_elem['item_list'], command_name)
         assert command.find_element(new_loc)
         command.add_command(command_name, timeout, command_content)
         assert command.get_top_right_notice_text() == "data has existed"
@@ -151,8 +151,8 @@ class TestAddCommand:
         timeout = generate_random_number(1, 86400)
         command_content = generate_content(999)
         command.add_command(command_name, timeout, command_content, action='cancel')
-        command.refresh()
-        new_loc = command.replace_locator_text(command_elem['command_list'], command_name)
+        command.click_refresh_button()
+        new_loc = command.replace_locator_text(command_elem['item_list'], command_name)
         assert not command.find_element(new_loc)
 
 
