@@ -219,6 +219,9 @@ def get_test_script_by_rpm_package_name(package_name, rpm_package_name):
                 script = history_script
             else:
                 history_script = script
+            if not script:
+                logger.info(f"第{times}次生成测试脚本{rpm_package_name}/{rpm_package_name}_{command}.sh失败")
+                continue
             # 执行生成的脚本
             logger.info("正在执行测试脚本...")
             history_script_exec_result, history_script_exec_log = execute_script(
