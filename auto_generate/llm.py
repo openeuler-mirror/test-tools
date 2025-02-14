@@ -44,7 +44,6 @@ def generate_script(
         return matches[0]
     except Exception as e:
         logger.info(f"调用大模型生成脚本失败:{str(e)}")
-        logger.info(f"大模型原始返回:{result}")
         return ""
 
 
@@ -52,12 +51,16 @@ def check_package_command(package_name, package_info):
     llm = get_llm()
     messages = [get_chat_message("system", CHECK_PACKAGE_SYS_PROMPT), get_chat_message(
         "user", CHECK_PACKAGE_USER_PROMPT.format(package_name=package_name, package_info=package_info)), ]
-    result = llm.invoke(messages).content
-    matches = re.findall(r"```json(.*?)```", result, re.DOTALL)
-    if matches:
-        result_json = json.loads(matches[0])
-        return result_json['command']
-    else:
+    try:
+        result = llm.invoke(messages).content
+        matches = re.findall(r"```json(.*?)```", result, re.DOTALL)
+        if matches:
+            result_json = json.loads(matches[0])
+            return result_json['command']
+        else:
+            return None
+    except Exception as e:
+        logger.info(f"调用大模型检查包命令失败:{str(e)}")
         return None
 
 
@@ -68,6 +71,10 @@ def generate_markdown(package_name, test_script_name, test_script):
         get_chat_message(
             "user", GENERATE_MARKDOWN_USER_PROMPT.format(
                 package_name=package_name, test_script_name=test_script_name, test_script=test_script)),]
-    result = llm.invoke(messages).content
-    matches = re.findall(r"```markdown(.*?)```", result, re.DOTALL)
-    return matches[0]
+    try:
+        result = llm.invoke(messages).content
+        matches = re.findall(r"```markdown(.*?)```", result, re.DOTALL)
+        return matches[0]
+    except Exception as e:
+        logger.info(f"调用大模型生成markdown失败:{str(e)}")
+        return ""

@@ -354,8 +354,8 @@ def get_test_script_by_file_path(file_path, timeout=600):
             future = executor.submit(get_test_script, package)
             try:
                 future.result(timeout=timeout)  # 设置超时时间
-            except concurrent.futures.TimeoutError:
-                logger.info(f"Timeout: Generating script for package '{package}' took too long. Skipping...")
+            except Exception as e:
+                logger.info(f"Generating script for package '{package}' failed. reason:{str(e)} Skipping...")
             logger.info("\n")
 
 
@@ -367,8 +367,8 @@ def get_test_script_md_by_file_path(file_path, timeout=600):
             future = executor.submit(get_test_script_md, package)
             try:
                 future.result(timeout=timeout)  # 设置超时时间
-            except concurrent.futures.TimeoutError:
-                logger.info(f"Timeout: Generating script for package '{package}' took too long. Skipping...")
+            except Exception as e:
+                logger.info(f"Generating md for package '{package}' failed. reason:{str(e)} Skipping...")
             logger.info("\n")
 
 
