@@ -18,9 +18,11 @@ mugen
     ├── llm.py          # 调用大模型接口
     ├── prompt.py       # 大模型prompt
     ├── requirements.txt # 依赖库
+    ├── logger.py       # 日志配置文件
     ├── .env            # 配置文件
+    ├── script_logs     # 生成测试脚本过程中打印的日志
     ├── tmp             # 存放测试脚本执行时环境中已有的数据
-        ├── common      # 测试环境中已有的数据，通常是测试脚本需要的文件
+        ├── common      # 存放软件包测试所需的文件
         └── note.md     # 描述环境的信息
 ```
 
@@ -73,7 +75,7 @@ note.md
 ### 2.4 命令
 
 ```
-python auto_generate/script.py -m=[mode] -n=[package_name]
+python auto_generate/script.py -m=[mode] -n=[package_name] -f=[file_path]
 ```
 
 参数说明：
@@ -81,14 +83,21 @@ python auto_generate/script.py -m=[mode] -n=[package_name]
 - mode：模式，shell、md
   1. shell模式：根据{package_name}生成测试脚本和测试套到generate_test_cases目录下
   2. md模式：根据generate_test_cases目录下的测试用例脚本转换成md文档，需要将脚本放在generate_test_cases/{package_name}下
-- package_name：需要生成的软件包名
+- package_name：需要生成的单个软件包名
+- file_path：需要生成的多个软件包的文件路径，文件格式为txt，每行为一个软件包名，注意file_path和package_name不能同时使用
 
 示例：
 生成脚本：
 python auto_generate/script.py -m=shell -n=attr
 会在generate_test_cases目录下生成attr目录，attr目录下有attr.sh、attr.json文件
 
+python auto_generate/script.py -m=shell -f=auto_generate/package.txt
+会根据package.txt文件中的软件包名，生成测试脚本和测试套到generate_test_cases目录下
+
 生成md：
 在generate_test_cases目录下放好attr目录，attr目录下有attr.sh、attr.json文件
 python auto_generate/script.py -m=md -n=attr
 会在generate_test_cases目录下生成attr的各个测试脚本的md
+
+python auto_generate/script.py -m=md -f=auto_generate/package.txt
+会根据package.txt文件中的软件包名，生成测试脚本的md到generate_test_cases目录下
