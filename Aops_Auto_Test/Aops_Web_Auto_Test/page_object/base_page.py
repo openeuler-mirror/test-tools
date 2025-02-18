@@ -12,6 +12,7 @@ from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.utils.LogUtil import my_log
 import pandas as pd
+from selenium.webdriver.common.keys import Keys
 
 
 base_page = Element('common')
@@ -326,6 +327,56 @@ class WebPage(object):
         except TimeoutException:
             print(f"等待{locator} 元素不可点击")
             return None
+
+    def dropdown_scroll(self, loc, except_option):
+        try:
+            before_roll_list = self.element_text(loc).split('\n')
+            last_loc = self.replace_locator_text(base_page['dropdown_value'], before_roll_list[-1])
+            ele = self.element_displayed(last_loc)
+            ActionChains(self.driver).move_to_element(ele).perform()
+            self.driver.execute_script('arguments[0].scrollIntoView(true);', ele)
+            except_loc = self.replace_locator_text(base_page['dropdown_value'], except_option)
+            if not self.element_displayed(except_loc):
+                self.dropdown_scroll(loc, except_option)
+            else:
+                self.click_element(except_loc)
+        except Exception as e:
+            print(f'获取元素失败！{e}')
+            raise
+
+    def select_value_by_dropdown_scroll(self, enter_ele, loc, except_option):
+        """从下拉框滚动选择值"""
+        self.click_element(enter_ele)
+        new_locator = self.replace_locator_text(base_page['dropdown_value'], except_option)
+        if self.element_displayed(new_locator):
+            self.click_element(new_locator)
+        else:
+            self.dropdown_scroll(loc, except_option)
+
+    def copy_and_paste(self, input_ele, output_ele, txt):
+        """复制和粘贴"""
+        ele = self.find_element(input_ele)
+        ele.clear()
+        ele.send_keys(txt)
+        ele.send_keys(Keys.CONTROL, "a")
+        ele.send_keys(Keys.CONTROL, "c")
+        ele.clear()
+        ele = self.find_element(output_ele)
+        ele.clear()
+        ele.send_keys(Keys.CONTROL, "v")
+
+    def click_return(self, locator):
+        """点击回车"""
+        ele = self.find_element(locator)
+        ele.send_keys(Keys.RETURN)
+
+    @staticmethod
+    def replace_locator_design_text(locator, init_value, replace_value):
+        """替换任意元素值"""
+        lst = list(locator)
+        lst[1] = lst[1].replace(init_value, replace_value)
+        locator = tuple(lst)
+        return locator
 
 
 class CommonPagingWebPage(WebPage):
