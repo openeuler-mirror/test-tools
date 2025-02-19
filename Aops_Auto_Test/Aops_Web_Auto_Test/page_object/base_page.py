@@ -185,11 +185,19 @@ class WebPage(object):
         self.driver.refresh()
         self.driver.implicitly_wait(30)
 
-    def select_value_by_dropdown(self, ele, value):
+    def select_value_by_dropdown(self, ele, value, is_scroll="no"):
         """从下拉框选择值"""
         self.click_element(ele)
         new_locator = self.replace_locator_text(base_page['dropdown_value'], value)
-        self.click_element(new_locator)
+        if is_scroll == "no":
+            self.click_element(new_locator)
+        elif is_scroll == "yes":
+            if self.element_displayed(new_locator):
+                self.click_element(new_locator)
+            else:
+                self.dropdown_scroll(value)
+        else:
+            raise ValueError("is_scroll 参数必须是yes或no")
 
     def select_value_by_radio_button(self, value):
         """选择单选按钮"""
@@ -328,30 +336,21 @@ class WebPage(object):
             print(f"等待{locator} 元素不可点击")
             return None
 
-    def dropdown_scroll(self, loc, except_option):
+    def dropdown_scroll(self, except_option):
         try:
-            before_roll_list = self.element_text(loc).split('\n')
+            before_roll_list = self.element_text(base_page['dropdown_list']).split('\n')
             last_loc = self.replace_locator_text(base_page['dropdown_value'], before_roll_list[-1])
             ele = self.element_displayed(last_loc)
             ActionChains(self.driver).move_to_element(ele).perform()
             self.driver.execute_script('arguments[0].scrollIntoView(true);', ele)
             except_loc = self.replace_locator_text(base_page['dropdown_value'], except_option)
             if not self.element_displayed(except_loc):
-                self.dropdown_scroll(loc, except_option)
+                self.dropdown_scroll(except_option)
             else:
                 self.click_element(except_loc)
         except Exception as e:
             print(f'获取元素失败！{e}')
             raise
-
-    def select_value_by_dropdown_scroll(self, enter_ele, loc, except_option):
-        """从下拉框滚动选择值"""
-        self.click_element(enter_ele)
-        new_locator = self.replace_locator_text(base_page['dropdown_value'], except_option)
-        if self.element_displayed(new_locator):
-            self.click_element(new_locator)
-        else:
-            self.dropdown_scroll(loc, except_option)
 
     def copy_and_paste(self, input_ele, output_ele, txt):
         """复制和粘贴"""
