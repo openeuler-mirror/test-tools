@@ -20,8 +20,8 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     # 测试前环境准备：
-        # 安装待测试的软件包
-        # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
+    # 安装待测试的软件包
+    # 准备测试数据等,如果要创建文件请使用"./你要创建的文件"直接把文件创建到当前目录下
     LOG_INFO "End of environmental preparation!"
 }
 # 测试函数
@@ -34,8 +34,8 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     # 测试后环境恢复：
-        # 卸载安装的软件包
-        # 清理测试中间产物文件
+    # 卸载安装的软件包
+    # 清理测试中间产物文件
     LOG_INFO "End of environment cleanup!"
 }
 

@@ -1,6 +1,6 @@
 dropdownbar: 'xpath==//input[@class="ant-select-selection-search-input" and @aria-expanded="false"]'
-#dropdown_value: 'xpath==//div[@class="ant-select-item-option-content" and text()="****"]'
-dropdown_value: 'xpath==//div[contains(@class,"ant-select-dropdown") and not (contains(@style,"display"))]'
+dropdown_value: 'xpath==//div[@class="ant-select-item-option-content" and text()="****"]'
+dropdown_list: 'xpath==//div[contains(@class,"ant-select-dropdown") and not(contains(@style, "display"))]//div[@class="rc-virtual-list"]'
 notice: 'xpath==//div[@class="ant-message-notice-content"]//span[2]'
 notice_close: 'class==ant-notification-notice-close'
 top_right_notice: 'xpath==//div[@class="ant-notification-notice-description"]'
