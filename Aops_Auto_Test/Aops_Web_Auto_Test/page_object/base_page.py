@@ -1,7 +1,6 @@
 # -*-coding:utf-8-*-
 import time
 from typing import List, Union, Tuple
-
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -216,7 +215,6 @@ class WebPage(object):
         new_search_button_loc = self.replace_locator_text(base_page['search_button'], placeholder_value)
         self.clear_before_input_text(new_search_input_loc, search_value)
         self.click_element(new_search_button_loc)
-
 
     @staticmethod
     def read_file(file_path):
