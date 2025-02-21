@@ -98,13 +98,21 @@ class ScriptManagementPage(WebPage):
         return script_os_text
 
     @staticmethod
-    def create_test_file(file_name, size_gb):
+    def create_test_file(file_name, size_gb, char_count=None):
         """创建测试文件"""
         size_bytes = size_gb * 1024 ** 3
         file_path = cm.BASE_DIR + '/test_data/' + file_name
-        with open(file_path, 'wb') as file:
-            file.seek(size_bytes - 1)
-            file.write(b'\0')
+        try:
+            with open(file_path, 'wb') as file:
+                if size_gb > 0:
+                    file.seek(size_bytes - 1)
+                    file.write(b'\0')
+                else:
+                    file.write(b'a' * char_count)
+                    pass
+            print(f"文件{file_path}已创建，大小为{size_gb}GB")
+        except Exception as e:
+            print(f"创建文件{file_path}时出错: {e}")
 
     @staticmethod
     def delete_test_file(file_name):

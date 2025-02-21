@@ -17,6 +17,7 @@ class CommandManagementPage(WebPage):
 
     def add_command(self, command_name, command_timeout, command_content, action='confirm'):
         """新建命令"""
+        self.click_element(command_elem['command_magt'])
         self.click_element(command_elem['new_command'])
         self.find_element(command_elem['new_windows'])
         self.input_text(command_elem['command_name'], command_name)
@@ -66,10 +67,14 @@ class CommandManagementPage(WebPage):
         except Exception as e:
             print(f"处理按钮时发生错误：{e}")
 
-    def add_task_input_task_name(self, task_name):
-        """新建任务-输入任务名"""
+    def enter_add_task_page(self):
+        """进入命令执行-新建任务页面"""
+        self.click_element(command_elem['command_execute'])
         self.click_element(command_elem['new_task'])
         self.find_element(command_elem['new_windows'])
+
+    def input_task_name(self, task_name):
+        """新建任务-输入任务名"""
         self.input_text(command_elem['task_name'], task_name)
 
     def select_command(self, command_name):
@@ -91,6 +96,7 @@ class CommandManagementPage(WebPage):
 
     def delete_task(self, task_name, action='confirm'):
         """删除任务"""
+        self.click_element(command_elem['command_execute'])
         new_loc = self.replace_locator_text(command_elem['delete_task'], task_name)
         self.click_element(new_loc)
         try:
@@ -117,3 +123,30 @@ class CommandManagementPage(WebPage):
         """删除所选的命令（方式二）"""
         new_loc = self.replace_locator_text(command_elem['command_delete_button'], command_name)
         self.click_element(new_loc)
+
+    def get_command_list(self):
+        """获取命令管理界面的命令列表"""
+        # self.page_resoure_load_complete()
+        command_text = self.element_text(command_elem['command_magt_table'])
+        return command_text
+
+    def get_command_select_list(self):
+        """获取新建任务中的命令选择列表"""
+        self.enter_add_task_page()
+        self.click_element(command_elem['enter_command_select'])
+        command_select_text = self.element_text(command_elem['command_select_list'])
+        self.click_element(command_elem['task_name_label'])
+        command_name_list = command_select_text.split("\n")
+        return command_name_list
+
+    def execute_task(self, task_name):
+        """执行任务"""
+        self.click_element(command_elem['command_execute'])
+        new_loc = self.replace_locator_text(command_elem['execute_task'], task_name)
+        self.click_element(new_loc)
+
+    def get_task_status(self, task_name):
+        """获取任务状态"""
+        new_loc = self.replace_locator_text(command_elem['task_status'], task_name)
+        status = self.element_text(new_loc)
+        return status

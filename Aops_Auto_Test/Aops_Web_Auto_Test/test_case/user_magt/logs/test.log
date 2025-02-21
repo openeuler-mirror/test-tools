@@ -1,2 +1,40 @@
-2025-01-16 16:54:02 selenium_manager.py:101 [DEBUG]: Selenium Manager binary found at: /data/BlueCloud/host/dingjiao/Aops/0116/test-tools/Aops_Auto_Test/venv/lib/python3.8/site-packages/selenium/webdriver/common/linux/selenium-manager
-2025-01-16 16:54:02 selenium_manager.py:114 [DEBUG]: Executing process: /data/BlueCloud/host/dingjiao/Aops/0116/test-tools/Aops_Auto_Test/venv/lib/python3.8/site-packages/selenium/webdriver/common/linux/selenium-manager --browser chrome --debug --language-binding python --output json
+2025-02-12 10:17:28 selenium_manager.py:101 [DEBUG]: Selenium Manager binary found at: /data/BlueCloud/host/dingjiao/Aops/test-tools/Aops_Auto_Test/venv/lib/python3.8/site-packages/selenium/webdriver/common/linux/selenium-manager
+2025-02-12 10:17:28 selenium_manager.py:114 [DEBUG]: Executing process: /data/BlueCloud/host/dingjiao/Aops/test-tools/Aops_Auto_Test/venv/lib/python3.8/site-packages/selenium/webdriver/common/linux/selenium-manager --browser chrome --debug --language-binding python --output json
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Sending stats to Plausible: Props { browser: "chrome", browser_version: "", os: "linux", arch: "x86_64", lang: "python", selenium_version: "4.27" }
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: chromedriver not found in PATH
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: chrome detected at /usr/bin/google-chrome
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Running command: /usr/bin/google-chrome --version
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Output: "Google Chrome 120.0.6099.71 "
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Detected browser: chrome 120.0.6099.71
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Discovering versions from https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Required driver: chromedriver 120.0.6099.109
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: chromedriver 120.0.6099.109 already in the cache
+2025-02-12 10:21:34 selenium_manager.py:138 [WARNING]: Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Driver path: /data/BlueCloud/host/dingjiao/.cache/selenium/chromedriver/linux64/120.0.6099.109/chromedriver
+2025-02-12 10:21:34 selenium_manager.py:140 [DEBUG]: Browser path: /usr/bin/google-chrome
+2025-02-12 10:21:34 service.py:225 [DEBUG]: Started executable: `/data/BlueCloud/host/dingjiao/.cache/selenium/chromedriver/linux64/120.0.6099.109/chromedriver` in a child process with pid: 3059534 using 0 to output -3
+2025-02-12 10:21:35 remote_connection.py:403 [DEBUG]: POST http://localhost:58039/session {'capabilities': {'firstMatch': [{}], 'alwaysMatch': {'browserName': 'chrome', 'pageLoadStrategy': <PageLoadStrategy.normal: 'normal'>, 'browserVersion': None, 'goog:chromeOptions': {'extensions': [], 'binary': '/usr/bin/google-chrome', 'args': ['no-sandbox']}}}}
+2025-02-12 10:21:35 connectionpool.py:243 [DEBUG]: Starting new HTTP connection (1): localhost:58039
+2025-02-12 10:21:36 connectionpool.py:546 [DEBUG]: http://localhost:58039 "POST /session HTTP/11" 200 0
+2025-02-12 10:21:36 remote_connection.py:436 [DEBUG]: Remote response: status=200 | data={"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"120.0.6099.71","chrome":{"chromedriverVersion":"120.0.6099.109 (3419140ab665596f21b385ce136419fde0924272-refs/branch-heads/6099@{#1483})","userDataDir":"/tmp/.org.chromium.Chromium.70UoGM"},"fedcm:accounts":true,"goog:chromeOptions":{"debuggerAddress":"localhost:33237"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"linux","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"9b572d844a604c3bbcaf5164989f2da7"}} | headers=HTTPHeaderDict({'Content-Length': '849', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2025-02-12 10:21:36 remote_connection.py:465 [DEBUG]: Finished Request
+2025-02-12 10:21:36 remote_connection.py:403 [DEBUG]: POST http://localhost:58039/session/9b572d844a604c3bbcaf5164989f2da7/window/maximize {}
+2025-02-12 10:21:36 connectionpool.py:546 [DEBUG]: http://localhost:58039 "POST /session/9b572d844a604c3bbcaf5164989f2da7/window/maximize HTTP/11" 200 0
+2025-02-12 10:21:36 remote_connection.py:436 [DEBUG]: Remote response: status=200 | data={"value":{"height":1033,"width":1680,"x":0,"y":17}} | headers=HTTPHeaderDict({'Content-Length': '51', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2025-02-12 10:21:36 remote_connection.py:465 [DEBUG]: Finished Request
+2025-02-12 10:21:36 remote_connection.py:403 [DEBUG]: POST http://localhost:58039/session/9b572d844a604c3bbcaf5164989f2da7/window/maximize {}
+2025-02-12 10:21:36 connectionpool.py:546 [DEBUG]: http://localhost:58039 "POST /session/9b572d844a604c3bbcaf5164989f2da7/window/maximize HTTP/11" 200 0
+2025-02-12 10:21:36 remote_connection.py:436 [DEBUG]: Remote response: status=200 | data={"value":{"height":1033,"width":1680,"x":0,"y":17}} | headers=HTTPHeaderDict({'Content-Length': '51', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2025-02-12 10:21:36 remote_connection.py:465 [DEBUG]: Finished Request
+2025-02-12 10:21:36 remote_connection.py:403 [DEBUG]: POST http://localhost:58039/session/9b572d844a604c3bbcaf5164989f2da7/timeouts {'pageLoad': 60000}
+2025-02-12 10:21:36 connectionpool.py:546 [DEBUG]: http://localhost:58039 "POST /session/9b572d844a604c3bbcaf5164989f2da7/timeouts HTTP/11" 200 0
+2025-02-12 10:21:36 remote_connection.py:436 [DEBUG]: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2025-02-12 10:21:36 remote_connection.py:465 [DEBUG]: Finished Request
+2025-02-12 10:21:36 remote_connection.py:403 [DEBUG]: POST http://localhost:58039/session/9b572d844a604c3bbcaf5164989f2da7/url {'url': 'http://172.168.107.251'}
+2025-02-12 10:21:45 connectionpool.py:546 [DEBUG]: http://localhost:58039 "POST /session/9b572d844a604c3bbcaf5164989f2da7/url HTTP/11" 500 0
+2025-02-12 10:21:45 remote_connection.py:436 [DEBUG]: Remote response: status=500 | data={"value":{"error":"unknown error","message":"unknown error: net::ERR_ADDRESS_UNREACHABLE\n  (Session info: chrome=120.0.6099.71)","stacktrace":"#0 0x55d3ae1c1f83 \u003Cunknown>\n#1 0x55d3ade7acf7 \u003Cunknown>\n#2 0x55d3ade726ea \u003Cunknown>\n#3 0x55d3ade615a1 \u003Cunknown>\n#4 0x55d3ade62d40 \u003Cunknown>\n#5 0x55d3ade61854 \u003Cunknown>\n#6 0x55d3ade60586 \u003Cunknown>\n#7 0x55d3ade6044a \u003Cunknown>\n#8 0x55d3ade5e7e1 \u003Cunknown>\n#9 0x55d3ade5f01a \u003Cunknown>\n#10 0x55d3ade7dbbe \u003Cunknown>\n#11 0x55d3adf137a5 \u003Cunknown>\n#12 0x55d3adef40b2 \u003Cunknown>\n#13 0x55d3adf13006 \u003Cunknown>\n#14 0x55d3adef3e53 \u003Cunknown>\n#15 0x55d3adebbdd4 \u003Cunknown>\n#16 0x55d3adebd1de \u003Cunknown>\n#17 0x55d3ae186531 \u003Cunknown>\n#18 0x55d3ae18a455 \u003Cunknown>\n#19 0x55d3ae172f55 \u003Cunknown>\n#20 0x55d3ae18b0ef \u003Cunknown>\n#21 0x55d3ae15699f \u003Cunknown>\n#22 0x55d3ae1af008 \u003Cunknown>\n#23 0x55d3ae1af1d7 \u003Cunknown>\n#24 0x55d3ae1c1124 \u003Cunknown>\n#25 0x7f263772a609 start_thread\n"}} | headers=HTTPHeaderDict({'Content-Length': '1045', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2025-02-12 10:21:45 remote_connection.py:465 [DEBUG]: Finished Request
+2025-02-12 10:21:46 remote_connection.py:403 [DEBUG]: DELETE http://localhost:58039/session/9b572d844a604c3bbcaf5164989f2da7 {}
+2025-02-12 10:21:46 connectionpool.py:546 [DEBUG]: http://localhost:58039 "DELETE /session/9b572d844a604c3bbcaf5164989f2da7 HTTP/11" 200 0
+2025-02-12 10:21:46 remote_connection.py:436 [DEBUG]: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+2025-02-12 10:21:46 remote_connection.py:465 [DEBUG]: Finished Request

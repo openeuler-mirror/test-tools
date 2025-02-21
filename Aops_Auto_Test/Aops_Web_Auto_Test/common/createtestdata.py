@@ -1,4 +1,5 @@
 import random
+
 import string
 
 from Aops_Web_Auto_Test.utils.times import dt_strftime
@@ -64,6 +65,7 @@ def correct_operation_name(min_len=5, max_len=60) -> str:
 def repo_name(length=20):
     """随机生成一个长度在20以内的字符串"""
     characters = string.ascii_letters + string.digits + string.punctuation
+    characters = characters.replace('"', '')
     repo = ''.join(random.choices(characters, k=length))
     return repo
 
@@ -75,22 +77,14 @@ def repo_data(length=20):
     return data
 
 
-def task_name():
-    """随机生成一个长度在32以内的字符串"""
-    length = random.randint(1, 17)
-    characters = string.ascii_letters + string.digits + string.punctuation
-    random_string = ''.join(random.choices(characters, k=length))
-    task_name = 'task' + random_string
-    return task_name
+def task_name(min_len=1, max_len=20, characters=string.ascii_letters + string.digits + string.punctuation) -> str:
+    """随机生成一个长度在50以内的字符串"""
+    return ''.join(random.choices(characters, k=random.randint(min_len, max_len)))
 
 
-def task_desc():
-    """随机生成一个长度在150以内的字符串"""
-    length = random.randint(1, 147)
-    characters = string.ascii_letters + string.digits + string.punctuation
-    random_string = ''.join(random.choices(characters, k=length))
-    task_desc = 'desc' + random_string
-    return task_desc
+def task_desc(min_len=1, max_len=50, characters=string.ascii_letters + string.digits + string.punctuation) -> str:
+    """随机生成一个长度在50以内的字符串"""
+    return ''.join(random.choices(characters, k=random.randint(min_len, max_len)))
 
 
 def test_script_name(length=10):
