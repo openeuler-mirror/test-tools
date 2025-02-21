@@ -12,6 +12,7 @@ from Aops_Web_Auto_Test.common.readelement import Element
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.utils.LogUtil import my_log
 import pandas as pd
+from selenium.webdriver.support.ui import Select
 
 
 base_page = Element('common')
@@ -200,6 +201,14 @@ class WebPage(object):
         file_path = cm.BASE_DIR + '/test_data/' + file_name
         self.input_text(base_page['select_file_button'], file_path)
         self.log.info("上传文件：{}".format(file_path))
+
+    def search_by_placeholder(self, placeholder_value, search_value):
+        """按照占位符搜索"""
+        new_search_input_loc = self.replace_locator_text(base_page['search_placeholder'], placeholder_value)
+        new_search_button_loc = self.replace_locator_text(base_page['search_button'], placeholder_value)
+        self.clear_before_input_text(new_search_input_loc, search_value)
+        self.click_element(new_search_button_loc)
+
 
     @staticmethod
     def read_file(file_path):
