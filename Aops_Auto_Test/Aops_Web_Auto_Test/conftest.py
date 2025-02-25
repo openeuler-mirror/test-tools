@@ -3,7 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.common.readconfig import ini
+from Aops_Web_Auto_Test.utils.LogUtil import my_log
 
+log = my_log()
 driver = None
 
 
@@ -31,3 +33,20 @@ def drivers(request):
 
     request.addfinalizer(fn)
     return driver
+
+
+test_case_counter = 0
+total_test_cases = None
+
+
+def pytest_collection_finish(session):
+    global total_test_cases
+    total_test_cases = len(session.items)
+    log.info(f"共收集到 {total_test_cases} 个测试用例")
+
+
+def pytest_runtest_setup(item):
+    global test_case_counter
+    test_case_counter += 1
+    log.info(f"开始执行第 {test_case_counter} 个测试用例: {item.name}")
+
