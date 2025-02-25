@@ -1,7 +1,6 @@
 # -*-coding:utf-8-*-
 import time
 from typing import List, Union, Tuple
-
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,7 +35,6 @@ class WebPage(object):
             self.driver.get(url)
             self.driver.implicitly_wait(10)
             self.log.info("打开网页：%s" % url)
-            # self.log.info("打开网页：%s" % url)
         except TimeoutException:
             raise TimeoutException("打开%s失败" % url)
 
@@ -114,7 +112,7 @@ class WebPage(object):
         ele = self.find_element(locator)
         ele.clear()
         ele.send_keys(txt)
-        self.log.info("输入文本：{}".format(txt))
+        self.log.info("在{}中输入文本：{}".format(locator, txt))
 
     def click_element(self, locator):
         """点击元素"""
@@ -122,6 +120,7 @@ class WebPage(object):
         try:
             element = self.find_element(locator)
             element.click()
+            self.log.info("点击元素：{}".format(locator))
             return True
         except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
             pass
@@ -129,6 +128,7 @@ class WebPage(object):
         try:
             element = self.element_clickable(locator)
             self.driver.execute_script("arguments[0].click();", element)
+            self.log.info("点击元素：{}".format(locator))
             return True
         except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
             pass
@@ -137,6 +137,7 @@ class WebPage(object):
             element = self.element_clickable(locator)
             actions = ActionChains(self.driver)
             actions.move_to_element(element).click().perform()
+            self.log.info("点击元素：{}".format(locator))
             return True
         except (NoSuchElementException, StaleElementReferenceException,
                 ElementNotInteractableException, TimeoutException):
@@ -154,10 +155,10 @@ class WebPage(object):
         """获取元素text"""
         try:
             _text = self.element_displayed(locator).text
-            self.log.info("获取文本：{}".format(_text))
+            self.log.info("获取{}元素的文本：{}".format(locator, _text))
             return _text
         except TimeoutException:
-            print("文本获取失败")
+            print("获取{}元素文本失败")
 
     def get_notice_text(self):
         """获取当前notice的text"""
@@ -183,13 +184,20 @@ class WebPage(object):
     def refresh(self):
         """刷新页面F5"""
         self.driver.refresh()
-        self.driver.implicitly_wait(30)
 
-    def select_value_by_dropdown(self, ele, value):
+    def select_value_by_dropdown(self, ele, value, is_scroll="no"):
         """从下拉框选择值"""
         self.click_element(ele)
         new_locator = self.replace_locator_text(base_page['dropdown_value'], value)
-        self.click_element(new_locator)
+        if is_scroll == "no":
+            self.click_element(new_locator)
+        elif is_scroll == "yes":
+            if self.element_displayed(new_locator):
+                self.click_element(new_locator)
+            else:
+                self.dropdown_scroll(value)
+        else:
+            raise ValueError("is_scroll 参数必须是yes或no")
 
     def select_value_by_radio_button(self, value):
         """选择单选按钮"""
@@ -208,7 +216,6 @@ class WebPage(object):
         new_search_button_loc = self.replace_locator_text(base_page['search_button'], placeholder_value)
         self.clear_before_input_text(new_search_input_loc, search_value)
         self.click_element(new_search_button_loc)
-
 
     @staticmethod
     def read_file(file_path):
@@ -336,30 +343,21 @@ class WebPage(object):
             print(f"等待{locator} 元素不可点击")
             return None
 
-    def dropdown_scroll(self, loc, except_option):
+    def dropdown_scroll(self, except_option):
         try:
-            before_roll_list = self.element_text(loc).split('\n')
+            before_roll_list = self.element_text(base_page['dropdown_list']).split('\n')
             last_loc = self.replace_locator_text(base_page['dropdown_value'], before_roll_list[-1])
             ele = self.element_displayed(last_loc)
             ActionChains(self.driver).move_to_element(ele).perform()
             self.driver.execute_script('arguments[0].scrollIntoView(true);', ele)
             except_loc = self.replace_locator_text(base_page['dropdown_value'], except_option)
             if not self.element_displayed(except_loc):
-                self.dropdown_scroll(loc, except_option)
+                self.dropdown_scroll(except_option)
             else:
                 self.click_element(except_loc)
         except Exception as e:
             print(f'获取元素失败！{e}')
             raise
-
-    def select_value_by_dropdown_scroll(self, enter_ele, loc, except_option):
-        """从下拉框滚动选择值"""
-        self.click_element(enter_ele)
-        new_locator = self.replace_locator_text(base_page['dropdown_value'], except_option)
-        if self.element_displayed(new_locator):
-            self.click_element(new_locator)
-        else:
-            self.dropdown_scroll(loc, except_option)
 
     def copy_and_paste(self, input_ele, output_ele, txt):
         """复制和粘贴"""

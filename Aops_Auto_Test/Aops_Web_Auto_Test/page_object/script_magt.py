@@ -212,8 +212,7 @@ class ScriptManagementPage(WebPage):
             self.click_confirm_button()
             print(f"处理按钮时发生错误1：{e}")
             pass
-        self.select_value_by_dropdown_scroll(script_elem['enter_task_operate_name'], script_elem['task_operate_list'],
-                                             operate_name)
+        self.select_value_by_dropdown(script_elem['enter_task_operate_name'], operate_name, "yes")
         task_page_text = self.element_text(script_elem['new_task_page'])
         try:
             if action == "confirm":
