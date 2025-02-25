@@ -91,3 +91,10 @@ def test_script_name(length=10):
     characters = string.ascii_letters
     data = ''.join(random.choice(characters) for _ in range(length))
     return data
+
+
+def test_symbol(length=1):
+    """随机生成一个任意长度的纯符号字符串"""
+    characters = string.punctuation
+    data = ''.join(random.choice(characters) for _ in range(length))
+    return data

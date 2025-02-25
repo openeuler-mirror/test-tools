@@ -1,11 +1,11 @@
 # -*-coding:utf-8-*-
 import os
-import time
 from Aops_Web_Auto_Test.config.conf import cm
 from Aops_Web_Auto_Test.page_object.base_page import WebPage
 from Aops_Web_Auto_Test.common.readelement import Element
 
 script_elem = Element('script_magt')
+base_page = Element('common')
 
 
 class ScriptManagementPage(WebPage):
@@ -212,7 +212,8 @@ class ScriptManagementPage(WebPage):
             self.click_confirm_button()
             print(f"处理按钮时发生错误1：{e}")
             pass
-        self.select_value_by_dropdown(script_elem['enter_task_operate_name'], operate_name)
+        self.select_value_by_dropdown_scroll(script_elem['enter_task_operate_name'], script_elem['task_operate_list'],
+                                             operate_name)
         task_page_text = self.element_text(script_elem['new_task_page'])
         try:
             if action == "confirm":
@@ -287,10 +288,13 @@ class ScriptManagementPage(WebPage):
             print(f"处理按钮时发生错误：{e}")
         self.click_return(script_elem['enter_host_ip'])
 
-    def script_exec_timed_task(self, date, timed_model='single', seconds_model='指定', minute_model='指定',
-                               hour_model='指定', day_model='每日', month_model='每月',
-                               week_model='不指定', year_model='每年'):
+    def script_exec_timed_task(self, date, timed_model='single', seconds_model='design', minute_model='design',
+                               hour_model='design', day_model='每日', month_model='每月', week_model='unspecified',
+                               year_model='每年', s_design_list=None, mi_design_list=None, h_design_list=None,
+                               d_design_list=None, mo_design_list=None, w_design_list=None, y_design_list=None,
+                               period_start=1, period_end=2, from_start=1, from_end=1,):
         """设置定时任务"""
+        self.element_displayed(script_elem['new_task_page'])
         self.click_element(script_elem['enter_timed_task'])
         try:
             if timed_model == "single":
@@ -304,20 +308,75 @@ class ScriptManagementPage(WebPage):
                 self.click_element(script_elem['cycle_exec'])
                 self.click_element(script_elem['cycle_exec_select'])
                 self.click_element(script_elem['enter_seconds'])
-                self.select_value_by_radio_button(seconds_model)
+                self.select_exec_plan(seconds_model, "pane-seconds", period_start, period_end,
+                                      from_start, from_end, s_design_list)
                 self.click_element(script_elem['enter_minute'])
-                self.select_value_by_radio_button(minute_model)
+                self.select_exec_plan(minute_model, "pane-minutes", period_start, period_end,
+                                      from_start, from_end, mi_design_list)
                 self.click_element(script_elem['enter_hour'])
-                self.select_value_by_radio_button(hour_model)
+                self.select_exec_plan(hour_model, "pane-Hour", period_start, period_end,
+                                      from_start, from_end, h_design_list)
                 self.click_element(script_elem['enter_day'])
-                self.select_value_by_radio_button(day_model)
+                self.select_exec_plan(day_model, "pane-day", period_start, period_end,
+                                      from_start, from_end, d_design_list)
                 self.click_element(script_elem['enter_month'])
-                self.select_value_by_radio_button(month_model)
+                self.select_exec_plan(month_model, "pane-month", period_start, period_end,
+                                      from_start, from_end, mo_design_list)
                 self.click_element(script_elem['enter_week'])
-                self.select_value_by_radio_button(week_model)
+                self.select_exec_plan(week_model, "pane-weeks", period_start, period_end,
+                                      from_start, from_end, w_design_list)
                 self.click_element(script_elem['enter_year'])
-                self.select_value_by_radio_button(year_model)
+                self.select_exec_plan(year_model, "pane-years", period_start, period_end,
+                                      from_start, from_end, y_design_list)
+                self.click_confirm_button()
             else:
                 raise ValueError("timed_model 参数必须是single或cycle")
         except Exception as e:
             print(f"处理按钮时发生错误：{e}")
+            raise
+
+    def select_exec_plan(self, exec_plan, time_id, period_start, period_end,
+                         from_start, from_end, design_list):
+        if exec_plan == "period":
+            new_loc = self.replace_locator_text(script_elem['select_period'], time_id)
+            self.click_element(new_loc)
+            new_loc = self.replace_locator_text(script_elem['input_period_start'], time_id)
+            self.input_text(new_loc, period_start)
+            new_loc = self.replace_locator_text(script_elem['input_period_end'], time_id)
+            self.input_text(new_loc, period_end)
+        elif exec_plan == "from":
+            new_loc = self.replace_locator_text(script_elem['select_from'], time_id)
+            self.click_element(new_loc)
+            new_loc = self.replace_locator_text(script_elem['input_from_start'], time_id)
+            self.input_text(new_loc, from_start)
+            new_loc = self.replace_locator_text(script_elem['input_from_end'], time_id)
+            self.input_text(new_loc, from_end)
+        elif exec_plan == "design":
+            new_loc = self.replace_locator_text(script_elem['select_design'], time_id)
+            self.click_element(new_loc)
+            for design_num in design_list:
+                new_loc = self.replace_locator_text(script_elem['select_design_time'], time_id)
+                new_loc = self.replace_locator_design_text(new_loc, "0", design_num)
+                self.click_element(new_loc)
+        elif exec_plan == "unspecified":
+            new_loc = self.replace_locator_text(script_elem['select_unspecified'], time_id)
+            self.click_element(new_loc)
+        else:
+            self.select_value_by_radio_button(exec_plan)
+
+    def get_task_operate_list(self):
+        """获取新建脚本中的操作列表"""
+        self.enter_create_new_task_page()
+        self.click_element(script_elem['enter_task_operate_name'])
+        script_operate_text = self.element_text(script_elem['task_operate_list'])
+        self.click_element(script_elem['enter_task_operate_name'])
+        self.click_cancel_button()
+        operate_name_list = script_operate_text.split("\n")
+        return operate_name_list
+
+    def enter_push_dir(self, dir_name):
+        """打开推送目录"""
+        self.clear_before_input_text(script_elem['input_push_dir'], dir_name)
+        self.click_confirm_button()
+        push_dir_text = self.element_text(script_elem['new_task_page'])
+        return push_dir_text

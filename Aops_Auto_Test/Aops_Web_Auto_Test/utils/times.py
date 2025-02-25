@@ -9,12 +9,23 @@ def timestamp():
     return time.time()
 
 
-def dt_strftime(fmt="%Y%m"):
+def dt_strftime(fmt="%Y%m", day='', model='next'):
     """
     datetime格式化时间
-    :param fmt "%Y%m%d %H%M%S
+    :param fmt: %Y%m%d %H%M%S
+    :param day: digits
+    :param model: previous or next
     """
-    return datetime.datetime.now().strftime(fmt)
+    if day:
+        if model == "next":
+            date_time = datetime.datetime.now() + datetime.timedelta(int(day))
+        elif model == "previous":
+            date_time = datetime.datetime.now() - datetime.timedelta(int(day))
+        else:
+            raise ValueError("model 参数必须是next或previous")
+    else:
+        date_time = datetime.datetime.now()
+    return date_time.strftime(fmt)
 
 
 def sleep(seconds=5.0):
