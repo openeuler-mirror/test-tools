@@ -1,7 +1,6 @@
 # -*-coding:utf-8-*-
 import time
 from typing import List, Union, Tuple
-
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,7 +35,6 @@ class WebPage(object):
             self.driver.get(url)
             self.driver.implicitly_wait(10)
             self.log.info("打开网页：%s" % url)
-            # self.log.info("打开网页：%s" % url)
         except TimeoutException:
             raise TimeoutException("打开%s失败" % url)
 
@@ -114,7 +112,7 @@ class WebPage(object):
         ele = self.find_element(locator)
         ele.clear()
         ele.send_keys(txt)
-        self.log.info("输入文本：{}".format(txt))
+        self.log.info("在{}中输入文本：{}".format(locator, txt))
 
     def click_element(self, locator):
         """点击元素"""
@@ -122,6 +120,7 @@ class WebPage(object):
         try:
             element = self.find_element(locator)
             element.click()
+            self.log.info("点击元素：{}".format(locator))
             return True
         except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
             pass
@@ -129,6 +128,7 @@ class WebPage(object):
         try:
             element = self.element_clickable(locator)
             self.driver.execute_script("arguments[0].click();", element)
+            self.log.info("点击元素：{}".format(locator))
             return True
         except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
             pass
@@ -137,6 +137,7 @@ class WebPage(object):
             element = self.element_clickable(locator)
             actions = ActionChains(self.driver)
             actions.move_to_element(element).click().perform()
+            self.log.info("点击元素：{}".format(locator))
             return True
         except (NoSuchElementException, StaleElementReferenceException,
                 ElementNotInteractableException, TimeoutException):
@@ -154,10 +155,10 @@ class WebPage(object):
         """获取元素text"""
         try:
             _text = self.element_displayed(locator).text
-            self.log.info("获取文本：{}".format(_text))
+            self.log.info("获取{}元素的文本：{}".format(locator, _text))
             return _text
         except TimeoutException:
-            print("文本获取失败")
+            print("获取{}元素文本失败")
 
     def get_notice_text(self):
         """获取当前notice的text"""
@@ -183,7 +184,6 @@ class WebPage(object):
     def refresh(self):
         """刷新页面F5"""
         self.driver.refresh()
-        self.driver.implicitly_wait(30)
 
     def select_value_by_dropdown(self, ele, value, is_scroll="no"):
         """从下拉框选择值"""
@@ -209,6 +209,13 @@ class WebPage(object):
         file_path = cm.BASE_DIR + '/test_data/' + file_name
         self.input_text(base_page['select_file_button'], file_path)
         self.log.info("上传文件：{}".format(file_path))
+
+    def search_by_placeholder(self, placeholder_value, search_value):
+        """按照占位符搜索"""
+        new_search_input_loc = self.replace_locator_text(base_page['search_placeholder'], placeholder_value)
+        new_search_button_loc = self.replace_locator_text(base_page['search_button'], placeholder_value)
+        self.clear_before_input_text(new_search_input_loc, search_value)
+        self.click_element(new_search_button_loc)
 
     @staticmethod
     def read_file(file_path):

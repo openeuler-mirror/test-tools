@@ -1,2 +1,0 @@
-2025-01-16 16:54:02 selenium_manager.py:101 [DEBUG]: Selenium Manager binary found at: /data/BlueCloud/host/dingjiao/Aops/0116/test-tools/Aops_Auto_Test/venv/lib/python3.8/site-packages/selenium/webdriver/common/linux/selenium-manager
-2025-01-16 16:54:02 selenium_manager.py:114 [DEBUG]: Executing process: /data/BlueCloud/host/dingjiao/Aops/0116/test-tools/Aops_Auto_Test/venv/lib/python3.8/site-packages/selenium/webdriver/common/linux/selenium-manager --browser chrome --debug --language-binding python --output json
