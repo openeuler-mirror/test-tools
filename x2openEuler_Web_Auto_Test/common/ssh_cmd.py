@@ -14,11 +14,10 @@ import re
 import sys
 import stat
 import subprocess
-import argparse
 import paramiko
-from common.log import log
-import config.config as cg
-from config.config import get_config
+from x2openEuler_Web_Auto_Test.common.log import log
+import x2openEuler_Web_Auto_Test.config.config as cg
+from x2openEuler_Web_Auto_Test.config.config import get_config
 
 
 class SSHClient(object):

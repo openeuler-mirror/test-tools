@@ -3,15 +3,22 @@ host:
   host_name: 172.168.9.155
   port: 22
   user_name: root
-  password: openEuler-2022
+  password: X2test-2022
   oe_qcow2: /home/data/kvm/oe_qcow2
   qcow2: /home/data/kvm/qcow2
 
 web:
   # x2 web登录界面url
   url: https://172.168.9.155:22901/x2openEuler/#/login
-  username: yangsc
-  password: openEuler-2022
+  user_1:
+    username: yangsc
+    password: openEuler-2022
+  user_2:
+    username: x2test_1
+    password: openEuler12#$
+  user_3:
+    username: x2test_2
+    password: openEuler12#$
 
 web_real_host:
   # x2 web主机信息

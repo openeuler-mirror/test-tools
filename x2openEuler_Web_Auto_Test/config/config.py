@@ -7,12 +7,16 @@
 import os
 import sys
 from selenium.webdriver.common.by import By
-from common.parse_yaml import Yaml
+from x2openEuler_Web_Auto_Test.common.parse_yaml import Yaml
 
 # 项目根目录
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ELEMENT_PATH = os.path.join(ROOT_DIR, 'page_element')
 Error_CODE = 519
+# 日志保留天数
+LOG_RETENTION_DAYS = 5
+# 日志最大文件数量
+MAX_LOG_FILES = 3
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
