@@ -216,6 +216,7 @@ class WebPage(object):
         new_search_button_loc = self.replace_locator_text(base_page['search_button'], placeholder_value)
         self.clear_before_input_text(new_search_input_loc, search_value)
         self.click_element(new_search_button_loc)
+        self.element_invisibility(base_page['table_search_position'])
 
     @staticmethod
     def read_file(file_path):
@@ -252,6 +253,7 @@ class WebPage(object):
     def click_refresh_button(self):
         """点击刷新按钮"""
         self.click_element(base_page['refresh'])
+        self.element_invisibility(base_page['table_search_position'])
 
     def click_confirm_button(self):
         """点击确定按钮"""
@@ -383,6 +385,59 @@ class WebPage(object):
         lst[1] = lst[1].replace(init_value, replace_value)
         locator = tuple(lst)
         return locator
+
+    def get_table_text(self) -> list:
+        """获取列表的文本"""
+        tr_list = []
+        tr_len = self.elements_num(base_page['tr'])
+        for tr in range(1, tr_len+1):
+            new_loc = self.replace_locator_text(base_page['tr_per'], str(tr))
+            text_result = self.element_text(new_loc)
+            tr_list.append(text_result.split())
+        return tr_list
+
+    def sort(self, column):
+        new_loc = self.replace_locator_text(base_page['sort_column'], column)
+        self.click_element(new_loc)
+        return self.get_element_attr(new_loc, "aria-sort")
+
+    def get_sort_status(self, column, action):
+        """
+        获取指定列排序后的状态（上升或下降）的类属性。
+
+        :param column: 需要获取排序状态的列名
+        :param action: 排序动作，'up' 表示上升，'down' 表示下降
+        :return: 指定元素的类属性
+        """
+        locator_template = base_page['sort_up_status'] if action == 'up' else base_page['sort_down_status']
+        new_loc = self.replace_locator_text(locator_template, column)
+        return self.get_element_attr(new_loc, "class")
+
+    @staticmethod
+    def is_sorted_ascending(lst):
+        """
+        检查列表是否按升序排列。
+
+        :param lst: 需要检查的列表
+        :return: 如果列表按升序排列，则返回True；否则返回False
+        """
+        for i in range(len(lst) - 1):
+            if lst[i] > lst[i + 1]:
+                return False
+        return True
+
+    @staticmethod
+    def is_sorted_descending(lst):
+        """
+        检查列表是否按降序排列。
+
+        :param lst: 需要检查的列表
+        :return: 如果列表按降序排列，则返回True；否则返回False
+        """
+        for i in range(len(lst) - 1):
+            if lst[i] < lst[i + 1]:
+                return False
+        return True
 
 
 class CommonPagingWebPage(WebPage):
