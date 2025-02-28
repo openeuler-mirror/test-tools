@@ -387,7 +387,11 @@ class WebPage(object):
         return locator
 
     def get_table_text(self) -> list:
-        """获取列表的文本"""
+        """
+        获取表格的值，比如cve列表、主机列表
+        :param : null
+        :return: 列表的值以list格式返回
+        """
         tr_list = []
         tr_len = self.elements_num(base_page['tr'])
         for tr in range(1, tr_len+1):
@@ -397,9 +401,16 @@ class WebPage(object):
         return tr_list
 
     def sort(self, column):
+        """
+        按照指定列对数据进行排序
+
+        :param column: 需要获取排序的列名
+        :return: 返回排序后
+        """
         new_loc = self.replace_locator_text(base_page['sort_column'], column)
         self.click_element(new_loc)
-        return self.get_element_attr(new_loc, "aria-sort")
+        sort_status = self.get_element_attr(new_loc, "aria-sort")
+        self.log.info("对{}列进行{}排序".format(column, sort_status))
 
     def get_sort_status(self, column, action):
         """
@@ -413,8 +424,7 @@ class WebPage(object):
         new_loc = self.replace_locator_text(locator_template, column)
         return self.get_element_attr(new_loc, "class")
 
-    @staticmethod
-    def is_sorted_ascending(lst):
+    def is_sorted_ascending(self,  lst: List) -> bool:
         """
         检查列表是否按升序排列。
 
@@ -423,11 +433,12 @@ class WebPage(object):
         """
         for i in range(len(lst) - 1):
             if lst[i] > lst[i + 1]:
+                self.log.error("列表{}不是按照升序排序".format(lst))
                 return False
+        self.log.info("列表{}按照升序排序".format(lst))
         return True
 
-    @staticmethod
-    def is_sorted_descending(lst):
+    def is_sorted_descending(self,  lst: List) -> bool:
         """
         检查列表是否按降序排列。
 
@@ -436,7 +447,9 @@ class WebPage(object):
         """
         for i in range(len(lst) - 1):
             if lst[i] < lst[i + 1]:
+                self.log.error("列表{}不是按照降序排序".format(lst))
                 return False
+        self.log.info("列表{}按照降序排序".format(lst))
         return True
 
 
