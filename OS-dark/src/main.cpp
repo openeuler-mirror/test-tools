@@ -2,6 +2,7 @@
 #include "Configuration.h"
 #include "AsyncProcessor.h"
 #include "AlertManager.h"
+#include "WebServer.h"
 #include <iostream>
 #include <memory>
 #include <string>
@@ -212,5 +213,9 @@ int main(int argc, char* argv[]) {
     asyncProcessor.stop();
     
     std::cout << "\nOS Dark monitoring completed." << std::endl;
+    
+    WebServer server;
+    server.start();
+    
     return 0;
 } 
