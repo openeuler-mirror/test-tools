@@ -1,20 +1,48 @@
-#include "DataCollector.h"
+#include "ComponentFactory.h"
 #include "SystemLogCollector.h"
 #include "ProcessStatusCollector.h"
 #include "MemoryUsageCollector.h"
-#include "DataStorage.h"
-#include "FileStorage.h"
-#include "TriggerMechanism.h"
 #include "SystemRestartDetector.h"
 #include "KernelCrashDetector.h"
 #include "OOMDetector.h"
-#include "RecoveryModule.h"
+#include "DiskSpaceDetector.h"
+#include "NetworkDetector.h"
+#include "FileStorage.h"
 #include "DataAnalyzer.h"
 #include "ReportGenerator.h"
-#include <vector>
-#include <string>
+#include "Configuration.h"
 #include <memory>
 
+// 前向声明
+class ConcreteDataCollector;
+class ConcreteTriggerMechanism;
+class ConcreteRecoveryModule;
+
+class DefaultComponentFactory : public ComponentFactory {
+public:
+    std::shared_ptr<DataCollector> createDataCollector() override {
+        auto logCollector = std::make_shared<SystemLogCollector>();
+        auto processCollector = std::make_shared<ProcessStatusCollector>();
+        auto memoryCollector = std::make_shared<MemoryUsageCollector>();
+        
+        return std::make_shared<ConcreteDataCollector>(
+            logCollector, processCollector, memoryCollector);
+    }
+    
+    std::shared_ptr<TriggerMechanism> createTriggerMechanism() override {
+        return std::make_shared<ConcreteTriggerMechanism>();
+    }
+    
+    std::shared_ptr<DataStorage> createDataStorage() override {
+        return std::make_shared<FileStorage>();
+    }
+    
+    std::shared_ptr<RecoveryModule> createRecoveryModule() override {
+        return std::make_shared<ConcreteRecoveryModule>();
+    }
+};
+
+// 实现ConcreteDataCollector
 class ConcreteDataCollector : public DataCollector {
 public:
     ConcreteDataCollector(
@@ -61,6 +89,7 @@ private:
     MemoryUsage memoryUsage;
 };
 
+// 实现ConcreteTriggerMechanism
 class ConcreteTriggerMechanism : public TriggerMechanism {
 public:
     bool detectSystemRestart() override {
@@ -83,8 +112,32 @@ public:
         std::cout << "OOM detected: " << (result ? "Yes" : "No") << std::endl;
         return result;
     }
+    
+    bool detectDiskSpaceLow() override {
+        // 从配置中获取磁盘空间阈值
+        auto& config = Configuration::getInstance();
+        double threshold = config.getDouble("disk_space_threshold", 85.0);
+        
+        DiskSpaceDetector detector(threshold);
+        bool result = detector.detect();
+        std::cout << "Disk space low detected: " << (result ? "Yes" : "No") << std::endl;
+        return result;
+    }
+    
+    bool detectNetworkIssues() override {
+        // 从配置中获取网络参数
+        auto& config = Configuration::getInstance();
+        double packetLossThreshold = config.getDouble("network_packet_loss_threshold", 5.0);
+        int latencyThreshold = config.getInt("network_latency_threshold", 100);
+        
+        NetworkDetector detector(packetLossThreshold, latencyThreshold);
+        bool result = detector.detect();
+        std::cout << "Network issues detected: " << (result ? "Yes" : "No") << std::endl;
+        return result;
+    }
 };
 
+// 实现ConcreteRecoveryModule
 class ConcreteRecoveryModule : public RecoveryModule {
 public:
     void analyzeData(const std::string& data) override {
@@ -96,32 +149,4 @@ public:
         ReportGenerator generator;
         generator.generate();
     }
-};
-
-int main() {
-    ConcreteDataCollector dataCollector;
-    dataCollector.collectSystemLogs();
-    dataCollector.collectProcessStatus();
-    dataCollector.collectMemoryUsage();
-
-    ConcreteTriggerMechanism triggerMechanism;
-    bool systemRestart = triggerMechanism.detectSystemRestart();
-    bool kernelCrash = triggerMechanism.detectKernelCrash();
-    bool oom = triggerMechanism.detectOOM();
-
-    if (systemRestart || kernelCrash || oom) {
-        FileStorage storage;
-        std::string data = "System Logs: " + std::to_string(dataCollector.getSystemLogs().size()) +
-                           "\nProcess Statuses: " + std::to_string(dataCollector.getProcessStatuses().size()) +
-                           "\nMemory Usage: " + std::to_string(dataCollector.getMemoryUsage().usedMemory);
-        storage.store(data, "system_data.txt", false); // Store data to a file
-
-        std::string retrievedData = storage.retrieve("system_data.txt"); // Retrieve data from the file
-
-        ConcreteRecoveryModule recoveryModule;
-        recoveryModule.analyzeData(retrievedData);
-        recoveryModule.generateReport();
-    }
-
-    return 0;
-}
+}; 

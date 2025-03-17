@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Dark Web Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        #data { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>OS Dark Web Interface</h1>
+    <div id="data">
+        <h2>Monitoring Data</h2>
+        <p>Sample data from node: <span id="nodeData">Loading...</span></p>
+    </div>
+    <script>
+        // 模拟从服务器获取数据
+        fetch('/data')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('nodeData').innerText = data;
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html> 

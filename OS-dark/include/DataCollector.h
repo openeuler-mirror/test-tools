@@ -24,6 +24,7 @@ struct MemoryUsage {
 
 class DataCollector {
 public:
+    virtual ~DataCollector() = default;
     virtual void collectSystemLogs() = 0;
     virtual void collectProcessStatus() = 0;
     virtual void collectMemoryUsage() = 0;
