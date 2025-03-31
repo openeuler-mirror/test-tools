@@ -6,7 +6,8 @@
 """
 import os
 import pytest
-from x2openEuler_Web_Auto_Test.config.config import get_test_config, get_config, data_path
+from x2openEuler_Web_Auto_Test.common.parse_yaml import Yaml
+from x2openEuler_Web_Auto_Test.config.config import get_test_config, get_config, data_path, get_os_version_path
 from x2openEuler_Web_Auto_Test.common.ssh_cmd import SSHClient
 from x2openEuler_Web_Auto_Test.common.util import get_kvm_ip
 import x2openEuler_Web_Auto_Test.common.util as util
@@ -14,6 +15,7 @@ from x2openEuler_Web_Auto_Test.page_object.task_upgrade import TaskUpgrade
 from x2openEuler_Web_Auto_Test.common.log import log
 
 test_data_path = os.path.join(data_path, 'task_upgrade', "test_files/task_upgrade.yaml")
+
 
 
 def retry_operation(node, res_index, expect_res, count):
@@ -51,6 +53,7 @@ class TestTaskUpgrade:
         虚拟机创建与删除、环境准备与清理
         :return:
         """
+        test_data = Yaml(get_os_version_path()).replace_yaml(test_data)
         self.host = get_config().get('host')
         ssh = SSHClient(hostname=self.host.get('host_name'), port=self.host.get('port'),
                         username=self.host.get('user_name'), password=self.host.get('password'))
@@ -61,16 +64,22 @@ class TestTaskUpgrade:
         self.node.update({
             'nick_name': test_data["node_name"],
             'source_sys_version': test_data['source_sys_version'],
-            'target_sys_version': test_data['target_sys_version'],
-            'repo_name': test_data['repo_name'],
+            'target_sys_version': test_data['target_os']['target_sys_version'],
+            'repo_name': test_data['target_os']['repo_name'],
         })
-        self.target_os_version = test_data['target_os_version']
+        self.target_os_version = test_data['target_os']['target_os_version']
 
         # 创建虚拟机
         _code, address_res = ssh.execute_command(f"ccentos.sh {test_data['os_type_num']} {self.node['nick_name']}")
-        self.node['ip'] = get_kvm_ip(address_res)
-        log.info(f"kvm init success, name is {self.node['nick_name']}, ip is {self.node['ip']} ...")
-        ssh.close()
+        log.info(address_res)
+        if "CREATE_ERROR" in address_res:
+            log.info(f"kvm init failed, name is {self.node['nick_name']} ...")
+            ssh.close()
+            pytest.skip(f"kvm init failed, name is {self.node['nick_name']}, ip can not be obtained ...")
+        else:
+            self.node['ip'] = get_kvm_ip(address_res)
+            log.info(f"kvm init success, name is {self.node['nick_name']}, ip is {self.node['ip']} ...")
+            ssh.close()
         self.x2upgrade = TaskUpgrade(drivers)
         yield
         ssh.connect()
@@ -122,6 +131,7 @@ class TestTaskUpgrade:
         self.x2upgrade.upgrade_node()
         upgrade_ret = self.x2upgrade.check_res("upgrade")
         if upgrade_ret == "升级失败":
+            log.info("升级失败")
             upgrade_ret = retry_operation(self.x2upgrade, "upgrade", "升级失败", 3)
         assert upgrade_ret in "升级完成（待重启生效）"
         log.info("升级完成（待重启生效）")
@@ -130,8 +140,11 @@ class TestTaskUpgrade:
         self.x2upgrade.reboot_node()
         upgrade_after_reboot_ret = self.x2upgrade.check_res("upgrade_after_reboot")
         if upgrade_after_reboot_ret == "重启超时":
+            log.info("重启超时")
             upgrade_after_reboot_ret = retry_operation(self.x2upgrade, "upgrade_after_reboot", "重启超时", 6)
-        assert upgrade_after_reboot_ret in "升级成功"
+        log.info(f"节点重启状态为：{upgrade_after_reboot_ret}")
+        assert upgrade_after_reboot_ret == "升级成功"
+        log.info("升级成功")
 
         # 升级后环境检查
         self.x2upgrade.post_upgrade_check()
@@ -156,6 +169,7 @@ class TestTaskUpgrade:
         self.x2upgrade.rollback_reboot_node()
         roll_back_after_reboot_ret = self.x2upgrade.check_res("roll_back_after_reboot")
         if roll_back_after_reboot_ret == "重启超时":
+            log.info("重启超时")
             roll_back_after_reboot_ret = retry_operation(self.x2upgrade, "roll_back_after_reboot", "重启超时", 6)
         assert "待升级" in roll_back_after_reboot_ret
         log.info("回退成功")

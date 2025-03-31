@@ -12,7 +12,7 @@ web:
   url: https://172.168.9.155:22901/x2openEuler/#/login
   user_1:
     username: yangsc
-    password: openEuler-2022
+    password: openEuler12#$
   user_2:
     username: x2test_1
     password: openEuler12#$

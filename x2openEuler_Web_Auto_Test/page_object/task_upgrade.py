@@ -234,7 +234,7 @@ class TaskUpgrade(BasePage):
         self.click_element_by_js(task_upgrade["reboot_node_button"])
         self.is_element_exist(30, task_upgrade["alert_node_confirm"])
         self.click(task_upgrade["alert_node_confirm"])
-        self.is_element_exist(1800, task_upgrade["start_check_button"])
+        self.is_element_exist(3600, task_upgrade["start_check_button"])
         self.refresh()
 
     def post_upgrade_check(self):

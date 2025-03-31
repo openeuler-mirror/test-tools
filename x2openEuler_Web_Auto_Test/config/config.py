@@ -33,6 +33,7 @@ LOCATE_MODE = {
 
 # 定义conf.yml文件路径
 _config_file = os.path.join(ROOT_DIR, 'config', 'config.yaml')
+_config_os_file = os.path.join(ROOT_DIR, 'config', 'os_versions.yaml')
 
 # 定义test_data文件路径
 data_path = os.path.join(ROOT_DIR, 'test_case')
@@ -40,6 +41,10 @@ data_path = os.path.join(ROOT_DIR, 'test_case')
 
 def get_config():
     return Yaml(_config_file).data()
+
+
+def get_os_version_path():
+    return _config_os_file
 
 
 def get_test_config(test_config_yaml):
