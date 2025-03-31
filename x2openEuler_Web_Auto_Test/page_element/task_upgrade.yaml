@@ -3,6 +3,8 @@ new_task_button: 'xpath==//div[1]/div[1]/div[5]/div/div[1]/div[2]/div[1]/span'
 upgrade_button: 'xpath==//div[3]/div[6]/div/div[1]/div/ul/li[1]'
 task_name_input: 'xpath==//div[1]/div/div[5]/div[2]/div[1]/ul/li/div[2]/div/input'
 add_node_button: 'xpath==//div[1]/div[1]/div[2]/button/span'
+cancel_button: 'xpath==//div[@class="btm-operate"]//span[text() = "取消" or text() = "Cancel"]'
+alert_task_confirm: 'xpath==//div[@class = "el-dialog"]//span[text() = "OK" or text() = "确认"]'
 trans_notes: 'xpath==//div[1]/div/div/div/span[1]/span/span'
 ipv6_button: 'xpath==//div[2]/div/div/label[2]/span[1]/span'
 ipv6_input: 'xpath==//div[3]/div[2]/div/div/input[1]'
@@ -61,4 +63,3 @@ clean_up_button: 'xpath==//div[@class="button-group"]//span[text() = "Clean Up" 
 post_upgrade_check_res: 'xpath==//li[4]/div/div[2]/span'
 roll_back_res: 'xpath==//li[3]//span[text()="回退完成（待重启生效）" or text() = "Rollback completed (pending restart)"]'
 roll_back_after_reboot_res: 'xpath==//div[@class="abnormal-image"]//p'
-

@@ -6,7 +6,7 @@
 """
 import os
 import yaml
-import config.config as cg
+import x2openEuler_Web_Auto_Test.config.config as cg
 
 
 class Element(object):

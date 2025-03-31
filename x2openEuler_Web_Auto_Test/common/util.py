@@ -8,7 +8,7 @@ import re
 import json
 import subprocess
 import yaml
-import common.ssh_cmd as ssh_cmd
+import x2openEuler_Web_Auto_Test.common.ssh_cmd as ssh_cmd
 
 
 x2_cmd = subprocess.run("cat ~/.bashrc | grep x2openEuler= | awk -F '\"' '{print $2}'", shell=True,
