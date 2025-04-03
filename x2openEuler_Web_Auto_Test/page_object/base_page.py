@@ -12,8 +12,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as WD
 
-from config.config import LOCATE_MODE
-from common.log import log
+from x2openEuler_Web_Auto_Test.config.config import LOCATE_MODE
+from x2openEuler_Web_Auto_Test.common.log import log
 
 
 class BasePage(object):

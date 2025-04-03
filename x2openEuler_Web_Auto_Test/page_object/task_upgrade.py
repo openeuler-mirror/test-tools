@@ -4,9 +4,9 @@
 @File : task_upgrade.py
 @IDE  : PyCharm
 """
-from common.readelement import Element
-from page_object.base_page import BasePage
-from common.log import log
+from x2openEuler_Web_Auto_Test.common.readelement import Element
+from x2openEuler_Web_Auto_Test.page_object.base_page import BasePage
+from x2openEuler_Web_Auto_Test.common.log import log
 
 task_upgrade = Element('task_upgrade')
 
@@ -24,13 +24,13 @@ class TaskUpgrade(BasePage):
         """
         self.click(task_upgrade["title"])
         self.click(task_upgrade["new_task_button"])
-        self.sleep(1)
-        self.click(task_upgrade["upgrade_button"])
-        if task_name:
-            self.clear(task_upgrade["task_name_input"])
-            self.sleep(1)
-            self.send_keys(task_upgrade["task_name_input"], task_name)
-        self.sleep(1)
+        if self.is_element_exist(30, task_upgrade["upgrade_button"]):
+            self.click(task_upgrade["upgrade_button"])
+            if task_name:
+                self.clear(task_upgrade["task_name_input"])
+                self.send_keys(task_upgrade["task_name_input"], task_name)
+        else:
+            log.error("系统升级按钮不存在，升级任务失败 !")
 
     def add_Service_Software(self, node):
         """
@@ -158,9 +158,10 @@ class TaskUpgrade(BasePage):
         :return:
         """
         self.click(task_upgrade["add_node_task_confirm"])
-        self.sleep(1)
         self.click(task_upgrade["view_details_button"])
         self.is_element_exist(1800, task_upgrade["start_check_button"])
+        self.sleep(1)
+        self.refresh()
 
     def upgrade_check(self):
         """
@@ -168,10 +169,10 @@ class TaskUpgrade(BasePage):
         :return:
         """
         self.is_element_exist(1800, task_upgrade["start_check_button"])
-        self.sleep(1)
         self.click_element_by_js(task_upgrade["start_check_button"])
         self.is_element_exist(1800, task_upgrade["task_upgrade_button"])
-
+        self.sleep(1)
+        self.refresh()
 
     def check_res(self, stage_flag):
         """
@@ -200,9 +201,9 @@ class TaskUpgrade(BasePage):
         self.is_element_exist(4800, task_upgrade["reboot_node_button"])
         self.refresh()
 
-    def retry_node(self):
+    def upgrade_retry_node(self):
         """
-        重试节点
+        升级失败重试节点
         :return:
         """
         self.is_element_exist(1800, task_upgrade["retry_button"])
@@ -210,6 +211,19 @@ class TaskUpgrade(BasePage):
         self.is_element_exist(30, task_upgrade["alert_node_confirm"])
         self.click(task_upgrade["alert_node_confirm"])
         self.is_element_exist(2400, task_upgrade["reboot_node_button"])
+        self.refresh()
+
+    def reboot_retry_node(self):
+        """
+        重启超时重试节点
+        :return:
+        """
+        self.is_element_exist(1800, task_upgrade["retry_button"])
+        self.click_element_by_js(task_upgrade["retry_button"])
+        self.is_element_exist(30, task_upgrade["alert_node_confirm"])
+        self.click(task_upgrade["alert_node_confirm"])
+        self.sleep(300)
+        self.is_element_exist(300, task_upgrade["task_upgrade_button"])
 
     def reboot_node(self):
         """
@@ -220,7 +234,8 @@ class TaskUpgrade(BasePage):
         self.click_element_by_js(task_upgrade["reboot_node_button"])
         self.is_element_exist(30, task_upgrade["alert_node_confirm"])
         self.click(task_upgrade["alert_node_confirm"])
-        self.is_element_exist(1800, task_upgrade["start_check_button"])
+        self.is_element_exist(3600, task_upgrade["start_check_button"])
+        self.refresh()
 
     def post_upgrade_check(self):
         """
@@ -243,6 +258,7 @@ class TaskUpgrade(BasePage):
         self.is_element_exist(30, task_upgrade["alert_node_confirm"])
         self.click(task_upgrade["alert_node_confirm"])
         self.is_element_exist(4800, task_upgrade["reboot_node_button"])
+        self.refresh()
 
     def rollback_reboot_node(self):
         """
@@ -254,14 +270,19 @@ class TaskUpgrade(BasePage):
         self.is_element_exist(30, task_upgrade["alert_node_confirm"])
         self.click(task_upgrade["alert_node_confirm"])
         self.is_element_exist(3600, task_upgrade["task_upgrade_button"])
+        self.refresh()
 
     def del_node(self):
         """
         删除节点
         :return:
         """
-        self.is_element_exist(300, task_upgrade["delete_button"])
-        self.click(task_upgrade["delete_button"])
-        self.sleep(1)
-        self.click(task_upgrade["alert_node_confirm"])
-        self.sleep(5)
+        if self.is_element_exist(5, task_upgrade["delete_button"]):
+            self.click(task_upgrade["delete_button"])
+            self.click(task_upgrade["alert_node_confirm"])
+        elif self.is_element_exist(5, task_upgrade["cancel_button"]):
+            self.click(task_upgrade["cancel_button"])
+            self.click(task_upgrade["alert_task_confirm"])
+            log.info("节点不存在，无需删除 !")
+        else:
+            log.error("删除按钮不存在，删除节点失败 !")

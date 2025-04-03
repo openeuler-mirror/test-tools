@@ -1,6 +1,8 @@
 """
 Subject: test Automated execution -> Script Management -> Operation Management -> New Operation
 """
+from datetime import datetime
+
 import pytest
 from selenium.common.exceptions import ElementClickInterceptedException
 
@@ -146,6 +148,71 @@ class TestNewOperation:
 
         empty_operation = page.search_name_tabledata(operation_name)
         assert empty_operation is None
+
+
+class TestNewOperationPaging:
+    @pytest.fixture(scope='class', autouse=True)
+    def setup_and_clear(self, page):
+        # generate test data
+        ts = datetime.now().strftime('%m%d%H%M%S')
+        names = []
+        for i in range(1, 22):
+            test_name = f'test_paging_{ts}_{i:02d}'
+            names.append(test_name)
+            page.add_new_operation(test_name, False)
+        yield
+        # clear test data
+        for name in names:
+            page.delete_operation(name)
+
+    def test_paging_005_previous_page_data_check(self, page):
+        """
+        非首页上一页返回验证
+        """
+        page.operation_management_tag.click()
+        page.first_page.click()
+        page_data = list(map(lambda td: td.text, page.get_table_column_data()))
+        page.next_page_button.click()
+        page.previous_page_button.click()
+        page_data_back = list(map(lambda td: td.text, page.get_table_column_data()))
+        assert page_data == page_data_back
+
+    def test_paging_006_next_page_data_check(self, page):
+        """
+        非末页下一页跳转验证
+        """
+        page.operation_management_tag.click()
+        page.first_page.click()
+        page.next_page_button.click()
+        page_data = list(map(lambda td: td.text, page.get_table_column_data()))
+        page.previous_page_button.click()
+        page.next_page_button.click()
+        page_data_back = list(map(lambda td: td.text, page.get_table_column_data()))
+        assert page_data == page_data_back
+
+    def test_paging_007_previous_page_button_disabled(self, page):
+        """
+        首页上一页按钮禁用验证
+        """
+        page.operation_management_tag.click()
+
+        # 点击第一页
+        page.first_page.click()
+        previous_button = page.previous_page_button
+        previous_button_aria_disabled_status = previous_button.get_attribute('aria-disabled')
+        assert previous_button_aria_disabled_status == 'true'
+
+    def test_paging_008_last_page_button_disabled(self, page):
+        """
+        末页下一页按钮禁用验证
+        """
+        page.operation_management_tag.click()
+
+        # 点击第一页
+        page.last_page.click()
+        next_page_button = page.next_page_button
+        next_page_button_aria_disabled_status = next_page_button.get_attribute('aria-disabled')
+        assert next_page_button_aria_disabled_status == 'true'
 
 
 if __name__ == '__main__':
