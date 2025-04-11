@@ -38,3 +38,4 @@ filter_dropdown: 'xpath==//div[contains(@class,"ant-dropdown-placement-bottomRig
 filter_option: 'xpath==//span[text()="****"]//ancestor::li'
 filter_reset: 'xpath==//div[contains(@class, "bottomRight") and not (contains(@style,"display"))]//span[text()="重置"]'
 filter_confirm: 'xpath==//div[contains(@class, "bottomRight") and not (contains(@style,"display"))]//span[text()="确定"]'
+select_all: 'xpath==//div[contains(@class,"ant-dropdown-placement-bottomRight") and not(contains(@style,"display: none"))]//span[text()="全选"]'
