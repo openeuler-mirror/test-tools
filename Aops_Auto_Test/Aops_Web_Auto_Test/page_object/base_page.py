@@ -280,28 +280,6 @@ class WebPage(object):
         else:
             print("页面资源可能还在加载中")
 
-    def count_table_rows(self):
-        """计算表格的行数"""
-        return self.elements_num(base_page["tr"])
-
-    def has_next_page(self):
-        """检查是否还有下一页"""
-        try:
-            return self.find_element(base_page["next_page"])
-        except TimeoutException:
-            return False
-
-    def get_total_table_rows(self):
-        """获取分页表格的总行数"""
-        total_rows = 0
-        total_rows += self.count_table_rows()
-        while self.has_next_page():
-            self.click_element(base_page["next_page"])
-            self.find_element(base_page["table"])
-            total_rows += self.count_table_rows()
-        print("列表总计： ", total_rows)
-        return total_rows
-
     def click_close_button(self):
         """
         Click "X" button in page
@@ -562,3 +540,40 @@ class CommonPagingWebPage(WebPage):
             #  目前python没有很好的办法监控dom局部变更状态。 暂定用sleep等table更新完成。
             time.sleep(2)
         return None
+
+    def select_per_page(self, number):
+        """
+        选择每页显示多少条数据
+        Args:
+            number: 每页显示多少条数据
+        """
+        self.select_value_by_dropdown(base_page['per_page_selector'], "{} 条/页".format(str(number)))
+        self.log.info("选择{}条/页".format(number))
+
+    def count_table_rows(self):
+        """计算表格的行数"""
+        return self.elements_num(base_page["tr"])
+
+    def has_next_page(self):
+        """检查是否还有下一页"""
+        try:
+            return self.find_element(base_page["next_page"])
+        except TimeoutException:
+            return False
+
+    def get_total_table_rows(self):
+        """获取分页表格的总行数"""
+        total_rows = 0
+        total_rows += self.count_table_rows()
+        while self.has_next_page():
+            self.click_element(base_page["next_page"])
+            self.find_element(base_page["table"])
+            total_rows += self.count_table_rows()
+        print("列表总计： ", total_rows)
+        return total_rows
+
+    def get_total_num(self):
+        """获取列表总计数"""
+        return self.element_text(base_page["page_totle_text"])
+
+
