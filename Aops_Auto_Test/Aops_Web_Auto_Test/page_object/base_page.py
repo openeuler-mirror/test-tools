@@ -213,7 +213,6 @@ class WebPage(object):
     def search_by_placeholder(self, placeholder_value, search_value):
         """按照占位符搜索"""
         new_search_input_loc = self.replace_locator_text(base_page['search_placeholder'], placeholder_value)
-        print("new_search_input_loc: ", new_search_input_loc)
         new_search_button_loc = self.replace_locator_text(base_page['search_button'], placeholder_value)
         self.clear_before_input_text(new_search_input_loc, search_value)
         self.click_element(new_search_button_loc)
