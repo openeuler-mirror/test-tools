@@ -18,10 +18,10 @@ dnf install -y kernel-source expect
 deploy_qemu()
 {
     cd /home
-    yum install -y ninja-build zlib-devel glib2-devel pixman-devel vim tar make g++
-    test -s syzdelop/qemu-5.2.0.tar.xz || wget https://download.qemu.org/qemu-5.2.0.tar.xz
+    yum install -y ninja-build zlib-devel glib2-devel pixman-devel vim tar make g++ gcc-c++ glibc-static libstdc++-static kernel-devel-$(uname -r) binutils-devel libcap-devel
+    test -s qemu-5.2.0.tar.xz || wget https://download.qemu.org/qemu-5.2.0.tar.xz
     test -d qemu-5.2.0 && rm -rf qemu-5.2.0
-    tar -xf syzdelop/qemu-5.2.0.tar.xz
+    tar -xf qemu-5.2.0.tar.xz
     cd qemu-5.2.0
     mkdir build && cd build
     if [ $arch == 'x86_64' ];then
@@ -340,6 +340,7 @@ modify_eth()
 
 install_rpm()
 {
+    cp -r /usr/src/linux*/rpmbuild /root/    
     kernel_rpm=$(ls /root/rpmbuild/RPMS/$(uname -i) | grep kernel-[0-9]|tail -n 1)
     scpcmd /root/rpmbuild/RPMS/$(uname -i)/${kernel_rpm} localhost:/home
     sshcmd "rpm -ivh /home/${kernel_rpm} --force"

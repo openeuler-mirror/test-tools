@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-LTPVER="20240129"
+LTPVER="20250930"
 
 install_rpm(){
     yum install -y zlib zlib-devel bc httpd net-tools gcc-c++ m4 flex byacc bison keyutils-libs-devel lksctp-tools-devel xfsprogs-devel libacl-devel openssl-devel numactl-devel libaio-devel glibc-devel libcap-devel findutils libtirpc kernel-headers glibc-headers elfutils-libelf-devel patch numactl tar automake cmake time psmisc vim git make
@@ -18,7 +18,7 @@ compile_ltp(){
     #    git clone -b ${LTPVER} https://github.com/linux-test-project/ltp.git
     #done
         
-    unzip ${LTPVER}.zip && cd ltp-${LTPVER}
+    unzip ltp-${LTPVER}.zip && cd ltp-${LTPVER}
     make autotools
     ./configure
     make -j16
