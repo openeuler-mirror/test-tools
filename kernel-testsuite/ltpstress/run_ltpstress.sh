@@ -1,21 +1,21 @@
 #/bin/bash
 
 WORKDIR=$(cd `dirname $0`;pwd)
-NEWVER="20240129"
+NEWVER="20250930"
 OLDVER="20180515"
 
 download_ltp_pkg(){
     yum install -y vim tar git make automake gcc pkgconf autoconf bison flex m4 kernel-headers glibc-headers clang findutils libtirpc libtirpc-devel pkg-config
 
-    if [ ! -e "${NEWVER}.zip" ];then
+    if [ ! -e "ltp-${NEWVER}.zip" ];then
         wget -c -t 30 https://github.com/linux-test-project/ltp/archive/refs/tags/${NEWVER}.zip
     fi
 
-    if [ ! -e "${OLDVER}.zip" ];then
+    if [ ! -e "ltp-${OLDVER}.zip" ];then
         wget -c -t 10 https://github.com/linux-test-project/ltp/archive/refs/tags/${OLDVER}.zip
     fi
-    unzip ${OLDVER}.zip
-    unzip ${NEWVER}.zip
+    unzip ltp-${OLDVER}.zip
+    unzip ltp-${NEWVER}.zip
     cp ltp-${OLDVER}/runtest/stress.part* ltp-${NEWVER}/runtest
     cp ltp-${OLDVER}/testscripts/ltpstress.sh ltp-${NEWVER}/testscripts    
 }

@@ -9,7 +9,7 @@
 
 * sh syzdelop.sh createvm<br/>
 1.启动脚本后，从菜单栏tigervnc view通过ip:31挂载镜像进行安装(安装方法可咨询安装小组)<br/>
-2.安装完成后保留安装虚拟机的窗口<br/>
+2.完成后重启机器，并且关闭防火墙<br/>
 
 * sh syzdelop.sh config<br/>
 1.安装完成后reboot重启虚拟机；使虚拟机配置和安装的内核生效；<br/>
