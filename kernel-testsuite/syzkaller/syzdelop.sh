@@ -36,18 +36,16 @@ deploy_qemu()
 
 deploy_syzkaller()
 {
-    cd /home/
+    cd /home
     yum install -y git go
     until (test -e "syzkaller")
     do
         git clone https://github.com/google/syzkaller.git
     done
-    if [ $arch == 'x86_64' ]; then
-        go env -w GOPROXY=https://goproxy.cn,direct
-    fi
     cd syzkaller || exit
+    go env -w GOPROXY=https://goproxy.cn,direct
     if [ $arch == 'aarch64' ]; then
-        git reset --hard 20497e8e232a
+        sed -i 's#cflags: []string{"-static-pie"}#cflags: []string{"-static"}#g' ./sys/targets/targets.go
     fi
     make
     cd -
