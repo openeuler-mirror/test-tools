@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 SERVICE_IP=121.36.84.172
-LTP_PREFIX=/opt/ltp
+LTP_PREFIX=/opt/ltpprefix
 source /etc/openEuler-latest
+echo 'export LANG=en_US.UTF-8' >> /root/.bashrc
+source /root/.bashrc
 
 red()    { echo -e "\e[31m$*\e[0m"; }
 green()  { echo -e "\e[32m$*\e[0m"; }
 yellow() { echo -e "\e[33m$*\e[0m"; }
-
-get_oe_ver() { grep -oE '[0-9]{2}\.[0-9]{2}' /etc/openEuler-latest | head -1; }
 
 select_ltp_tag() {
     local k=$(uname -r | awk -F. '{printf "%d%02d",$1,$2}')
@@ -16,7 +16,7 @@ select_ltp_tag() {
         4*|509|510) echo 20220121 ;;
         511|6[0-4]) echo 20230626 ;;
         6[5-8])    echo 20231030 ;;
-        *)         git ls-remote --tags --sort=-v:refname https://github.com/linux-test-project/ltp.git \
+        *)         GIT_SSL_NO_VERIFY=true git ls-remote --tags --sort=-v:refname https://github.com/linux-test-project/ltp.git \
                    | awk -F/ '{print $3}' | grep -E '^[0-9]{8}$' | head -1 ;;
     esac
 }
@@ -105,13 +105,13 @@ update_kernel() {
 
 
 clone_ltp() {
-    local tag=$(select_ltp_tag) LTP_PREFIX=$LTP_PREFIX
+    local tag=$(select_ltp_tag) 
     green ">>> 准备克隆LTP tag=$tag"
     rm -rf "$LTP_PREFIX"
     local t0=$SECONDS
     while [[ ! -d $LTP_PREFIX ]]; do
         (( SECONDS - t0 > 600 )) && { echo "Clone ltp失败，超时10 min"; exit 1; }
-        timeout 120 git clone -b "$tag" --depth 1 https://github.com/linux-test-project/ltp.git "$LTP_PREFIX" && break
+        timeout 600 git clone -b "$tag" --depth 1 https://github.com/linux-test-project/ltp.git "$LTP_PREFIX" && break
         sleep 10
     done
     green ">>> LTP已克隆：$LTP_PREFIX"
@@ -119,11 +119,10 @@ clone_ltp() {
 
 build_ltp() {
     green ">>> 开始编译LTP"
-    [[ -f $LTP_PREFIX/.build-done ]] && { green "已编译，跳过"; return; }
     cd "$LTP_PREFIX"
     make autotools
     ./configure
-    make -j"$(nproc)"
+    make -j16
     make install
     # kernel 5.10 resolve proc01 testcase fail    
     grep openeulerversion /etc/openEuler-latest |grep -iE "22.03|22.09|23.09" && echo 1024 > /proc/dirty/buffer_size
@@ -132,15 +131,17 @@ build_ltp() {
         insmod /usr/lib/modules/$(uname -r)/kernel/fs/proc/etmem_swap.ko*
         insmod /usr/lib/modules/$(uname -r)/kernel/fs/proc/etmem_scan.ko*
     fi
-    green ">>> 编译完成，安装目录：$LTP_PREFIX"
+    green ">>> 编译完成，安装目录：/opt/ltp/"
 }
 
 run_ltp() {
     green ">>> 运行LTP用例：$*"
-    cd "$LTP_PREFIX"
-    ./runltp "$@" | tee ltp.log
-    green ">>> 结果目录：$(ls -d results/*)"
-    grep -nr FAIL results/ || true
+    cd /opt/ltp || exit 1
+    echo -e "\e[32mrunltp $*\e[0m"
+    sleep 2
+    ./runltp $* |tee ltp.log
+    echo -e "\e[32m$(ls results) \e[0m"
+    grep -nr "FAIL" results/
 }
 
 
@@ -173,7 +174,7 @@ case $1 in
         clone_ltp
         build_ltp
         shift
-        run_ltp $*
+        run_ltp 
         ;;
     *)
         echo -e "\e[32mhelp info:\e[0m"
